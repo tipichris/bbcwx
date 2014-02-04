@@ -124,6 +124,7 @@ MyDesklet.prototype = {
       this.settings = new Settings.DeskletSettings(this, "bbcwx@oak-wood.co.uk", this.desklet_id);                    
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this._refreshweathers,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"transparency","transparency",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"textcolor","textcolor",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bgcolor","bgcolor",this._refreshweathers,null);
@@ -332,19 +333,30 @@ MyDesklet.prototype = {
     var fahr = temp.slice(temp.indexOf('(')+1, temp.length - 3).trim();
     var out = ((this.units==1) ? celsius : fahr);
     if (units) {
-      out += ((this.units==1) ? " \u2103" : " \u2109")
+      out += ((this.units==1) ? "\u2103" : "\u2109")
     }
     return out;
   },
 
   _formatWindspeed: function(wind, units) {
     if (!wind) return '';
+    var conversion = {
+      'mph': 1,
+      'knots': 0.869,
+      'kph': 1.6,
+      'mps': 0.447
+    };
+    var unitstring = {
+      'mph': 'mph',
+      'knots': 'kts',
+      'kph': 'km/h',
+      'mps': 'm/s'
+    }
     var mph = wind.replace('mph', '');
-    var kph = mph * 1.6;
-    kph = kph.toFixed(0);
-    var out = ((this.units==1) ? kph : mph);
+    var out = mph * conversion[this.wunits];
+    out = out.toFixed(0);
     if (units) {
-      out += ((this.units==1) ? " km/h" : " mph")
+      out += unitstring[this.wunits];
     }
     return out;
   },

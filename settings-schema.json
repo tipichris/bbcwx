@@ -14,12 +14,25 @@
   "units" : {
     "type": "combobox",
     "default" : "1",
-    "description" : "Choose your measurement unit:",
+    "description" : "Temperature measurement unit:",
     "options" : {
         "C" : "1",
         "F" : "0"
     },
-    "tooltip" : "Measurement units to display weather information"
+    "tooltip" : "Measurement units used to display temperature"
+  },
+  
+  "wunits" : {
+    "type": "combobox",
+    "default" : "mph",
+    "description" : "Wind speed measurement unit:",
+    "options" : {
+        "mph" : "mph",
+        "km/h" : "kph",
+        "knots": "knots",
+        "m/s": "mps"
+    },
+    "tooltip" : "Measurement units used to display wind speed"
   },
 
   "zoom" : {
