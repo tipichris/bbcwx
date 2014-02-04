@@ -192,7 +192,7 @@ MyDesklet.prototype = {
   createwindow: function(){
     this.window=new St.BoxLayout({vertical: false});
    
-    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+3*this.zoom+"px;padding-bottom:"+3*this.zoom+"px",x_align:2, y_align:2 });
+    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+5*this.zoom+"px;padding-bottom:"+3*this.zoom+"px",x_align:2, y_align:2 });
     this.iconbutton=new St.Icon({ icon_name: 'view-refresh-symbolic',
       icon_size: 14*this.zoom+'',
       icon_type: St.IconType.SYMBOLIC,
@@ -214,7 +214,7 @@ MyDesklet.prototype = {
     this.cityname=new St.Label({style: "text-align: center;font-size: "+14*this.zoom+"px" });
     this.city=new St.BoxLayout({vertical:true,style: "align: center;"});
     this.table=new St.Table({style: "spacing-rows: "+5*this.zoom+"px;spacing-columns: "+5*this.zoom+"px;padding: "+10*this.zoom+"px;"});
-    this.container= new St.BoxLayout({vertical: true, x_align: St.Align.MIDDLE});//definire coloana dreapta
+    this.container= new St.BoxLayout({vertical: true, x_align: St.Align.MIDDLE, style: "padding-left: 5px;"});//definire coloana dreapta
     this.cweather = new St.BoxLayout({vertical: true}); //definire coloana stangz
     this.cwicon = new St.Bin({height: (170*this.zoom), width: (200*this.zoom)}); //icoana mare cu starea vremii
     this.weathertext=new St.Label({style: 'text-align : center; font-size:'+30*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
@@ -234,10 +234,23 @@ MyDesklet.prototype = {
     this.ctemp_values.add_actor(this.windspeed);
     this.ctemp.add_actor(this.ctemp_captions); //-adauga coloana din stanga la informatii
     this.ctemp.add_actor(this.ctemp_values);  //adauga coloana din dreapta la informatii     
+      
+    this.labels[0]=new St.Label({style: 'text-align : center;font-size: '+14*this.zoom+"px"});
+    this.fwicons[0]=new St.Bin({height:50*this.zoom, width: 60*this.zoom});
+    this.tempd[0]=new St.Label({text: _('Temp: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+    this.winds[0]=new St.Label({text: _('Wind: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+    this.windd[0]=new St.Label({text: _('Dir: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+    this.eachday[0]=new St.BoxLayout({vertical: true });
+    this.eachday[0].add_actor(this.labels[0]);
+    this.eachday[0].add_actor(this.fwicons[0]);
+    this.eachday[0].add_actor(this.tempd[0]);
+    this.eachday[0].add_actor(this.winds[0]);
+    this.eachday[0].add_actor(this.windd[0]);
+    this._forecasticons.add_actor(this.eachday[0]);
+    
     for(f=1;f<this.no;f++) {
       this.labels[f]=new St.Label({style: 'text-align : center;font-size: '+14*this.zoom+"px"});
       this.fwicons[f]=new St.Bin({height:50*this.zoom, width: 60*this.zoom});
-      //this.fwicons[f].set_child(this._getIconImage(days[f]['weathericon']));
       this.tempd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
       this.winds[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
       this.windd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
@@ -283,7 +296,6 @@ MyDesklet.prototype = {
         for(f=1;f<this.no;f++)
         {
           this.labels[f].text=this.days[f]['day'].substr(0,3);
-          //this.fwicons[f]=new St.Bin({height:50, width: 60});
           global.log(this.days[f]['day'] + ": " + this.days[f]['weathertext']);
           this.fwicons[f].set_child(this._getIconImage(this.days[f]['weathertext']));
           this.tempd[f].text=this._formatTemerature(this.days[f]['minimum_temperature'])+" - "+this._formatTemerature(this.days[f]['maximum_temperature']);
@@ -298,10 +310,8 @@ MyDesklet.prototype = {
         this.cwicon.set_child(this._getIconImage(this.cc['weathertext'])); //--refresh
         this.weathertext.text=this.cc['weathertext'];
         this.temperature.text = this._formatTemerature(this.cc['temperature'], true);
-        //this.feelslike.text=this.cc['realfeel']+((this.units==1) ? " \u2103" : " F");
         this.humidity.text= this.cc['humidity'];
         this.pressure.text=this.cc['pressure'];
-        //let wd=this.cc['winddirection'];(wd.length>2)? wd=wd.replace(wd[0]+wd[1],wd[0]+'-'+wd[1]):wd;
         this.windspeed.text=this.cc['wind_direction']+ ", " + this._formatWindspeed(this.cc['wind_speed'], true);
       });
     
@@ -401,7 +411,6 @@ MyDesklet.prototype = {
 
     var rootElem = doc.getRootElement();
     var channel = rootElem.getChildElement("channel");
-//  var title = channel.getChildElements("title").getText();
     days['city'] = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
 
     var items = channel.getChildElements("item");
@@ -434,17 +443,6 @@ MyDesklet.prototype = {
     return days;
   },
   
-
-
-//    getWeather: function() {
-//   let url = 'http://thale.accu-weather.com/widget/thale/weather-data.asp?location='+this.stationID+'&metric='+this.units+'&format=json'+counter+'';
-// //  let url = 'http://localhost/weather.xml';
-//   let file = Gio.file_new_for_uri(url).load_contents(null);
-//   let doc=(file[1]+"")//.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, "");
-//   return doc;
-//   
-//       },
-  
   getWeather: function(type, callback) {
     let here = this;
     let url = 'http://open.live.bbc.co.uk/weather/feeds/en/' + this.stationID +'/' + type + '.rss';
@@ -454,29 +452,16 @@ MyDesklet.prototype = {
       callback.call(here,mes.toString());      
     });
   }, 
-    
-       
+          
   forecastchange: function() {
-    if(this.switch=='daytime') {
-      this.switch='nighttime';   
-    } 
-    else {
-      this.switch='daytime';
-    }
     this._refreshweathers();  
   },
-    
-
-
-  
   
   on_desklet_removed: function() {
     if(this._timeoutId)
     {Mainloop.source_remove(this._timeoutId);}
   }
 }
-
-
 
 function main(metadata, decklet_id){
   let desklet = new MyDesklet(metadata,decklet_id);
