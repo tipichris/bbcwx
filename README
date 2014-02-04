@@ -4,8 +4,9 @@ To find your location's code go to
 
 http://www.bbc.co.uk/weather/
 
-and search for your city. The station ID you need is the numeric part at the end of 
-URL for the city's weather. For example, a search for London takes you to
+and search for your city. The station ID you need is the numeric part at
+the end of URL for the city's weather. For example, a search for London 
+takes you to
 
 http://www.bbc.co.uk/weather/2643743
 

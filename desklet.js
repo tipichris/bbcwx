@@ -7,13 +7,13 @@ const St = imports.gi.St;
 const Desklet = imports.ui.desklet;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
-const Clutter = imports.gi.Clutter;
+const Clutter = imports.gi.Clutter;  //used?
 const GLib = imports.gi.GLib;
-const Tweener = imports.ui.tweener;
+const Tweener = imports.ui.tweener;  //used?
 const Util = imports.misc.util;
 const Main = imports.ui.main;
 
-const Tooltips = imports.ui.tooltips;
+const Tooltips = imports.ui.tooltips;  //used?
 const PopupMenu = imports.ui.popupMenu;
 const Cinnamon = imports.gi.Cinnamon;
 const Settings = imports.ui.settings;
@@ -328,6 +328,7 @@ MyDesklet.prototype = {
   },
   
   _formatTemerature: function(temp, units) {
+    units = typeof units !== 'undefined' ? units : false;
     if (!temp) return '';
     var celsius = temp.slice(0, temp.indexOf('C')-1).trim();
     var fahr = temp.slice(temp.indexOf('(')+1, temp.length - 3).trim();
@@ -339,6 +340,7 @@ MyDesklet.prototype = {
   },
 
   _formatWindspeed: function(wind, units) {
+    units = typeof units !== 'undefined' ? units : false;
     if (!wind) return '';
     var conversion = {
       'mph': 1,
