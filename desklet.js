@@ -185,17 +185,19 @@ MyDesklet.prototype = {
     
     this.buttons.style="padding-top:"+3*this.zoom+"px;padding-bottom:"+3*this.zoom+"px";
     
-    this.iconbutton.icon_size=20*this.zoom;
-    this.banner.style='font-size: '+14*this.zoom+"px"; 
+    this.iconbutton.icon_size=14*this.zoom;
+    this.banner.style='font-size: '+8*this.zoom+"px"; 
   },
   
   createwindow: function(){
     this.window=new St.BoxLayout({vertical: false});
    
-    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+3*this.zoom+"px;padding-bottom:"+3*this.zoom+"px",x_align:2});
-    this.iconbutton=new St.Icon({ icon_name: 'weather-clear-symbolic',
-      icon_size: 20*this.zoom+'',
-      icon_type: St.IconType.SYMBOLIC});
+    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+3*this.zoom+"px;padding-bottom:"+3*this.zoom+"px",x_align:2, y_align:2 });
+    this.iconbutton=new St.Icon({ icon_name: 'view-refresh-symbolic',
+      icon_size: 14*this.zoom+'',
+      icon_type: St.IconType.SYMBOLIC,
+      style: "padding: 0 0 0 3px;"
+    });
     this.but=new St.Button();
     this.labels=[]; this.fwicons=[];this.tempd=[]; this.windd=[]; this.winds=[]; this.eachday=[];
     this._forecasticons = new St.BoxLayout({vertical: false,x_align:2}); //---zii/iconita/temperaturi
@@ -206,7 +208,7 @@ MyDesklet.prototype = {
     this.pressure=new St.Label();
     this.windspeed=new St.Label();
     this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+14*this.zoom+"px"});
-    this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+14*this.zoom+"px"});
+    //this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+14*this.zoom+"px"});
     this.ctemp_captions = new St.BoxLayout({vertical: true,style : 'text-align : right'});
     this.ctemp = new St.BoxLayout({vertical: false,x_align: 2});
     this.cityname=new St.Label({style: "text-align: center;font-size: "+14*this.zoom+"px" });
@@ -249,20 +251,15 @@ MyDesklet.prototype = {
     }
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.forecastchange));
-    this.banner=new St.Label({text: _('      bbc.co.uk'),style: 'font-size: '+14*this.zoom+"px"});
-    this.buttons.add_actor(this.but);
+    this.banner=new St.Label({text: _('Data from www.bbc.co.uk/weather'),style: 'font-size: '+8*this.zoom+"px"});
     this.buttons.add_actor(this.banner);
-    if(this.no==6)  {
-      this.container.add_actor(this.table);     
-    }
-    else {
-      this.city.style = "padding:"+10*this.zoom+"px";
-      this.container.add_actor(this.city); //--adauga label cu orasul
-      this.container.add_actor(this.ctemp);//-- adauga tabelul cu informatiile depsre vreme     
-    }
+    this.buttons.add_actor(this.but);
+    this.city.style = "padding:"+10*this.zoom+"px";
+    this.container.add_actor(this.city); //--adauga label cu orasul
+    this.container.add_actor(this.ctemp);//-- adauga tabelul cu informatiile depsre vreme     
     this.container.add_actor(this._separatorArea);//--adauga separatorul
     this.container.add_actor(this._forecasticons); //--adauga zii/iconite/temperaturi
-    this.container.add_actor(this.buttons); //adauga butonul de jos si probabil si un banner cu accuweather
+    this.cweather.add_actor(this.buttons); //adauga butonul de jos si probabil si un banner cu accuweather
     this.window.add_actor(this.cweather);
     this.window.add_actor(this.container);
     
