@@ -453,12 +453,15 @@ MyDesklet.prototype = {
   getWeather: function(type, callback) {
     let here = this;
     let url = 'http://open.live.bbc.co.uk/weather/feeds/en/' + this.stationID +'/' + type + '.rss';
-    // ### TO DO ### 
-    // handle failure when retrieving data
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
-      let mes = message.response_body.data;
-      callback.call(here,mes.toString());      
+      if( message.status_code == 200) {
+        let mes = message.response_body.data;
+        callback.call(here,mes.toString()); 
+      } else {
+        global.log("Error retrieving address " + url + ". Status: " + message.status_code);
+        callback.call(here,'');
+      }
     });
   }, 
           
