@@ -199,6 +199,7 @@ MyDesklet.prototype = {
       style: "padding: 0 0 0 3px;"
     });
     this.but=new St.Button();
+    this.bannerbut=new St.Button();
     this.labels=[]; this.fwicons=[];this.tempd=[]; this.windd=[]; this.winds=[]; this.eachday=[];
     this._forecasticons = new St.BoxLayout({vertical: false,x_align:2}); //---zii/iconita/temperaturi
     this._separatorArea = new St.DrawingArea({ style_class: STYLE_POPUP_SEPARATOR_MENU_ITEM });
@@ -265,7 +266,11 @@ MyDesklet.prototype = {
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.forecastchange));
     this.banner=new St.Label({text: _('Data from www.bbc.co.uk/weather'),style: 'font-size: '+8*this.zoom+"px"});
-    this.buttons.add_actor(this.banner);
+    this.bannerbut.set_child(this.banner);
+    this.bannerbut.connect('clicked', Lang.bind(this, Lang.bind(this, function() {
+        Util.spawnCommandLine("xdg-open http://www.bbc.co.uk/weather");
+      })));
+    this.buttons.add_actor(this.bannerbut);
     this.buttons.add_actor(this.but);
     this.city.style = "padding:"+10*this.zoom+"px";
     this.container.add_actor(this.city); //--adauga label cu orasul
