@@ -14,6 +14,7 @@ const Util = imports.misc.util;
 const Main = imports.ui.main;
 
 const Tooltips = imports.ui.tooltips;  //used?
+const Links = imports.ui.link;
 const PopupMenu = imports.ui.popupMenu;
 const Cinnamon = imports.gi.Cinnamon;
 const Settings = imports.ui.settings;
@@ -23,10 +24,8 @@ const Soup = imports.gi.Soup;
 imports.searchPath.push(GLib.get_home_dir()+'/.local/share/cinnamon/desklets/bbcwx@oak-wood.co.uk/');
 const xml = imports.marknote;
 
-const text_aliniere= 'text-align : center';
-var counter=0;var cc;//var docu;//var mesaj;
 const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
-const STYLE_FORECAST = 'forecast';
+
 
 const _httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
@@ -43,7 +42,7 @@ MyDesklet.prototype = {
   _init: function(metadata,decklet_id){
     //############Variables###########
     this.switch="day";this.daynames={Monday: 'Mo',Tuesday:'Tu', Wednesday:'We', Thursday:'Th', Friday:'Fr', Saturday:'Sa', Sunday:'Su'};
-    this.fwicons=[];this.labels=[];this.tempd=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];
+    this.fwicons=[];this.labels=[];this.tempd=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
     this.switch="daytime"
     this.cc=[];this.days=[];
     this.icon_paths = GLib.get_home_dir()+'/.local/share/cinnamon/desklets/bbcwx@oak-wood.co.uk/icons/';
@@ -199,7 +198,6 @@ MyDesklet.prototype = {
       style: "padding: 0 0 0 3px;"
     });
     this.but=new St.Button();
-    this.bannerbut=new St.Button();
     this.labels=[]; this.fwicons=[];this.tempd=[]; this.windd=[]; this.winds=[]; this.eachday=[];
     this._forecasticons = new St.BoxLayout({vertical: false,x_align:2}); //---zii/iconita/temperaturi
     this._separatorArea = new St.DrawingArea({ style_class: STYLE_POPUP_SEPARATOR_MENU_ITEM });
@@ -251,10 +249,11 @@ MyDesklet.prototype = {
     
     for(f=1;f<this.no;f++) {
       this.labels[f]=new St.Label({style: 'text-align : center;font-size: '+14*this.zoom+"px"});
-      this.fwicons[f]=new St.Bin({height:50*this.zoom, width: 60*this.zoom});
+      this.fwicons[f]=new St.Button({height:50*this.zoom, width: 60*this.zoom});
       this.tempd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
       this.winds[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
       this.windd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+      this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
       this.eachday[f]=new St.BoxLayout({vertical: true });
       this.eachday[f].add_actor(this.labels[f]);
       this.eachday[f].add_actor(this.fwicons[f]);
@@ -265,12 +264,15 @@ MyDesklet.prototype = {
     }
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.forecastchange));
-    this.banner=new St.Label({text: _('Data from www.bbc.co.uk/weather'),style: 'font-size: '+8*this.zoom+"px"});
-    this.bannerbut.set_child(this.banner);
-    this.bannerbut.connect('clicked', Lang.bind(this, Lang.bind(this, function() {
+    this.banner=new St.Button({label: _('Data from www.bbc.co.uk/weather'),style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";",reactive: true,
+                          track_hover: true,
+                          style_class: 'bbcwx-link'});
+    this.banner.connect('clicked', Lang.bind(this, Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open http://www.bbc.co.uk/weather");
       })));
-    this.buttons.add_actor(this.bannerbut);
+    this.bannertooltip = new Tooltips.Tooltip(this.banner, _('Click to visit the BBC weather website'));
+    this.refreshtooltip = new Tooltips.Tooltip(this.but, _('Refresh'));
+    this.buttons.add_actor(this.banner);
     this.buttons.add_actor(this.but);
     this.city.style = "padding:"+10*this.zoom+"px";
     this.container.add_actor(this.city); //--adauga label cu orasul
@@ -295,7 +297,6 @@ MyDesklet.prototype = {
     
     
       let a = this.getWeather('3dayforecast', function(weather) {
-        counter=new Date().toLocaleFormat('%H%M');
         this.days=this.load_days(weather);
         this.cityname.text=this.days['city'];
         for(f=1;f<this.no;f++)
@@ -303,6 +304,7 @@ MyDesklet.prototype = {
           this.labels[f].text=this.days[f]['day'].substr(0,3);
           global.log(this.days[f]['day'] + ": " + this.days[f]['weathertext']);
           this.fwicons[f].set_child(this._getIconImage(this.days[f]['weathertext']));
+          this.wxtooltip[f].set_text(this.days[f]['weathertext']);
           this.tempd[f].text=this._formatTemerature(this.days[f]['minimum_temperature'])+" - "+this._formatTemerature(this.days[f]['maximum_temperature']);
           this.winds[f].text=this._formatWindspeed(this.days[f]['wind_speed'], true);
           this.windd[f].text= this.days[f]['wind_direction'];
@@ -451,6 +453,8 @@ MyDesklet.prototype = {
   getWeather: function(type, callback) {
     let here = this;
     let url = 'http://open.live.bbc.co.uk/weather/feeds/en/' + this.stationID +'/' + type + '.rss';
+    // ### TO DO ### 
+    // handle failure when retrieving data
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
       let mes = message.response_body.data;
