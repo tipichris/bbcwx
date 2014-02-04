@@ -1,0 +1,16 @@
+A desklet to display weather from the BBC's weather feeds.
+
+To find your location's code go to 
+
+http://www.bbc.co.uk/weather/
+
+and search for your city. The station ID you need is the numeric part at the end of 
+URL for the city's weather. For example, a search for London takes you to
+
+http://www.bbc.co.uk/weather/2643743
+
+The StationID is 2643743
+
+This desklet is a fork of Loganj's AccuWeather Desklet,
+http://cinnamon-spices.linuxmint.com/desklets/view/10. It makes use of
+the marknote xml library: https://code.google.com/p/marknote/
