@@ -45,7 +45,7 @@ MyDesklet.prototype = {
     //############Variables###########
     this.desklet_id = desklet_id;
     this.daynames={Monday: _('Mon'),Tuesday: _('Tue'), Wednesday: _('Wed'), Thursday: _('Thu'), Friday: _('Fri'), Saturday: _('Sat'), Sunday: _('Sun')};
-    this.fwicons=[];this.labels=[];this.tempd=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
+    this.fwicons=[];this.labels=[];this.max=[];this.min=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
     this.cc=[];this.days=[];
     this.icon_paths = DESKLET_DIR + '/icons/';
     this.metadata = metadata;
@@ -162,7 +162,7 @@ MyDesklet.prototype = {
   style_change: function() {
     this.cwicon.height=170*this.zoom;this.cwicon.width=200*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+30*this.zoom+'px';
-    this.table.style="spacing-rows: "+5*this.zoom+"px;spacing-columns: "+5*this.zoom+"px;padding: "+10*this.zoom+"px;";
+    this.fwtable.style="spacing-rows: "+2*this.zoom+"px;spacing-columns: "+2*this.zoom+"px;padding: "+5*this.zoom+"px;";
     this.cityname.style="text-align: center;font-size: "+14*this.zoom+"px" ;    
     this.ctemp_captions.style = 'text-align : right;font-size: '+14*this.zoom+"px";
     this.ctemp_values.style = 'text-align : left; font-size: '+14*this.zoom+"px";
@@ -180,9 +180,10 @@ MyDesklet.prototype = {
     for(f=1;f<this.no;f++) {
       this.labels[f].style='text-align : center;font-size: '+14*this.zoom+"px";
       this.fwicons[f].height=50*this.zoom;this.fwicons[f].width= 60*this.zoom;
-      this.tempd[f].style= 'text-align : center;padding: 0 3px; font-size: '+14*this.zoom+"px";
+      this.max[f].style= 'text-align : center;padding: 0 3px; font-size: '+14*this.zoom+"px";
+      this.min[f].style= 'text-align : center;padding: 0 3px; font-size: '+14*this.zoom+"px";
       this.winds[f].style= 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px";
-      this.windd[f].style= 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px";
+     this.windd[f].style= 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px";
     }
     
     this.buttons.style="padding-top:"+3*this.zoom+"px;padding-bottom:"+3*this.zoom+"px";
@@ -201,7 +202,7 @@ MyDesklet.prototype = {
       style: "padding: 0 0 0 3px;"
     });
     this.but=new St.Button();
-    this.labels=[]; this.fwicons=[];this.tempd=[]; this.windd=[]; this.winds=[]; this.eachday=[];
+    this.labels=[]; this.fwicons=[];this.max=[]; this.min=[]; this.windd=[]; this.winds=[]; this.eachday=[];
     this._forecasticons = new St.BoxLayout({vertical: false,x_align:2}); //---zii/iconita/temperaturi
     this._separatorArea = new St.DrawingArea({ style_class: STYLE_POPUP_SEPARATOR_MENU_ITEM });
     this.temperature = new St.Label();
@@ -215,7 +216,6 @@ MyDesklet.prototype = {
     this.ctemp = new St.BoxLayout({vertical: false,x_align: 2});
     this.cityname=new St.Label({style: "text-align: center;font-size: "+14*this.zoom+"px" });
     this.city=new St.BoxLayout({vertical:true,style: "align: center;"});
-    this.table=new St.Table({style: "spacing-rows: "+5*this.zoom+"px;spacing-columns: "+5*this.zoom+"px;padding: "+10*this.zoom+"px;"});
     this.container= new St.BoxLayout({vertical: true, x_align: St.Align.MIDDLE, style: "padding-left: 5px;"});//definire coloana dreapta
     this.cweather = new St.BoxLayout({vertical: true}); //definire coloana stangz
     this.cwicon = new St.Bin({height: (170*this.zoom), width: (200*this.zoom)}); //icoana mare cu starea vremii
@@ -236,45 +236,47 @@ MyDesklet.prototype = {
     this.ctemp_values.add_actor(this.windspeed);
     this.ctemp.add_actor(this.ctemp_captions); //-adauga coloana din stanga la informatii
     this.ctemp.add_actor(this.ctemp_values);  //adauga coloana din dreapta la informatii     
-      
-    this.labels[0]=new St.Label({style: 'text-align : center;font-size: '+14*this.zoom+"px"});
-    this.fwicons[0]=new St.Bin({height:50*this.zoom, width: 60*this.zoom});
-    this.tempd[0]=new St.Label({text: _('Temp: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-    this.winds[0]=new St.Label({text: _('Wind: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-    this.windd[0]=new St.Label({text: _('Dir: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-    this.eachday[0]=new St.BoxLayout({vertical: true });
-    this.eachday[0].add_actor(this.labels[0]);
-    this.eachday[0].add_actor(this.fwicons[0]);
-    this.eachday[0].add_actor(this.tempd[0]);
-    this.eachday[0].add_actor(this.winds[0]);
-    this.eachday[0].add_actor(this.windd[0]);
-    this._forecasticons.add_actor(this.eachday[0]);
+    
+    this.fwtable =new St.Table({style: "spacing-rows: "+2*this.zoom+"px;spacing-columns: "+2*this.zoom+"px;padding: "+5*this.zoom+"px;"});
+    this.fwtable.add(new St.Label({text: _('Max:'), style: 'text-align : right;padding: 0 3px;font-size: '+11*this.zoom+"px"}),{row:2,col:0});
+    this.fwtable.add(new St.Label({text: _('Min:'), style: 'text-align : right;padding: 0 3px;font-size: '+11*this.zoom+"px"}),{row:3,col:0});
+    this.fwtable.add(new St.Label({text: _('Wind:'), style: 'text-align : right;padding: 0 3px;font-size: '+11*this.zoom+"px"}),{row:4,col:0});
+    this.fwtable.add(new St.Label({text: _('Dir:'), style: 'text-align : right;padding: 0 3px;font-size: '+11*this.zoom+"px"}),{row:5,col:0});
+    
+//    this.tempd[0]=new St.Label({text: _('Temp: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+//    this.winds[0]=new St.Label({text: _('Wind: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+//    this.windd[0]=new St.Label({text: _('Dir: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+
     
     for(f=1;f<this.no;f++) {
-      this.labels[f]=new St.Label({style: 'text-align : center;font-size: '+14*this.zoom+"px"});
-      this.fwicons[f]=new St.Button({height:50*this.zoom, width: 60*this.zoom});
-      this.tempd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+      this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+14*this.zoom+"px" });
+      this.fwicons[f]=new St.Button({height:40*this.zoom, width: 48*this.zoom});
+      this.max[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+      this.min[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
       this.winds[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
       this.windd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
       this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
-      this.eachday[f]=new St.BoxLayout({vertical: true });
-      this.eachday[f].add_actor(this.labels[f]);
-      this.eachday[f].add_actor(this.fwicons[f]);
-      this.eachday[f].add_actor(this.tempd[f]);
-      this.eachday[f].add_actor(this.winds[f]);
-      this.eachday[f].add_actor(this.windd[f]);
-      this._forecasticons.add_actor(this.eachday[f]);          
+      
+      this.fwtable.add(this.labels[f],{row:0,col:f});
+      this.fwtable.add(this.fwicons[f],{row:1,col:f});
+      this.fwtable.add(this.max[f],{row:2,col:f});
+      this.fwtable.add(this.min[f],{row:3,col:f});
+      this.fwtable.add(this.winds[f],{row:4,col:f});
+      this.fwtable.add(this.windd[f],{row:5,col:f});
+
     }
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.forecastchange));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
-    this.bannerpre=new St.Button({label: _('Data from '),style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";"});
-    this.banner=new St.Button({label: this.creditlink,style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";",reactive: true,
-                          track_hover: true,
-                          style_class: 'bbcwx-link'});
-    this.banner.connect('clicked', Lang.bind(this, Lang.bind(this, function() {
+    this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";"});
+    this.banner=new St.Button({label: this.creditlink, 
+      style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";",
+      reactive: true,
+      track_hover: true,
+      style_class: 'bbcwx-link'});
+    this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open http://" + this.creditlink);
-      })));
+      }));
     this.bannertooltip = new Tooltips.Tooltip(this.banner, _('Click to visit the BBC weather website'));
     this.refreshtooltip = new Tooltips.Tooltip(this.but, _('Refresh'));
     this.buttons.add_actor(this.bannerpre);
@@ -284,7 +286,7 @@ MyDesklet.prototype = {
     this.container.add_actor(this.city); //--adauga label cu orasul
     this.container.add_actor(this.ctemp);//-- adauga tabelul cu informatiile depsre vreme     
     this.container.add_actor(this._separatorArea);//--adauga separatorul
-    this.container.add_actor(this._forecasticons); //--adauga zii/iconite/temperaturi
+    this.container.add_actor(this.fwtable); //--adauga zii/iconite/temperaturi
     this.cweather.add_actor(this.buttons); //adauga butonul de jos si probabil si un banner cu accuweather
     this.window.add_actor(this.cweather);
     this.window.add_actor(this.container);
@@ -303,6 +305,7 @@ MyDesklet.prototype = {
     
     
       let a = this.getWeather('3dayforecast', function(weather) {
+        //global.log("Weather: " + weather)
         if (weather) {
           this.days=this.load_days(weather);
         }  else {
@@ -311,11 +314,12 @@ MyDesklet.prototype = {
         this.cityname.text=this.days['city'];
         for(f=1;f<this.no;f++)
         {
-          this.labels[f].text=this.daynames[this.days[f]['day']];
-          global.log(this.days[f]['day'] + ": " + this.days[f]['weathertext']);
-          this.fwicons[f].set_child(this._getIconImage(this.days[f]['weathertext']));
+          this.labels[f].label=this.daynames[this.days[f]['day']];
+
+          this.fwicons[f].set_child(this._getIconImage(this.days[f]['weathertext']));      
           this.wxtooltip[f].set_text(_(this.days[f]['weathertext']));
-          this.tempd[f].text=this._formatTemerature(this.days[f]['minimum_temperature'])+" - "+this._formatTemerature(this.days[f]['maximum_temperature']);
+          this.max[f].text=this._formatTemerature(this.days[f]['maximum_temperature'], true);
+          this.min[f].text=this._formatTemerature(this.days[f]['minimum_temperature'], true);
           this.winds[f].text=this._formatWindspeed(this.days[f]['wind_speed'], true);
           this.windd[f].text= this.days[f]['wind_direction'];
         }
@@ -425,6 +429,7 @@ MyDesklet.prototype = {
   },
   
   load_days: function (rss) {
+    global.log('entering load_days');
     var days = [];
     
     var parser = new marknote.Parser();
@@ -433,7 +438,7 @@ MyDesklet.prototype = {
     var rootElem = doc.getRootElement();
     var channel = rootElem.getChildElement("channel");
     days['city'] = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
-
+    global.log('City: ' + days['city']);
     var items = channel.getChildElements("item");
     var desc, title;
 
@@ -441,6 +446,8 @@ MyDesklet.prototype = {
     for (var i=0; i<items.length; i++) {
       desc = items[i].getChildElement("description").getText();
       title = items[i].getChildElement("title").getText();
+      data['link'] = items[i].getChildElement("link").getText();
+      global.log('Link: ' + data['link']);
       data['day'] = title.split(':')[0].trim();
       data['weathertext'] = title.split(':')[1].split(',')[0].trim();
       var parts = desc.split(',');
@@ -465,6 +472,7 @@ MyDesklet.prototype = {
   },
   
   getWeather: function(type, callback) {
+    global.log("Called getWeather with type " + type);
     let here = this;
     let url = 'http://open.live.bbc.co.uk/weather/feeds/en/' + this.stationID +'/' + type + '.rss';
     let message = Soup.Message.new('GET', url);
