@@ -21,36 +21,39 @@ const Settings = imports.ui.settings;
 
 const Soup = imports.gi.Soup;
 
-imports.searchPath.push(GLib.get_home_dir()+'/.local/share/cinnamon/desklets/bbcwx@oak-wood.co.uk/');
-const xml = imports.marknote;
-
 const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
 
+const UUID = "bbcwx@oak-wood.co.uk";
+const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
+
+imports.searchPath.push(DESKLET_DIR);
+const xml = imports.marknote;
 
 const _httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
 
-function MyDesklet(metadata,decklet_id){
-  this._init(metadata,decklet_id);
+function MyDesklet(metadata,desklet_id){
+  this._init(metadata,desklet_id);
 }
 
 MyDesklet.prototype = {
   __proto__: Desklet.Desklet.prototype,
     
 
-  _init: function(metadata,decklet_id){
+  _init: function(metadata,desklet_id){
     //############Variables###########
-    this.switch="day";this.daynames={Monday: 'Mo',Tuesday:'Tu', Wednesday:'We', Thursday:'Th', Friday:'Fr', Saturday:'Sa', Sunday:'Su'};
+    this.desklet_id = desklet_id;
+    this.daynames={Monday: _('Mon'),Tuesday: _('Tue'), Wednesday: _('Wed'), Thursday: _('Thu'), Friday: _('Fri'), Saturday: _('Sat'), Sunday: _('Sun')};
     this.fwicons=[];this.labels=[];this.tempd=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
-    this.switch="daytime"
     this.cc=[];this.days=[];
-    this.icon_paths = GLib.get_home_dir()+'/.local/share/cinnamon/desklets/bbcwx@oak-wood.co.uk/icons/';
-    this.metadata = metadata
+    this.icon_paths = DESKLET_DIR + '/icons/';
+    this.metadata = metadata;
     this.update_id = null;
     this.proces=null;
     this.test=0;
     this.no=4;
+    this.creditlink='www.bbc.co.uk/weather';
     this.bbcicons = {
       'clear sky' : '0.png', //night
       'sunny' : '1.png',
@@ -120,7 +123,7 @@ MyDesklet.prototype = {
     try {
       Desklet.Desklet.prototype._init.call(this, metadata);
       //#########################binding configuration file################
-      this.settings = new Settings.DeskletSettings(this, "bbcwx@oak-wood.co.uk", this.desklet_id);                    
+      this.settings = new Settings.DeskletSettings(this, UUID, this.desklet_id);                    
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this._refreshweathers,null);
@@ -132,12 +135,12 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this._refreshweathers,null);
 
             
-      this._menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-      this._menu.addAction(_("Settings"), Lang.bind(this, function() {
-        Util.spawnCommandLine("cinnamon-settings desklets bbcwx@oak-wood.co.uk")  
-      }));
+      //this._menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+      //this._menu.addAction(_("Settings"), Lang.bind(this, function() {
+      //  Util.spawnCommandLine("cinnamon-settings desklets " + UUID)  
+      //}));
 
-      this.helpFile = GLib.get_home_dir() + "/.local/share/cinnamon/desklets/bbcwx@oak-wood.co.uk/README";  
+      this.helpFile = DESKLET_DIR + "/README";  
       this._menu.addAction(_("Help"), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
@@ -264,14 +267,17 @@ MyDesklet.prototype = {
     }
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.forecastchange));
-    this.banner=new St.Button({label: _('Data from www.bbc.co.uk/weather'),style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";",reactive: true,
+    // seems we have to use a button for bannerpre to get the vertical alignment :(
+    this.bannerpre=new St.Button({label: _('Data from '),style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";"});
+    this.banner=new St.Button({label: this.creditlink,style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";",reactive: true,
                           track_hover: true,
                           style_class: 'bbcwx-link'});
     this.banner.connect('clicked', Lang.bind(this, Lang.bind(this, function() {
-        Util.spawnCommandLine("xdg-open http://www.bbc.co.uk/weather");
+        Util.spawnCommandLine("xdg-open http://" + this.creditlink);
       })));
     this.bannertooltip = new Tooltips.Tooltip(this.banner, _('Click to visit the BBC weather website'));
     this.refreshtooltip = new Tooltips.Tooltip(this.but, _('Refresh'));
+    this.buttons.add_actor(this.bannerpre);
     this.buttons.add_actor(this.banner);
     this.buttons.add_actor(this.but);
     this.city.style = "padding:"+10*this.zoom+"px";
@@ -297,14 +303,18 @@ MyDesklet.prototype = {
     
     
       let a = this.getWeather('3dayforecast', function(weather) {
-        this.days=this.load_days(weather);
+        if (weather) {
+          this.days=this.load_days(weather);
+        }  else {
+          this.days['city']=_('No data available');
+        }
         this.cityname.text=this.days['city'];
         for(f=1;f<this.no;f++)
         {
-          this.labels[f].text=this.days[f]['day'].substr(0,3);
+          this.labels[f].text=this.daynames[this.days[f]['day']];
           global.log(this.days[f]['day'] + ": " + this.days[f]['weathertext']);
           this.fwicons[f].set_child(this._getIconImage(this.days[f]['weathertext']));
-          this.wxtooltip[f].set_text(this.days[f]['weathertext']);
+          this.wxtooltip[f].set_text(_(this.days[f]['weathertext']));
           this.tempd[f].text=this._formatTemerature(this.days[f]['minimum_temperature'])+" - "+this._formatTemerature(this.days[f]['maximum_temperature']);
           this.winds[f].text=this._formatWindspeed(this.days[f]['wind_speed'], true);
           this.windd[f].text= this.days[f]['wind_direction'];
@@ -313,9 +323,13 @@ MyDesklet.prototype = {
 
     
       let b = this.getWeather('observations', function(weather) {
-        this.cc=this.set_vars(weather); 
+        if (weather) {
+          this.cc=this.set_vars(weather); 
+        } else {
+          this.cc['weathertext']=_('No data available');
+        }
         this.cwicon.set_child(this._getIconImage(this.cc['weathertext'])); //--refresh
-        this.weathertext.text=this.cc['weathertext'];
+        this.weathertext.text=_(this.cc['weathertext']);
         this.temperature.text = this._formatTemerature(this.cc['temperature'], true);
         this.humidity.text= this.cc['humidity'];
         this.pressure.text=this.cc['pressure'];
@@ -348,7 +362,7 @@ MyDesklet.prototype = {
     var fahr = temp.slice(temp.indexOf('(')+1, temp.length - 3).trim();
     var out = ((this.units==1) ? celsius : fahr);
     if (units) {
-      out += ((this.units==1) ? "\u2103" : "\u2109")
+      out += ((this.units==1) ? _("\u2103") : _("\u2109"))
     }
     return out;
   },
@@ -363,10 +377,10 @@ MyDesklet.prototype = {
       'mps': 0.447
     };
     var unitstring = {
-      'mph': 'mph',
-      'knots': 'kts',
-      'kph': 'km/h',
-      'mps': 'm/s'
+      'mph': _('mph'),
+      'knots': _('kts'),
+      'kph': _('km/h'),
+      'mps': _('m/s')
     }
     var mph = wind.replace('mph', '');
     var out = mph * conversion[this.wunits];
@@ -460,7 +474,7 @@ MyDesklet.prototype = {
         callback.call(here,mes.toString()); 
       } else {
         global.log("Error retrieving address " + url + ". Status: " + message.status_code);
-        callback.call(here,'');
+        callback.call(here,false);
       }
     });
   }, 
@@ -475,7 +489,7 @@ MyDesklet.prototype = {
   }
 }
 
-function main(metadata, decklet_id){
-  let desklet = new MyDesklet(metadata,decklet_id);
+function main(metadata, desklet_id){
+  let desklet = new MyDesklet(metadata,desklet_id);
   return desklet;
 }

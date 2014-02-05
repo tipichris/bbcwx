@@ -1,7 +1,6 @@
 .bbcwx-link {
-        color: #bbbbbb;
-        text-decoration: underline;
+  text-decoration: underline;
 }
 .bbcwx-link:hover {
-        color: #ffffff;
+  text-decoration: none;
 }
