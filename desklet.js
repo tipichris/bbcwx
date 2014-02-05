@@ -173,7 +173,7 @@ MyDesklet.prototype = {
       this.window.style="border-radius: 12px; padding: 5px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
     }
     this._separatorArea.height=5*this.zoom;
-    this.temperature.style="font-size:"+14*this.zoom+"px;text-align:left";
+    //this.temperature.style="font-size:"+14*this.zoom+"px;text-align:left";
 
       
     for(f=1;f<this.no;f++) {
@@ -204,7 +204,7 @@ MyDesklet.prototype = {
     this.labels=[]; this.fwicons=[];this.max=[]; this.min=[]; this.windd=[]; this.winds=[]; this.eachday=[];
     this._forecasticons = new St.BoxLayout({vertical: false,x_align:2}); //---zii/iconita/temperaturi
     this._separatorArea = new St.DrawingArea({ style_class: STYLE_POPUP_SEPARATOR_MENU_ITEM });
-    this.temperature = new St.Label();
+    //this.temperature = new St.Label();
     //this.feelslike = new St.Label();
     this.humidity=new St.Label();
     this.pressure=new St.Label();
@@ -222,12 +222,12 @@ MyDesklet.prototype = {
     
 
     this.city.add_actor(this.cityname); //-------------
-    this.ctemp_captions.add_actor(new St.Label({text: _('Temperature: ')}));  
+    //this.ctemp_captions.add_actor(new St.Label({text: _('Temperature: ')}));  
     //this.ctemp_captions.add_actor(new St.Label({text: _('Feels like: ')}));
     this.ctemp_captions.add_actor(new St.Label({text: _('Humidity: ')}));
     this.ctemp_captions.add_actor(new St.Label({text: _('Pressure: ')}));
     this.ctemp_captions.add_actor(new St.Label({text: _('Wind: ')}));
-    this.ctemp_values.add_actor(this.temperature); //###adauga valori in coloana din dreapta a informatiilor despre temperatura 
+    //this.ctemp_values.add_actor(this.temperature); //###adauga valori in coloana din dreapta a informatiilor despre temperatura 
     //this.ctemp_values.add_actor(this.feelslike);
     this.ctemp_values.add_actor(this.humidity);
     this.ctemp_values.add_actor(this.pressure);
@@ -334,8 +334,8 @@ MyDesklet.prototype = {
           this.cc['weathertext']=_('No data available');
         }
         this.cwicon.set_child(this._getIconImage(this.cc['weathertext'])); //--refresh
-        this.weathertext.text=_(this.cc['weathertext']);
-        this.temperature.text = this._formatTemerature(this.cc['temperature'], true);
+        this.weathertext.text=_(this.cc['weathertext']) + ', ' + this._formatTemerature(this.cc['temperature'], true);
+//        this.temperature.text = this._formatTemerature(this.cc['temperature'], true);
         this.humidity.text= this.cc['humidity'];
         this.pressure.text=this.cc['pressure'];
         this.windspeed.text=this.cc['wind_direction']+ ", " + this._formatWindspeed(this.cc['wind_speed'], true);
