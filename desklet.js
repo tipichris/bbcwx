@@ -14,7 +14,6 @@ const Util = imports.misc.util;
 const Main = imports.ui.main;
 
 const Tooltips = imports.ui.tooltips;  //used?
-const Links = imports.ui.link;
 const PopupMenu = imports.ui.popupMenu;
 const Cinnamon = imports.gi.Cinnamon;
 const Settings = imports.ui.settings;
@@ -161,7 +160,7 @@ MyDesklet.prototype = {
   
   style_change: function() {
     this.cwicon.height=170*this.zoom;this.cwicon.width=200*this.zoom;
-    this.weathertext.style= 'text-align : center; font-size:'+30*this.zoom+'px';
+    this.weathertext.style= 'text-align : center; font-size:'+24*this.zoom+'px';
     this.fwtable.style="spacing-rows: "+2*this.zoom+"px;spacing-columns: "+2*this.zoom+"px;padding: "+5*this.zoom+"px;";
     this.cityname.style="text-align: center;font-size: "+14*this.zoom+"px" ;    
     this.ctemp_captions.style = 'text-align : right;font-size: '+14*this.zoom+"px";
@@ -219,10 +218,9 @@ MyDesklet.prototype = {
     this.container= new St.BoxLayout({vertical: true, x_align: St.Align.MIDDLE, style: "padding-left: 5px;"});//definire coloana dreapta
     this.cweather = new St.BoxLayout({vertical: true}); //definire coloana stangz
     this.cwicon = new St.Bin({height: (170*this.zoom), width: (200*this.zoom)}); //icoana mare cu starea vremii
-    this.weathertext=new St.Label({style: 'text-align : center; font-size:'+30*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
+    this.weathertext=new St.Label({style: 'text-align : center; font-size:'+24*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
     
-    this.cweather.add_actor(this.cwicon); //--adauga icoana
-    this.cweather.add_actor(this.weathertext); //-adauga textul
+
     this.city.add_actor(this.cityname); //-------------
     this.ctemp_captions.add_actor(new St.Label({text: _('Temperature: ')}));  
     //this.ctemp_captions.add_actor(new St.Label({text: _('Feels like: ')}));
@@ -283,10 +281,13 @@ MyDesklet.prototype = {
     this.buttons.add_actor(this.banner);
     this.buttons.add_actor(this.but);
     this.city.style = "padding:"+10*this.zoom+"px";
-    this.container.add_actor(this.city); //--adauga label cu orasul
+    this.ctemp.style = "padding-top:"+10*this.zoom+"px";
     this.container.add_actor(this.ctemp);//-- adauga tabelul cu informatiile depsre vreme     
     this.container.add_actor(this._separatorArea);//--adauga separatorul
     this.container.add_actor(this.fwtable); //--adauga zii/iconite/temperaturi
+    this.cweather.add_actor(this.city); //--adauga label cu orasul
+    this.cweather.add_actor(this.cwicon); //--adauga icoana
+    this.cweather.add_actor(this.weathertext); //-adauga textul
     this.cweather.add_actor(this.buttons); //adauga butonul de jos si probabil si un banner cu accuweather
     this.window.add_actor(this.cweather);
     this.window.add_actor(this.container);
