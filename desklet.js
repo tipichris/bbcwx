@@ -309,13 +309,13 @@ MyDesklet.prototype = {
     this.buttons.add_actor(this.bannerpre);
     this.buttons.add_actor(this.banner);
     this.buttons.add_actor(this.but);
-    this.container.add_actor(this.ctemp);//-- adauga tabelul cu informatiile depsre vreme     
-    this.container.add_actor(this._separatorArea);//--adauga separatorul
-    this.container.add_actor(this.fwtable); //--adauga zii/iconite/temperaturi
-    this.cweather.add_actor(this.city); //--adauga label cu orasul
-    this.cweather.add_actor(this.cwicon); //--adauga icoana
-    this.cweather.add_actor(this.weathertext); //-adauga textul
-    this.container.add_actor(this.buttons); //adauga butonul de jos si probabil si un banner cu accuweather
+    this.container.add_actor(this.ctemp);  
+    this.container.add_actor(this._separatorArea);
+    this.container.add_actor(this.fwtable); 
+    this.cweather.add_actor(this.city);
+    this.cweather.add_actor(this.cwicon);
+    this.cweather.add_actor(this.weathertext);
+    this.container.add_actor(this.buttons);
     this.window.add_actor(this.cweather);
     this.window.add_actor(this.container);
     
