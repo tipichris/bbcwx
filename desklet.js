@@ -1,5 +1,3 @@
-//Hope you like it.i've done this mostly for myself
-//Unfortunately i dont have an accuweather api key to get more info from it.
 
 
 const Gio = imports.gi.Gio;
@@ -7,20 +5,18 @@ const St = imports.gi.St;
 const Desklet = imports.ui.desklet;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
-const Clutter = imports.gi.Clutter;  //used?
+const Clutter = imports.gi.Clutter;  
 const GLib = imports.gi.GLib;
-const Tweener = imports.ui.tweener;  //used?
+const Tweener = imports.ui.tweener;
 const Util = imports.misc.util;
 const Main = imports.ui.main;
 
-const Tooltips = imports.ui.tooltips;  //used?
+const Tooltips = imports.ui.tooltips;
 const PopupMenu = imports.ui.popupMenu;
 const Cinnamon = imports.gi.Cinnamon;
 const Settings = imports.ui.settings;
 
 const Soup = imports.gi.Soup;
-
-const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
 
 const UUID = "bbcwx@oak-wood.co.uk";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
@@ -31,11 +27,22 @@ const xml = imports.marknote;
 const _httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
+// Set up some constants for layout and styling
 const TEXT_SIZE = 14;
 const CC_TEXT_SIZE = 24;
 const LABEL_TEXT_SIZE = 11;
 const LINK_TEXT_SIZE =8;
 const REFRESH_ICON_SIZE=14;
+const TABLE_ROW_SPACING=2;
+const TABLE_COL_SPACING=5;
+const TABLE_PADDING=5;
+const CONTAINER_PADDING=12;
+const ICON_HEIGHT = 40;
+const ICON_WIDTH = 48;
+const CC_ICON_HEIGHT =170;
+const CC_ICON_WIDTH =200;
+const BUTTON_PADDING=3;
+const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
 
 function MyDesklet(metadata,desklet_id){
   this._init(metadata,desklet_id);
@@ -56,7 +63,7 @@ MyDesklet.prototype = {
     this.update_id = null;
     this.proces=null;
     this.test=0;
-    this.no=4;
+    this.no=4; 
     this.creditlink='www.bbc.co.uk/weather';
     this.bbcicons = {
       'clear sky' : '0.png', //night
@@ -160,100 +167,121 @@ MyDesklet.prototype = {
   
   style_change: function() {
     this.window.vertical = (this.layout==1) ? true : false;
-    this.cwicon.height=170*this.zoom;this.cwicon.width=200*this.zoom;
+    this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
-    this.fwtable.style="spacing-rows: "+2*this.zoom+"px;spacing-columns: "+2*this.zoom+"px;padding: "+5*this.zoom+"px;";
+    this.fwtable.style="spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;";
     this.cityname.style="text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px" ;    
     this.ctemp_captions.style = 'text-align : right;font-size: '+TEXT_SIZE*this.zoom+"px";
     this.ctemp_values.style = 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px";
     
     if (this.border) {
-      this.window.style="border: 2px solid "+this.bordercolor+"; border-radius: 12px; padding: 5px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
+      this.window.style="border: 2px solid "+this.bordercolor+"; border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
     }
     else {
-      this.window.style="border-radius: 12px; padding: 5px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
+      this.window.style="border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
     }
     this._separatorArea.height=5*this.zoom;
 
     for(f=1;f<this.no;f++) {
       this.labels[f].style='text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px";
-      this.fwicons[f].height=50*this.zoom;this.fwicons[f].width= 60*this.zoom;
-      this.max[f].style= 'text-align : center;padding: 0 3px; font-size: '+TEXT_SIZE*this.zoom+"px";
-      this.min[f].style= 'text-align : center;padding: 0 3px; font-size: '+TEXT_SIZE*this.zoom+"px";
-      this.winds[f].style= 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px";
-     this.windd[f].style= 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px";
+      this.fwicons[f].height=ICON_HEIGHT*this.zoom;this.fwicons[f].width= ICON_WIDTH*this.zoom;
+      this.max[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      this.min[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      this.winds[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+     this.windd[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
     }
     
-    this.buttons.style="padding-top:"+3*this.zoom+"px;padding-bottom:"+3*this.zoom+"px";
+    this.buttons.style="padding-top:"+BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BUTTON_PADDING*this.zoom+"px";
     
     this.iconbutton.icon_size=REFRESH_ICON_SIZE*this.zoom;
     this.banner.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
     this.bannerpre.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
     
-    this.maxlabel.style = 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
-    this.minlabel.style = 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
-    this.windlabel.style = 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
-    this.winddlabel.style = 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    this.maxlabel.style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    this.minlabel.style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    this.windlabel.style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    this.winddlabel.style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    
+    this.cweather.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
+    if (this.layout==1) {
+      // loose the top padding on container in vertical mode (too much space)
+      this.container.style='padding: 0 ' + CONTAINER_PADDING*this.zoom+'px ' + CONTAINER_PADDING*this.zoom+'px ' + CONTAINER_PADDING*this.zoom+'px ' ;
+    } else {
+      this.container.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
+    }
+    
   },
   
   createwindow: function(){
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
-   
-    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+5*this.zoom+"px;padding-bottom:"+3*this.zoom+"px",x_align:2, y_align:2 });
+    
+    // container for link and refresh icon
+    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BUTTON_PADDING*this.zoom+"px",x_align:2, y_align:2 });
+    // refresh icon
     this.iconbutton=new St.Icon({ icon_name: 'view-refresh-symbolic',
       icon_size: REFRESH_ICON_SIZE*this.zoom+'',
       icon_type: St.IconType.SYMBOLIC,
       style: "padding: 0 0 0 3px;"
     });
-    this.but=new St.Button();
+    this.but=new St.Button(); // container for refresh icon
+    
+    // these will hold the data for the three day forecast
     this.labels=[]; this.fwicons=[];this.max=[]; this.min=[]; this.windd=[]; this.winds=[]; this.eachday=[];
-    this._forecasticons = new St.BoxLayout({vertical: false,x_align:2}); //---zii/iconita/temperaturi
     this._separatorArea = new St.DrawingArea({ style_class: STYLE_POPUP_SEPARATOR_MENU_ITEM });
+    
+    // current weather values
     this.humidity=new St.Label();
     this.pressure=new St.Label();
     this.windspeed=new St.Label();
+    
+    // container for current weather values
     this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px"});
+    // container for current weather labels
     this.ctemp_captions = new St.BoxLayout({vertical: true,style : 'text-align : right'});
+    // container for current weather
     this.ctemp = new St.BoxLayout({vertical: false,x_align: 2});
+    
+    // city and city container
     this.cityname=new St.Label({style: "text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px" });
     this.city=new St.BoxLayout({vertical:true,style: "align: center;"});
+    
+    // container for right (horizontal) or lower (vertical) part of window
     this.container= new St.BoxLayout({vertical: true, x_align: St.Align.MIDDLE, style: "padding-left: 5px;"});//definire coloana dreapta
+    // container for left (horizontal) or upper (vertical) part of window
     this.cweather = new St.BoxLayout({vertical: true}); //definire coloana stangz
-    this.cwicon = new St.Bin({height: (170*this.zoom), width: (200*this.zoom)}); //icoana mare cu starea vremii
+    // current weather icon container
+    this.cwicon = new St.Bin({height: (CC_ICON_HEIGHT*this.zoom), width: (CC_ICON_WIDTH*this.zoom)}); //icoana mare cu starea vremii
+    // current weather text
     this.weathertext=new St.Label({style: 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
     
+    this.city.add_actor(this.cityname); 
 
-    this.city.add_actor(this.cityname); //-------------
-    //this.ctemp_captions.add_actor(new St.Label({text: _('Temperature: ')}));  
-    //this.ctemp_captions.add_actor(new St.Label({text: _('Feels like: ')}));
     this.ctemp_captions.add_actor(new St.Label({text: _('Humidity: ')}));
     this.ctemp_captions.add_actor(new St.Label({text: _('Pressure: ')}));
     this.ctemp_captions.add_actor(new St.Label({text: _('Wind: ')}));
-    //this.ctemp_values.add_actor(this.temperature); //###adauga valori in coloana din dreapta a informatiilor despre temperatura 
-    //this.ctemp_values.add_actor(this.feelslike);
     this.ctemp_values.add_actor(this.humidity);
     this.ctemp_values.add_actor(this.pressure);
     this.ctemp_values.add_actor(this.windspeed);
     this.ctemp.add_actor(this.ctemp_captions); //-adauga coloana din stanga la informatii
     this.ctemp.add_actor(this.ctemp_values);  //adauga coloana din dreapta la informatii     
     
-    this.fwtable =new St.Table({style: "spacing-rows: "+2*this.zoom+"px;spacing-columns: "+2*this.zoom+"px;padding: "+5*this.zoom+"px;"});
-    this.maxlabel = new St.Label({text: _('Max:'), style: 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
-    this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
-    this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
+    // build table to hold three day forecast
+    this.fwtable =new St.Table({style: "spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;"});
+    this.maxlabel = new St.Label({text: _('Max:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
+    this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
+    this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
     this.fwtable.add(this.maxlabel,{row:2,col:0});
     this.fwtable.add(this.minlabel,{row:3,col:0});
     this.fwtable.add(this.windlabel,{row:4,col:0});
-    this.fwtable.add(this.winddlabel,{row:5,col:0});
-    
+    this.fwtable.add(this.winddlabel,{row:5,col:0}); 
     for(f=1;f<this.no;f++) {
       this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+TEXT_SIZE*this.zoom+"px" });
-      this.fwicons[f]=new St.Button({height:40*this.zoom, width: 48*this.zoom});
-      this.max[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      this.min[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      this.winds[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      this.windd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      this.fwicons[f]=new St.Button({height:ICON_HEIGHT*this.zoom, width: ICON_WIDTH*this.zoom});
+      this.max[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      this.min[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      this.winds[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      this.windd[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
       this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
       
       this.fwtable.add(this.labels[f],{row:0,col:f});
@@ -262,10 +290,10 @@ MyDesklet.prototype = {
       this.fwtable.add(this.min[f],{row:3,col:f});
       this.fwtable.add(this.winds[f],{row:4,col:f});
       this.fwtable.add(this.windd[f],{row:5,col:f});
-
     }
+    
     this.but.set_child(this.iconbutton);
-    this.but.connect('clicked', Lang.bind(this, this.forecastchange));
+    this.but.connect('clicked', Lang.bind(this, this._refreshweathers));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
     this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";"});
     this.banner=new St.Button({label: this.creditlink, 
@@ -274,15 +302,13 @@ MyDesklet.prototype = {
       track_hover: true,
       style_class: 'bbcwx-link'});
     this.banner.connect('clicked', Lang.bind(this, function() {
-        Util.spawnCommandLine("xdg-open http://" + this.creditlink);
+        Util.spawnCommandLine("xdg-open http://" + this.creditlink + '/' + this.stationID);
       }));
     this.bannertooltip = new Tooltips.Tooltip(this.banner, _('Click to visit the BBC weather website'));
     this.refreshtooltip = new Tooltips.Tooltip(this.but, _('Refresh'));
     this.buttons.add_actor(this.bannerpre);
     this.buttons.add_actor(this.banner);
     this.buttons.add_actor(this.but);
-    this.city.style = "padding:"+10*this.zoom+"px";
-    this.ctemp.style = "padding-top:"+10*this.zoom+"px";
     this.container.add_actor(this.ctemp);//-- adauga tabelul cu informatiile depsre vreme     
     this.container.add_actor(this._separatorArea);//--adauga separatorul
     this.container.add_actor(this.fwtable); //--adauga zii/iconite/temperaturi
@@ -296,7 +322,7 @@ MyDesklet.prototype = {
   },
   
   _refreshweathers: function() {
-    global.log('Entering _refreshweathers');
+    //global.log('Entering _refreshweathers');
     if (this.proces) {
       if(this.test!=this.no) {
         this.test=this.no;
@@ -304,10 +330,9 @@ MyDesklet.prototype = {
       }
       this.style_change();
       this.setContent(this.window);
-    
-    
+      
+      // process the three day forecast
       let a = this.getWeather('3dayforecast', function(weather) {
-        //global.log("Weather: " + weather)
         if (weather) {
           this.days=this.load_days(weather);
         }  else {
@@ -327,7 +352,7 @@ MyDesklet.prototype = {
         }
       });
 
-    
+      // process current observations
       let b = this.getWeather('observations', function(weather) {
         if (weather) {
           this.cc=this.set_vars(weather); 
@@ -336,7 +361,6 @@ MyDesklet.prototype = {
         }
         this.cwicon.set_child(this._getIconImage(this.cc['weathertext'])); //--refresh
         this.weathertext.text=_(this.cc['weathertext']) + ', ' + this._formatTemerature(this.cc['temperature'], true);
-//        this.temperature.text = this._formatTemerature(this.cc['temperature'], true);
         this.humidity.text= this.cc['humidity'];
         this.pressure.text=this.cc['pressure'];
         this.windspeed.text=this.cc['wind_direction']+ ", " + this._formatWindspeed(this.cc['wind_speed'], true);
@@ -361,6 +385,8 @@ MyDesklet.prototype = {
     return St.TextureCache.get_default().load_uri_async(icon_uri, 200*this.zoom, 200*this.zoom);
   },
   
+  // take a string with both C and F and extract the required 
+  // value. Append unit string if units is true
   _formatTemerature: function(temp, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (!temp) return '';
@@ -373,6 +399,8 @@ MyDesklet.prototype = {
     return out;
   },
 
+  // take a string with speed in mph and convert to required 
+  // units. Append unit string if units is true
   _formatWindspeed: function(wind, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (!wind) return '';
@@ -397,6 +425,7 @@ MyDesklet.prototype = {
     return out;
   },
     
+  // take an rss feed of current observations and extract data into an array
   set_vars: function (rss) {
     var parser = new marknote.Parser();
     var doc = parser.parse(rss);
@@ -430,8 +459,9 @@ MyDesklet.prototype = {
     return cc;
   },
   
+  // take an rss feed of 3 day forecast and extract data into an array
   load_days: function (rss) {
-    global.log('entering load_days');
+    //global.log('entering load_days');
     var days = [];
     
     var parser = new marknote.Parser();
@@ -440,7 +470,7 @@ MyDesklet.prototype = {
     var rootElem = doc.getRootElement();
     var channel = rootElem.getChildElement("channel");
     days['city'] = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
-    global.log('City: ' + days['city']);
+    //global.log('City: ' + days['city']);
     var items = channel.getChildElements("item");
     var desc, title;
 
@@ -449,7 +479,7 @@ MyDesklet.prototype = {
       desc = items[i].getChildElement("description").getText();
       title = items[i].getChildElement("title").getText();
       data['link'] = items[i].getChildElement("link").getText();
-      global.log('Link: ' + data['link']);
+      //global.log('Link: ' + data['link']);
       data['day'] = title.split(':')[0].trim();
       data['weathertext'] = title.split(':')[1].split(',')[0].trim();
       var parts = desc.split(',');
@@ -473,6 +503,8 @@ MyDesklet.prototype = {
     return days;
   },
   
+  // async call to retrieve rss feed. 
+  // -> type: either '3dayforecast' or 'observations'
   getWeather: function(type, callback) {
     global.log("Called getWeather with type " + type);
     let here = this;
@@ -488,10 +520,7 @@ MyDesklet.prototype = {
       }
     });
   }, 
-          
-  forecastchange: function() {
-    this._refreshweathers();  
-  },
+
   
   on_desklet_removed: function() {
     if(this._timeoutId)
