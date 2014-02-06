@@ -7,14 +7,14 @@
   "stationID": {
     "type" : "entry",
     "default" : "2643743",
-    "description" : "Location:",
+    "description" : "Location",
     "tooltip" : "Set your location here"
   },
 
   "units" : {
     "type": "combobox",
     "default" : "1",
-    "description" : "Temperature measurement unit:",
+    "description" : "Temperature measurement unit",
     "options" : {
         "C" : "1",
         "F" : "0"
@@ -25,7 +25,7 @@
   "wunits" : {
     "type": "combobox",
     "default" : "mph",
-    "description" : "Wind speed measurement unit:",
+    "description" : "Wind speed measurement unit",
     "options" : {
         "mph" : "mph",
         "km/h" : "kph",
@@ -43,7 +43,7 @@
   "zoom" : {
     "type": "combobox",
     "default" : "1",
-    "description" : "Scale:",
+    "description" : "Scale",
     "options" : {
       "200%" : "2",
       "150%" : "1.5",
@@ -84,17 +84,17 @@
   "border" : {
     "type" : "checkbox",
     "default" : true,
-    "description": "Border on/off:",
+    "description": "Show border",
     "tooltip": "Check this to turn border on/off"
   },
   
   "bordercolor" : {
     "type" : "colorchooser",
     "default" : "white",
-    "description" : "Border's color:",
+    "description" : "Border colour",
     "indent": true,
     "dependency" : "border",
-    "tooltip" : "Set your custom label here.  This field is unavailable unless the checkbox above is enabled"
+    "tooltip" : "Select the colour for the border. This field is unavailable unless the checkbox above is enabled"
   },
 
   "transparency" : {
@@ -104,20 +104,20 @@
     "max" : 1.0,
     "step" : 0.05,
     "description" : "Transparency:",
-    "tooltip" : "Transparency"
+    "tooltip" : "Set the transparency of the desklet"
   },
   
   "textcolor" : {
     "type": "colorchooser",
     "default" : "rgb(255,255,255)",
-    "description" : "The text's color for the desklet:",
+    "description" : "Text colour",
     "tooltip" : "Click the button to select a new text color"
   },
   
   "bgcolor" : {
     "type": "colorchooser",
     "default" : "rgb(0,0,0)",
-    "description" : "The background color for the desklet:",
+    "description" : "Background colour",
     "tooltip" : "Click the button to select a new background color"
   }
 }

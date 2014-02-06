@@ -84,10 +84,11 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this._refreshweathers,null);
 
 
-      this.helpFile = DESKLET_DIR + "/README";  
+      this.helpFile = DESKLET_DIR + "/help.html"; 
       this._menu.addAction(_("Help"), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
+
            
       this.proces=true;
     
