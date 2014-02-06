@@ -132,6 +132,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"zoom","zoom",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"border","border",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this._refreshweathers,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this._refreshweathers,null);
 
             
       //this._menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
@@ -159,6 +160,7 @@ MyDesklet.prototype = {
   //##########################REFRESH#########################  
   
   style_change: function() {
+    this.window.vertical = (this.layout==1) ? true : false;
     this.cwicon.height=170*this.zoom;this.cwicon.width=200*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+24*this.zoom+'px';
     this.fwtable.style="spacing-rows: "+2*this.zoom+"px;spacing-columns: "+2*this.zoom+"px;padding: "+5*this.zoom+"px;";
@@ -192,7 +194,7 @@ MyDesklet.prototype = {
   },
   
   createwindow: function(){
-    this.window=new St.BoxLayout({vertical: false});
+    this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
    
     this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+5*this.zoom+"px;padding-bottom:"+3*this.zoom+"px",x_align:2, y_align:2 });
     this.iconbutton=new St.Icon({ icon_name: 'view-refresh-symbolic',
@@ -288,7 +290,7 @@ MyDesklet.prototype = {
     this.cweather.add_actor(this.city); //--adauga label cu orasul
     this.cweather.add_actor(this.cwicon); //--adauga icoana
     this.cweather.add_actor(this.weathertext); //-adauga textul
-    this.cweather.add_actor(this.buttons); //adauga butonul de jos si probabil si un banner cu accuweather
+    this.container.add_actor(this.buttons); //adauga butonul de jos si probabil si un banner cu accuweather
     this.window.add_actor(this.cweather);
     this.window.add_actor(this.container);
     

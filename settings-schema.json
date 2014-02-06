@@ -49,6 +49,18 @@
     "tooltip" : "Change the size of the desklet"
   },
   
+  "layout" : {
+    "type": "combobox",
+    "default": "0",
+    "description" : "Layout",
+    "options" : {
+      "Horizontal": "0",
+      "Vertical": "1"
+    },
+    "tooltip": "Set the overall layout of the desklet"
+  },
+      
+  
   "border" : {
     "type" : "checkbox",
     "default" : true,
