@@ -31,16 +31,16 @@ Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefa
 const TEXT_SIZE = 14;
 const CC_TEXT_SIZE = 24;
 const LABEL_TEXT_SIZE = 11;
-const LINK_TEXT_SIZE =8;
+const LINK_TEXT_SIZE = 9;
 const REFRESH_ICON_SIZE=14;
 const TABLE_ROW_SPACING=2;
 const TABLE_COL_SPACING=5;
 const TABLE_PADDING=5;
 const CONTAINER_PADDING=12;
 const ICON_HEIGHT = 40;
-const ICON_WIDTH = 48;
+const ICON_WIDTH = 40;
 const CC_ICON_HEIGHT =170;
-const CC_ICON_WIDTH =200;
+const CC_ICON_WIDTH =170;
 const BUTTON_PADDING=3;
 const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
 
@@ -58,77 +58,13 @@ MyDesklet.prototype = {
     this.daynames={Monday: _('Mon'),Tuesday: _('Tue'), Wednesday: _('Wed'), Thursday: _('Thu'), Friday: _('Fri'), Saturday: _('Sat'), Sunday: _('Sun')};
     this.fwicons=[];this.labels=[];this.max=[];this.min=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
     this.cc=[];this.days=[];
-    this.icon_paths = DESKLET_DIR + '/icons/';
     this.metadata = metadata;
     this.update_id = null;
     this.proces=null;
     this.test=0;
     this.no=4; 
     this.creditlink='www.bbc.co.uk/weather';
-    this.bbcicons = {
-      'clear sky' : '0.png', //night
-      'sunny' : '1.png',
-      'partly cloudy' : '2.png',  //night
-      'sunny intervals' : '3.png',
-      'sand storm' : '4.png', // not confirmed
-      'mist' : '5.png',
-      'fog' : '6.png',
-      'white cloud' : '7.png',
-      'light cloud' : '7.png',
-      'grey cloud' : '8.png',
-      'thick cloud' : '8.png',
-      // light rain shower night 9
-      'light rain shower' : '10.png',
-      'drizzle' : '11.png',
-      'light rain' : '12.png',
-      // heavy rain shower night 13
-      'heavy rain shower' : '14.png',
-      'heavy rain' : '15.png',
-      // sleet shower night 16
-      'sleet shower' : '17.png',
-      'sleet' : '18.png',
-      // 19, 20, 21 ???
-      // light snow shower night 22
-      'light snow shower' : '23.png',
-      'light snow' : '24.png',
-      // heavy snow shower night 25
-      'heavy snow shower' : '26.png',
-      'heavy snow' : '27.png',
-      // thundery shower night 28
-      'thundery shower' : '29.png',
-      'thunder storm' : '30.png',
-      'thunderstorm' : '30.png',
-      'hazy' : '32.png', //not confirmed
-    };
-    
-    this.icons = {
-      'clear sky' : '33.PNG', //night
-      'sunny' : '01.PNG',
-      'partly cloudy' : '38.PNG',  //night
-      'sunny intervals' : '04.PNG',
-      'mist' : '11.PNG',
-      'fog' : '11.PNG',
-      'white cloud' : '07.PNG',
-      'light cloud' : '07.PNG',
-      'grey cloud' : '08.PNG',
-      'thick cloud' : '08.PNG',
-      'light rain shower' : '16.PNG',
-      'drizzle' : '12.PNG',
-      'light rain' : '12.PNG',
-      'heavy rain shower' : '16.PNG',
-      'heavy rain' : '13.PNG',
-      'sleet shower' : '24.PNG',
-      'sleet' : '25.PNG',     
-      'light snow shower' : '21.PNG',
-      'light snow' : '19.PNG',
-      'heavy snow shower' : '23.PNG',
-      'heavy snow' : '22.PNG',
-      'thundery shower' : '17.PNG',
-      'thunder storm' : '15.PNG',
-      'thunderstorm' : '15.PNG',
-      'hazy' : '32.PNG', //not confirmed
-    };
-    
+        
     //################################
 
     try {
@@ -145,6 +81,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"border","border",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this._refreshweathers,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this._refreshweathers,null);
 
 
       this.helpFile = DESKLET_DIR + "/README";  
@@ -359,7 +296,7 @@ MyDesklet.prototype = {
         } else {
           this.cc['weathertext']=_('No data available');
         }
-        this.cwicon.set_child(this._getIconImage(this.cc['weathertext'])); //--refresh
+        this.cwicon.set_child(this._getIconImage(this.cc['weathertext']));
         this.weathertext.text=_(this.cc['weathertext']) + ', ' + this._formatTemerature(this.cc['temperature'], true);
         this.humidity.text= this.cc['humidity'];
         this.pressure.text=this.cc['pressure'];
@@ -371,17 +308,46 @@ MyDesklet.prototype = {
   },
     
   _getIconImage: function(wxtext) {
-    var icon_name = 'DUNNO.PNG';
+    var icon_name = 'na.svg';
+    var iconmap = {
+      'clear sky' : '00', //night
+      'sunny' : '01',
+      'partly cloudy' : '02',  //night
+      'sunny intervals' : '03',
+      'sand storm' : '04', // not confirmed
+      'mist' : '05',
+      'fog' : '06',
+      'white cloud' : '07',
+      'light cloud' : '07',
+      'grey cloud' : '08',
+      'thick cloud' : '08',
+      'light rain shower' : '10',
+      'drizzle' : '11',
+      'light rain' : '12',
+      'heavy rain shower' : '14',
+      'heavy rain' : '15',
+      'sleet shower' : '17',
+      'sleet' : '18',
+      'light snow shower' : '23',
+      'light snow' : '24',
+      'heavy snow shower' : '26',
+      'heavy snow' : '27',
+      'thundery shower' : '29',
+      'thunder storm' : '30',
+      'thunderstorm' : '30',
+      'hazy' : '32'
+    }
+    var icon_ext = '.png';
     wxtext = wxtext.toLowerCase();
     //global.log('wxtext: ' + wxtext);
-    if (typeof this.icons[wxtext] !== "undefined") {
-      icon_name = this.icons[wxtext];
+    if (typeof iconmap[wxtext] !== "undefined") {
+      icon_name = iconmap[wxtext];
     }
       
-    let icon_file = this.icon_paths + icon_name;
+    let icon_file = DESKLET_DIR + '/icons/' + this.iconstyle +'/' + icon_name + icon_ext;
     let file = Gio.file_new_for_path(icon_file);
     let icon_uri = file.get_uri();
-
+    
     return St.TextureCache.get_default().load_uri_async(icon_uri, 200*this.zoom, 200*this.zoom);
   },
   

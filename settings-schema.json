@@ -1,7 +1,7 @@
 {
-  "head" : {
+  "top" : {
     "type" : "header",
-    "description" : "First Section"
+    "description" : "Weather configuration"
   },
 
   "stationID": {
@@ -35,6 +35,11 @@
     "tooltip" : "Measurement units used to display wind speed"
   },
 
+  "display" : {
+    "type" : "header",
+    "description" : "Desklet display"
+  },
+
   "zoom" : {
     "type": "combobox",
     "default" : "1",
@@ -59,7 +64,22 @@
     },
     "tooltip": "Set the overall layout of the desklet"
   },
-      
+
+  "iconstyle" : {
+    "type": "combobox",
+    "default": "colourful",
+    "description" : "Icon style",
+    "options" : {
+      "Colourful": "colourful",
+      "Dark": "dark",
+      "Light": "light",
+      "Flat colourful": "flat_colourful",
+      "Flat black": "flat_black",
+      "Flat white": "flat_white"
+    },
+    "tooltip": "Select the style for the weather icons"
+  },
+
   
   "border" : {
     "type" : "checkbox",
