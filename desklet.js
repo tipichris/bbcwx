@@ -82,7 +82,7 @@ MyDesklet.prototype = {
     this.metadata = metadata;
     this.proces=null;
     this.windowcreated=false;
-    this.no=4; 
+    this.no=3; // number of days to show
     this.creditlink='www.bbc.co.uk/weather';
         
     //################################
@@ -140,7 +140,7 @@ MyDesklet.prototype = {
     }
     this._separatorArea.height=5*this.zoom;
 
-    for(f=1;f<this.no;f++) {
+    for(f=0;f<this.no;f++) {
       this.labels[f].style='text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px";
       this.fwicons[f].height=ICON_HEIGHT*this.zoom;this.fwicons[f].width= ICON_WIDTH*this.zoom;
       this.max[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
@@ -233,7 +233,7 @@ MyDesklet.prototype = {
     this.fwtable.add(this.minlabel,{row:3,col:0});
     this.fwtable.add(this.windlabel,{row:4,col:0});
     this.fwtable.add(this.winddlabel,{row:5,col:0}); 
-    for(f=1;f<this.no;f++) {
+    for(f=0;f<this.no;f++) {
       this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+TEXT_SIZE*this.zoom+"px" });
       this.fwicons[f]=new St.Button({height:ICON_HEIGHT*this.zoom, width: ICON_WIDTH*this.zoom});
       this.max[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
@@ -242,12 +242,12 @@ MyDesklet.prototype = {
       this.windd[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
       this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
       
-      this.fwtable.add(this.labels[f],{row:0,col:f});
-      this.fwtable.add(this.fwicons[f],{row:1,col:f});
-      this.fwtable.add(this.max[f],{row:2,col:f});
-      this.fwtable.add(this.min[f],{row:3,col:f});
-      this.fwtable.add(this.winds[f],{row:4,col:f});
-      this.fwtable.add(this.windd[f],{row:5,col:f});
+      this.fwtable.add(this.labels[f],{row:0,col:f+1});
+      this.fwtable.add(this.fwicons[f],{row:1,col:f+1});
+      this.fwtable.add(this.max[f],{row:2,col:f+1});
+      this.fwtable.add(this.min[f],{row:3,col:f+1});
+      this.fwtable.add(this.winds[f],{row:4,col:f+1});
+      this.fwtable.add(this.windd[f],{row:5,col:f+1});
     }
     
     this.but.set_child(this.iconbutton);
@@ -299,7 +299,7 @@ MyDesklet.prototype = {
           this.days['city']=_('No data available');
         }
         this.cityname.text=this.days['city'];
-        for(f=1;f<this.no;f++)
+        for(f=0;f<this.no;f++)
         {
           this.labels[f].label=this.daynames[this.days[f]['day']];
 
@@ -489,7 +489,7 @@ MyDesklet.prototype = {
         }
         data[k] = v;
       }
-      days[i+1] = data;
+      days[i] = data;
       data = [];
     }
     //global.log('returning from load_days');
