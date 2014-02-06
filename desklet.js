@@ -80,9 +80,8 @@ MyDesklet.prototype = {
     this.fwicons=[];this.labels=[];this.max=[];this.min=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
     this.cc=[];this.days=[];
     this.metadata = metadata;
-    this.update_id = null;
     this.proces=null;
-    this.test=0;
+    this.windowcreated=false;
     this.no=4; 
     this.creditlink='www.bbc.co.uk/weather';
         
@@ -283,9 +282,11 @@ MyDesklet.prototype = {
   _refreshweathers: function() {
     //global.log('Entering _refreshweathers');
     if (this.proces) {
-      if(this.test!=this.no) {
-        this.test=this.no;
+      let now=new Date().toLocaleFormat('%H:%M:%S');
+      global.log("bbcwx: refreshing forecast at " + now);
+      if(!this.windowcreated) {
         this.createwindow(); 
+        this.windowcreated=true;
       }
       this.style_change();
       this.setContent(this.window);
@@ -324,11 +325,15 @@ MyDesklet.prototype = {
         this.pressure.text=this.cc['pressure'];
         this.windspeed.text=this.cc['wind_direction']+ ", " + this._formatWindspeed(this.cc['wind_speed'], true);
       });
-    
+      
+      if(this._timeoutId) {
+        Mainloop.source_remove(this._timeoutId);
+      }
+      
       this._timeoutId=Mainloop.timeout_add_seconds(600 + Math.round(Math.random()*120), Lang.bind(this, this._refreshweathers));
     }
   },
-    
+
   _getIconImage: function(wxtext) {
     var icon_name = 'na.svg';
     var iconmap = {
@@ -487,14 +492,14 @@ MyDesklet.prototype = {
       days[i+1] = data;
       data = [];
     }
-    global.log('returning from load_days');
+    //global.log('returning from load_days');
     return days;
   },
   
   // async call to retrieve rss feed. 
   // -> type: either '3dayforecast' or 'observations'
   getWeather: function(type, callback) {
-    global.log("Called getWeather with type " + type);
+    //global.log("Called getWeather with type " + type);
     let here = this;
     let url = 'http://open.live.bbc.co.uk/weather/feeds/en/' + this.stationID +'/' + type + '.rss';
     let message = Soup.Message.new('GET', url);
@@ -512,8 +517,8 @@ MyDesklet.prototype = {
   
   on_desklet_removed: function() {
     if(this._timeoutId)
-    {Mainloop.source_remove(this._timeoutId);}
-  }
+      {Mainloop.source_remove(this._timeoutId);}
+    }
 }
 
 function main(metadata, desklet_id){
