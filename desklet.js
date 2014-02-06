@@ -31,6 +31,11 @@ const xml = imports.marknote;
 const _httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
+const TEXT_SIZE = 14;
+const CC_TEXT_SIZE = 24;
+const LABEL_TEXT_SIZE = 11;
+const LINK_TEXT_SIZE =8;
+const REFRESH_ICON_SIZE=14;
 
 function MyDesklet(metadata,desklet_id){
   this._init(metadata,desklet_id);
@@ -134,18 +139,12 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this._refreshweathers,null);
 
-            
-      //this._menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-      //this._menu.addAction(_("Settings"), Lang.bind(this, function() {
-      //  Util.spawnCommandLine("cinnamon-settings desklets " + UUID)  
-      //}));
 
       this.helpFile = DESKLET_DIR + "/README";  
       this._menu.addAction(_("Help"), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
-      
-      
+           
       this.proces=true;
     
       this._refreshweathers();
@@ -162,12 +161,12 @@ MyDesklet.prototype = {
   style_change: function() {
     this.window.vertical = (this.layout==1) ? true : false;
     this.cwicon.height=170*this.zoom;this.cwicon.width=200*this.zoom;
-    this.weathertext.style= 'text-align : center; font-size:'+24*this.zoom+'px';
+    this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
     this.fwtable.style="spacing-rows: "+2*this.zoom+"px;spacing-columns: "+2*this.zoom+"px;padding: "+5*this.zoom+"px;";
-    this.cityname.style="text-align: center;font-size: "+14*this.zoom+"px" ;    
-    this.ctemp_captions.style = 'text-align : right;font-size: '+14*this.zoom+"px";
-    this.ctemp_values.style = 'text-align : left; font-size: '+14*this.zoom+"px";
-    // this._separatorArea.width = 200*this.zoom;
+    this.cityname.style="text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px" ;    
+    this.ctemp_captions.style = 'text-align : right;font-size: '+TEXT_SIZE*this.zoom+"px";
+    this.ctemp_values.style = 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px";
+    
     if (this.border) {
       this.window.style="border: 2px solid "+this.bordercolor+"; border-radius: 12px; padding: 5px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
     }
@@ -175,22 +174,26 @@ MyDesklet.prototype = {
       this.window.style="border-radius: 12px; padding: 5px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
     }
     this._separatorArea.height=5*this.zoom;
-    //this.temperature.style="font-size:"+14*this.zoom+"px;text-align:left";
 
-      
     for(f=1;f<this.no;f++) {
-      this.labels[f].style='text-align : center;font-size: '+14*this.zoom+"px";
+      this.labels[f].style='text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px";
       this.fwicons[f].height=50*this.zoom;this.fwicons[f].width= 60*this.zoom;
-      this.max[f].style= 'text-align : center;padding: 0 3px; font-size: '+14*this.zoom+"px";
-      this.min[f].style= 'text-align : center;padding: 0 3px; font-size: '+14*this.zoom+"px";
-      this.winds[f].style= 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px";
-     this.windd[f].style= 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px";
+      this.max[f].style= 'text-align : center;padding: 0 3px; font-size: '+TEXT_SIZE*this.zoom+"px";
+      this.min[f].style= 'text-align : center;padding: 0 3px; font-size: '+TEXT_SIZE*this.zoom+"px";
+      this.winds[f].style= 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px";
+     this.windd[f].style= 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px";
     }
     
     this.buttons.style="padding-top:"+3*this.zoom+"px;padding-bottom:"+3*this.zoom+"px";
     
-    this.iconbutton.icon_size=14*this.zoom;
-    this.banner.style='font-size: '+8*this.zoom+"px"; 
+    this.iconbutton.icon_size=REFRESH_ICON_SIZE*this.zoom;
+    this.banner.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
+    this.bannerpre.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
+    
+    this.maxlabel.style = 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    this.minlabel.style = 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    this.windlabel.style = 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    this.winddlabel.style = 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
   },
   
   createwindow: function(){
@@ -198,7 +201,7 @@ MyDesklet.prototype = {
    
     this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+5*this.zoom+"px;padding-bottom:"+3*this.zoom+"px",x_align:2, y_align:2 });
     this.iconbutton=new St.Icon({ icon_name: 'view-refresh-symbolic',
-      icon_size: 14*this.zoom+'',
+      icon_size: REFRESH_ICON_SIZE*this.zoom+'',
       icon_type: St.IconType.SYMBOLIC,
       style: "padding: 0 0 0 3px;"
     });
@@ -206,21 +209,18 @@ MyDesklet.prototype = {
     this.labels=[]; this.fwicons=[];this.max=[]; this.min=[]; this.windd=[]; this.winds=[]; this.eachday=[];
     this._forecasticons = new St.BoxLayout({vertical: false,x_align:2}); //---zii/iconita/temperaturi
     this._separatorArea = new St.DrawingArea({ style_class: STYLE_POPUP_SEPARATOR_MENU_ITEM });
-    //this.temperature = new St.Label();
-    //this.feelslike = new St.Label();
     this.humidity=new St.Label();
     this.pressure=new St.Label();
     this.windspeed=new St.Label();
-    this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+14*this.zoom+"px"});
-    //this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+14*this.zoom+"px"});
+    this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px"});
     this.ctemp_captions = new St.BoxLayout({vertical: true,style : 'text-align : right'});
     this.ctemp = new St.BoxLayout({vertical: false,x_align: 2});
-    this.cityname=new St.Label({style: "text-align: center;font-size: "+14*this.zoom+"px" });
+    this.cityname=new St.Label({style: "text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px" });
     this.city=new St.BoxLayout({vertical:true,style: "align: center;"});
     this.container= new St.BoxLayout({vertical: true, x_align: St.Align.MIDDLE, style: "padding-left: 5px;"});//definire coloana dreapta
     this.cweather = new St.BoxLayout({vertical: true}); //definire coloana stangz
     this.cwicon = new St.Bin({height: (170*this.zoom), width: (200*this.zoom)}); //icoana mare cu starea vremii
-    this.weathertext=new St.Label({style: 'text-align : center; font-size:'+24*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
+    this.weathertext=new St.Label({style: 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
     
 
     this.city.add_actor(this.cityname); //-------------
@@ -238,23 +238,22 @@ MyDesklet.prototype = {
     this.ctemp.add_actor(this.ctemp_values);  //adauga coloana din dreapta la informatii     
     
     this.fwtable =new St.Table({style: "spacing-rows: "+2*this.zoom+"px;spacing-columns: "+2*this.zoom+"px;padding: "+5*this.zoom+"px;"});
-    this.fwtable.add(new St.Label({text: _('Max:'), style: 'text-align : right;padding: 0 3px;font-size: '+11*this.zoom+"px"}),{row:2,col:0});
-    this.fwtable.add(new St.Label({text: _('Min:'), style: 'text-align : right;padding: 0 3px;font-size: '+11*this.zoom+"px"}),{row:3,col:0});
-    this.fwtable.add(new St.Label({text: _('Wind:'), style: 'text-align : right;padding: 0 3px;font-size: '+11*this.zoom+"px"}),{row:4,col:0});
-    this.fwtable.add(new St.Label({text: _('Dir:'), style: 'text-align : right;padding: 0 3px;font-size: '+11*this.zoom+"px"}),{row:5,col:0});
-    
-//    this.tempd[0]=new St.Label({text: _('Temp: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-//    this.winds[0]=new St.Label({text: _('Wind: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-//    this.windd[0]=new St.Label({text: _('Dir: '), style: 'text-align : right;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-
+    this.maxlabel = new St.Label({text: _('Max:'), style: 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
+    this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
+    this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;padding: 0 3px;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
+    this.fwtable.add(this.maxlabel,{row:2,col:0});
+    this.fwtable.add(this.minlabel,{row:3,col:0});
+    this.fwtable.add(this.windlabel,{row:4,col:0});
+    this.fwtable.add(this.winddlabel,{row:5,col:0});
     
     for(f=1;f<this.no;f++) {
-      this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+14*this.zoom+"px" });
+      this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+TEXT_SIZE*this.zoom+"px" });
       this.fwicons[f]=new St.Button({height:40*this.zoom, width: 48*this.zoom});
-      this.max[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-      this.min[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-      this.winds[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
-      this.windd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+14*this.zoom+"px"});
+      this.max[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      this.min[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      this.winds[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      this.windd[f]=new St.Label({style: 'text-align : center;padding: 0 3px;font-size: '+TEXT_SIZE*this.zoom+"px"});
       this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
       
       this.fwtable.add(this.labels[f],{row:0,col:f});
@@ -268,9 +267,9 @@ MyDesklet.prototype = {
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.forecastchange));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
-    this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";"});
+    this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";"});
     this.banner=new St.Button({label: this.creditlink, 
-      style: 'font-size: '+8*this.zoom+"px; color: " + this.textcolor + ";",
+      style: 'font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";",
       reactive: true,
       track_hover: true,
       style_class: 'bbcwx-link'});
