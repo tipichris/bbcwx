@@ -283,7 +283,7 @@ MyDesklet.prototype = {
     //global.log('Entering _refreshweathers');
     if (this.proces) {
       let now=new Date().toLocaleFormat('%H:%M:%S');
-      global.log("bbcwx: refreshing forecast at " + now);
+      global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
       if(!this.windowcreated) {
         this.createwindow(); 
         this.windowcreated=true;
@@ -302,8 +302,9 @@ MyDesklet.prototype = {
         for(f=0;f<this.no;f++)
         {
           this.labels[f].label=this.daynames[this.days[f]['day']];
-
-          this.fwicons[f].set_child(this._getIconImage(this.days[f]['weathertext']));      
+          let fwiconimage = this._getIconImage(this.days[f]['weathertext']);
+          fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
+          this.fwicons[f].set_child(fwiconimage);      
           this.wxtooltip[f].set_text(_(this.days[f]['weathertext']));
           this.max[f].text=this._formatTemerature(this.days[f]['maximum_temperature'], true);
           this.min[f].text=this._formatTemerature(this.days[f]['minimum_temperature'], true);
@@ -320,7 +321,7 @@ MyDesklet.prototype = {
           this.cc['weathertext']=_('No data available');
         }
         let cwimage=this._getIconImage(this.cc['weathertext']);
-        cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom)
+        cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
         this.cwicon.set_child(cwimage);
         this.weathertext.text=_(this.cc['weathertext']) + ', ' + this._formatTemerature(this.cc['temperature'], true);
         this.humidity.text= this.cc['humidity'];
@@ -328,7 +329,7 @@ MyDesklet.prototype = {
         this.windspeed.text=_(this.cc['wind_direction']) + ", " + this._formatWindspeed(this.cc['wind_speed'], true);
       });
       
-      if(this._timeoutId) {
+      if(this._timeoutId != undefined) {
         Mainloop.source_remove(this._timeoutId);
       }
       
@@ -510,7 +511,7 @@ MyDesklet.prototype = {
         let mes = message.response_body.data;
         callback.call(here,mes.toString()); 
       } else {
-        global.log("Error retrieving address " + url + ". Status: " + message.status_code);
+        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
         callback.call(here,false);
       }
     });
@@ -518,7 +519,7 @@ MyDesklet.prototype = {
 
   
   on_desklet_removed: function() {
-    if(this._timeoutId)
+    if(this._timeoutId != undefined)
       {Mainloop.source_remove(this._timeoutId);}
     }
 }

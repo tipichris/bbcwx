@@ -2,5 +2,6 @@
     "description": "BBC Weather Desklet", 
     "last-edited": "1391160776", 
     "name": "BBC Weather Desklet", 
-    "uuid": "bbcwx@oak-wood.co.uk"
+    "uuid": "bbcwx@oak-wood.co.uk",
+    "max-instances": "10"
 }
