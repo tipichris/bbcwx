@@ -4,7 +4,7 @@
  * 
  * Copyright 2014 Chris Hastie. Forked from accudesk@logan; original
  * code Copyright 2013 loganj. Includes the marknote library, Copyright
- * 2011 jbulb.org. Icons Copyright 2013 Merlin the Red. See help.html
+ * 2011 jbulb.org. Icons Copyright 2010 Merlin the Red. See help.html
  * for further credits and license information.
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -319,7 +319,9 @@ MyDesklet.prototype = {
         } else {
           this.cc['weathertext']=_('No data available');
         }
-        this.cwicon.set_child(this._getIconImage(this.cc['weathertext']));
+        let cwimage=this._getIconImage(this.cc['weathertext']);
+        cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom)
+        this.cwicon.set_child(cwimage);
         this.weathertext.text=_(this.cc['weathertext']) + ', ' + this._formatTemerature(this.cc['temperature'], true);
         this.humidity.text= this.cc['humidity'];
         this.pressure.text=this.cc['pressure'];
