@@ -3,8 +3,8 @@
  * from the BBC's RSS feed.
  * 
  * Copyright 2014 Chris Hastie. Forked from accudesk@logan; original
- * code Copyright loganj. Includes the marknote library, Copyright
- * 2011 jbulb.org. Icons Copyright Merlin the Red. See help.html
+ * code Copyright 2013 loganj. Includes the marknote library, Copyright
+ * 2011 jbulb.org. Icons Copyright 2013 Merlin the Red. See help.html
  * for further credits and license information.
  * 
  * This program is free software: you can redistribute it and/or modify
