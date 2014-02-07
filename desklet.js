@@ -308,7 +308,7 @@ MyDesklet.prototype = {
           this.max[f].text=this._formatTemerature(this.days[f]['maximum_temperature'], true);
           this.min[f].text=this._formatTemerature(this.days[f]['minimum_temperature'], true);
           this.winds[f].text=this._formatWindspeed(this.days[f]['wind_speed'], true);
-          this.windd[f].text= this.days[f]['wind_direction'];
+          this.windd[f].text= _(this.days[f]['wind_direction']);
         }
       });
 
@@ -323,7 +323,7 @@ MyDesklet.prototype = {
         this.weathertext.text=_(this.cc['weathertext']) + ', ' + this._formatTemerature(this.cc['temperature'], true);
         this.humidity.text= this.cc['humidity'];
         this.pressure.text=this.cc['pressure'];
-        this.windspeed.text=this.cc['wind_direction']+ ", " + this._formatWindspeed(this.cc['wind_speed'], true);
+        this.windspeed.text=_(this.cc['wind_direction']) + ", " + this._formatWindspeed(this.cc['wind_speed'], true);
       });
       
       if(this._timeoutId) {
