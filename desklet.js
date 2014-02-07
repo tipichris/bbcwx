@@ -91,18 +91,18 @@ MyDesklet.prototype = {
       Desklet.Desklet.prototype._init.call(this, metadata);
       //#########################binding configuration file################
       this.settings = new Settings.DeskletSettings(this, UUID, this.desklet_id);                    
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"transparency","transparency",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"textcolor","textcolor",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bgcolor","bgcolor",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"zoom","zoom",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"border","border",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this._refreshweathers,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"citystyle","citystyle",this._refreshweathers,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this.updateForecast,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"transparency","transparency",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"textcolor","textcolor",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bgcolor","bgcolor",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"zoom","zoom",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"border","border",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"citystyle","citystyle",this.updateStyle,null);
 
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
@@ -113,7 +113,7 @@ MyDesklet.prototype = {
            
       this.proces=true;
     
-      this._refreshweathers();
+      this.initForecast();
       
     }
     catch (e) {
@@ -123,8 +123,16 @@ MyDesklet.prototype = {
   },
 
   //##########################REFRESH#########################  
+    
+  updateStyle: function() {
+    global.log("bbcwx (instance " + this.desklet_id + "): entering updateStyle");
+    this._update_style();
+    this.displayForecast();
+    this.displayCurrent();
+  },
   
-  style_change: function() {
+  _update_style: function() {
+    global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
     this.window.vertical = (this.layout==1) ? true : false;
     this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
@@ -172,6 +180,7 @@ MyDesklet.prototype = {
   },
   
   createwindow: function(){
+    global.log("bbcwx (instance " + this.desklet_id + "): entering createwindow");
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
     
     // container for link and refresh icon
@@ -252,7 +261,7 @@ MyDesklet.prototype = {
     }
     
     this.but.set_child(this.iconbutton);
-    this.but.connect('clicked', Lang.bind(this, this._refreshweathers));
+    this.but.connect('clicked', Lang.bind(this, this.updateForecast));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
     this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";"});
     this.banner=new St.Button({label: this.creditlink, 
@@ -280,66 +289,102 @@ MyDesklet.prototype = {
     
   },
   
-  _refreshweathers: function() {
-    //global.log('Entering _refreshweathers');
+  updateForecast: function() {
+    global.log("bbcwx (instance " + this.desklet_id + "): entering updateForecast");
+    this._refreshweathers();
+  },
+  
+  initForecast: function() {
+    global.log("bbcwx (instance " + this.desklet_id + "): entering initForecast");
     if (this.proces) {
-      let now=new Date().toLocaleFormat('%H:%M:%S');
-      global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
       if(!this.windowcreated) {
         this.createwindow(); 
         this.windowcreated=true;
       }
-      this.style_change();
-      this.setContent(this.window);
-      
-      // process the three day forecast
-      let a = this.getWeather('3dayforecast', function(weather) {
-        if (weather) {
-          this.days=this.load_days(weather);
-        }  else {
-          this.days['city']=_('No data available');
-        }
-        this.cityname.text=this.days['city'];
-        for(f=0;f<this.no;f++)
-        {
-          this.labels[f].label=this.daynames[this.days[f]['day']];
-          let fwiconimage = this._getIconImage(this.days[f]['weathertext']);
-          fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
-          this.fwicons[f].set_child(fwiconimage);      
-          this.wxtooltip[f].set_text(_(this.days[f]['weathertext']));
-          this.max[f].text=this._formatTemerature(this.days[f]['maximum_temperature'], true);
-          this.min[f].text=this._formatTemerature(this.days[f]['minimum_temperature'], true);
-          this.winds[f].text=this._formatWindspeed(this.days[f]['wind_speed'], true);
-          this.windd[f].text= _(this.days[f]['wind_direction']);
-        }
-      });
-
-      // process current observations
-      let b = this.getWeather('observations', function(weather) {
-        if (weather) {
-          this.cc=this.set_vars(weather); 
-        } else {
-          this.cc['weathertext']=_('No data available');
-        }
-        let cwimage=this._getIconImage(this.cc['weathertext']);
-        cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
-        this.cwicon.set_child(cwimage);
-        this.weathertext.text=_(this.cc['weathertext']) + ', ' + this._formatTemerature(this.cc['temperature'], true);
-        this.humidity.text= this.cc['humidity'];
-        this.pressure.text=this.cc['pressure'];
-        this.windspeed.text=_(this.cc['wind_direction']) + ", " + this._formatWindspeed(this.cc['wind_speed'], true);
-      });
-      
-      if(this._timeoutId != undefined) {
-        Mainloop.source_remove(this._timeoutId);
-      }
-      
-      this._timeoutId=Mainloop.timeout_add_seconds(600 + Math.round(Math.random()*120), Lang.bind(this, this._refreshweathers));
+      this._update_style();
+      this.setContent(this.window);    
+      this._refreshweathers(); 
     }
   },
+  
+  _refreshweathers: function() {
+    let now=new Date().toLocaleFormat('%H:%M:%S');
+    global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
+    
+    // empty the arrays first, in case the refresh fails - don't want stale data left
+    this.cc = [];
+    this._emptyDays();
+    
+    // process the three day forecast
+    let a = this.getWeather('3dayforecast', function(weather) {
+      if (weather) {
+        this.days=this.load_days(weather);
+      }  else {
+        this.days['city']=_('No data available');
+      }
+      this.displayForecast();
+    });
 
+    // process current observations
+    let b = this.getWeather('observations', function(weather) {
+      if (weather) {
+        this.cc=this.set_vars(weather); 
+      } else {
+        this.cc['weathertext']=_('No data available');
+      }
+      this.displayCurrent();
+    });
+    
+    if(this._timeoutId != undefined) {
+      Mainloop.source_remove(this._timeoutId);
+    }
+    
+    this._timeoutId=Mainloop.timeout_add_seconds(600 + Math.round(Math.random()*120), Lang.bind(this, this.updateForecast));
+  },
+
+  
+  _emptyDays: function() {
+    for(f=0;f<this.no;f++) {
+      this.days[f]=[];
+      this.days[f]['day'] = '';
+      this.days[f]['weathertext'] = '';
+      this.days[f]['maximum_temperature'] = '';
+      this.days[f]['minimum_temperature'] = '';
+      this.days[f]['wind_speed'] = '';
+      this.days[f]['wind_direction'] = '';
+    }      
+  },
+  
+  displayForecast: function() {
+    global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
+    this.cityname.text=this.days['city'];
+    for(f=0;f<this.no;f++)
+    {
+      this.labels[f].label=((this.daynames[this.days[f]['day']]) ? this.daynames[this.days[f]['day']] : '');
+      let fwiconimage = this._getIconImage(this.days[f]['weathertext']);
+      fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
+      this.fwicons[f].set_child(fwiconimage);      
+      this.wxtooltip[f].set_text(((this.days[f]['weathertext']) ? _(this.days[f]['weathertext']) : _('No data available')));
+      this.max[f].text=this._formatTemerature(this.days[f]['maximum_temperature'], true);
+      this.min[f].text=this._formatTemerature(this.days[f]['minimum_temperature'], true);
+      this.winds[f].text=this._formatWindspeed(this.days[f]['wind_speed'], true);
+      this.windd[f].text= ((this.days[f]['wind_direction']) ? _(this.days[f]['wind_direction']) : '');
+    }    
+  },
+  
+  displayCurrent: function(){
+    global.log("bbcwx (instance " + this.desklet_id + "): entering displayCurrent");
+    let cwimage=this._getIconImage(this.cc['weathertext']);
+    cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
+    this.cwicon.set_child(cwimage);
+    this.weathertext.text=_(this.cc['weathertext']) + ((this.cc['temperature']) ? ', ' + this._formatTemerature(this.cc['temperature'], true) : '');
+    this.humidity.text= ((this.cc['humidity']) ? this.cc['humidity'] : '');
+    this.pressure.text=((this.cc['pressure']) ? this.cc['pressure'] : '');
+    this.windspeed.text=((this.cc['wind_direction']) ? _(this.cc['wind_direction']) + ", " + this._formatWindspeed(this.cc['wind_speed'], true) : '');    
+  },
+  
   _getIconImage: function(wxtext) {
-    let icon_name = 'na.svg';
+    let icon_name = 'na';
     let iconmap = {
       'clear sky' : '00', //night
       'sunny' : '01',
@@ -369,10 +414,11 @@ MyDesklet.prototype = {
       'hazy' : '32'
     }
     let icon_ext = '.png';
-    wxtext = wxtext.toLowerCase();
-    //global.log('wxtext: ' + wxtext);
-    if (typeof iconmap[wxtext] !== "undefined") {
-      icon_name = iconmap[wxtext];
+    if (wxtext) {
+      wxtext = wxtext.toLowerCase();
+      if (typeof iconmap[wxtext] !== "undefined") {
+        icon_name = iconmap[wxtext];
+      }
     }
       
     let icon_file = DESKLET_DIR + '/icons/' + this.iconstyle +'/' + icon_name + icon_ext;
@@ -386,7 +432,7 @@ MyDesklet.prototype = {
   // value. Append unit string if units is true
   _formatTemerature: function(temp, units) {
     units = typeof units !== 'undefined' ? units : false;
-    if (!temp) return '';
+    if (!temp) return ''; 
     let celsius = temp.slice(0, temp.indexOf('C')-1).trim();
     let fahr = temp.slice(temp.indexOf('(')+1, temp.length - 3).trim();
     let out = ((this.units==1) ? celsius : fahr);
@@ -503,7 +549,7 @@ MyDesklet.prototype = {
   // async call to retrieve rss feed. 
   // -> type: either '3dayforecast' or 'observations'
   getWeather: function(type, callback) {
-    //global.log("Called getWeather with type " + type);
+    global.log("Called getWeather with type " + type);
     let here = this;
     let url = 'http://open.live.bbc.co.uk/weather/feeds/en/' + this.stationID +'/' + type + '.rss';
     let message = Soup.Message.new('GET', url);
