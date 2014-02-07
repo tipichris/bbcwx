@@ -102,6 +102,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this._refreshweathers,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this._refreshweathers,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"citystyle","citystyle",this._refreshweathers,null);
 
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
@@ -128,7 +129,7 @@ MyDesklet.prototype = {
     this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
     this.fwtable.style="spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;";
-    this.cityname.style="text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px" ;    
+    this.cityname.style="text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
     this.ctemp_captions.style = 'text-align : right;font-size: '+TEXT_SIZE*this.zoom+"px";
     this.ctemp_values.style = 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px";
     

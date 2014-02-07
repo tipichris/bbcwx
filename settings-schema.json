@@ -35,6 +35,10 @@
     "tooltip" : "Measurement units used to display wind speed"
   },
 
+  "displaysep" : {
+    "type" : "separator"
+  },
+
   "display" : {
     "type" : "header",
     "description" : "Desklet display"
@@ -67,7 +71,7 @@
 
   "iconstyle" : {
     "type": "combobox",
-    "default": "colourful",
+    "default": "light",
     "description" : "Icon style",
     "options" : {
       "Colourful": "colourful",
@@ -80,10 +84,16 @@
     "tooltip": "Select the style for the weather icons"
   },
 
+  "citystyle" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Bold city name",
+    "tooltip": "Check to display the city name in bold"
+  },
   
   "border" : {
     "type" : "checkbox",
-    "default" : true,
+    "default" : false,
     "description": "Show border",
     "tooltip": "Check this to turn border on/off"
   },
