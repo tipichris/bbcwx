@@ -338,8 +338,8 @@ MyDesklet.prototype = {
   },
 
   _getIconImage: function(wxtext) {
-    var icon_name = 'na.svg';
-    var iconmap = {
+    let icon_name = 'na.svg';
+    let iconmap = {
       'clear sky' : '00', //night
       'sunny' : '01',
       'partly cloudy' : '02',  //night
@@ -367,7 +367,7 @@ MyDesklet.prototype = {
       'thunderstorm' : '30',
       'hazy' : '32'
     }
-    var icon_ext = '.png';
+    let icon_ext = '.png';
     wxtext = wxtext.toLowerCase();
     //global.log('wxtext: ' + wxtext);
     if (typeof iconmap[wxtext] !== "undefined") {
@@ -386,9 +386,9 @@ MyDesklet.prototype = {
   _formatTemerature: function(temp, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (!temp) return '';
-    var celsius = temp.slice(0, temp.indexOf('C')-1).trim();
-    var fahr = temp.slice(temp.indexOf('(')+1, temp.length - 3).trim();
-    var out = ((this.units==1) ? celsius : fahr);
+    let celsius = temp.slice(0, temp.indexOf('C')-1).trim();
+    let fahr = temp.slice(temp.indexOf('(')+1, temp.length - 3).trim();
+    let out = ((this.units==1) ? celsius : fahr);
     if (units) {
       out += ((this.units==1) ? _("\u2103") : _("\u2109"))
     }
@@ -400,20 +400,20 @@ MyDesklet.prototype = {
   _formatWindspeed: function(wind, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (!wind) return '';
-    var conversion = {
+    let conversion = {
       'mph': 1,
       'knots': 0.869,
       'kph': 1.6,
       'mps': 0.447
     };
-    var unitstring = {
+    let unitstring = {
       'mph': _('mph'),
       'knots': _('kts'),
       'kph': _('km/h'),
       'mps': _('m/s')
     }
-    var mph = wind.replace('mph', '');
-    var out = mph * conversion[this.wunits];
+    let mph = wind.replace('mph', '');
+    let out = mph * conversion[this.wunits];
     out = out.toFixed(0);
     if (units) {
       out += unitstring[this.wunits];
@@ -423,26 +423,26 @@ MyDesklet.prototype = {
     
   // take an rss feed of current observations and extract data into an array
   set_vars: function (rss) {
-    var parser = new marknote.Parser();
-    var doc = parser.parse(rss);
-    var rootElem = doc.getRootElement();
-    var channel = rootElem.getChildElement("channel");
-    var item = channel.getChildElement("item");
-    var desc = item.getChildElement("description").getText();
-    var title = item.getChildElement("title").getText();
+    let parser = new marknote.Parser();
+    let doc = parser.parse(rss);
+    let rootElem = doc.getRootElement();
+    let channel = rootElem.getChildElement("channel");
+    let item = channel.getChildElement("item");
+    let desc = item.getChildElement("description").getText();
+    let title = item.getChildElement("title").getText();
     desc = desc.replace('mb,', 'mb|');
     parts
-    var cc=[];
+    let cc=[];
     cc['weathertext'] = title.split(':')[2].split(',')[0].trim();
-    var parts = desc.split(',');
-    var k, v;
-    for (var b=0; b<parts.length; b++) {
+    let parts = desc.split(',');
+    let k, v;
+    for (let b=0; b<parts.length; b++) {
       k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
       v = parts[b].slice(parts[b].indexOf(':')+1).trim();
       if (k == "wind_direction") {
-        var vparts = v.split(" ");
+        let vparts = v.split(" ");
         v = '';
-        for (var c=0; c<vparts.length; c++) {
+        for (let c=0; c<vparts.length; c++) {
           v += vparts[c].charAt(0).toUpperCase();
         }
       }
@@ -458,35 +458,35 @@ MyDesklet.prototype = {
   // take an rss feed of 3 day forecast and extract data into an array
   load_days: function (rss) {
     //global.log('entering load_days');
-    var days = [];
+    let days = [];
     
-    var parser = new marknote.Parser();
-    var doc = parser.parse(rss);
+    let parser = new marknote.Parser();
+    let doc = parser.parse(rss);
 
-    var rootElem = doc.getRootElement();
-    var channel = rootElem.getChildElement("channel");
+    let rootElem = doc.getRootElement();
+    let channel = rootElem.getChildElement("channel");
     days['city'] = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
     //global.log('City: ' + days['city']);
-    var items = channel.getChildElements("item");
-    var desc, title;
+    let items = channel.getChildElements("item");
+    let desc, title;
 
-    var data = [];
-    for (var i=0; i<items.length; i++) {
+    let data = [];
+    for (let i=0; i<items.length; i++) {
       desc = items[i].getChildElement("description").getText();
       title = items[i].getChildElement("title").getText();
       data['link'] = items[i].getChildElement("link").getText();
       //global.log('Link: ' + data['link']);
       data['day'] = title.split(':')[0].trim();
       data['weathertext'] = title.split(':')[1].split(',')[0].trim();
-      var parts = desc.split(',');
-      var k, v;
-      for (var b=0; b<parts.length; b++) {
+      let parts = desc.split(',');
+      let k, v;
+      for (let b=0; b<parts.length; b++) {
         k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
         v = parts[b].slice(parts[b].indexOf(':')+1).trim();
         if (k == "wind_direction") {
-          var vparts = v.split(" ");
+          let vparts = v.split(" ");
           v = '';
-          for (var c=0; c<vparts.length; c++) {
+          for (let c=0; c<vparts.length; c++) {
             v += vparts[c].charAt(0).toUpperCase();
           }
         }
