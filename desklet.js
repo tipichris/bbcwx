@@ -80,7 +80,7 @@ MyDesklet.prototype = {
     this.fwicons=[];this.labels=[];this.max=[];this.min=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
     this.cc=[];this.days=[];
     this.metadata = metadata;
-    this.proces=null;
+    this.proces=false;
     this.windowcreated=false;
     this.no=3; // number of days to show
     this.creditlink='www.bbc.co.uk/weather';
@@ -205,9 +205,9 @@ MyDesklet.prototype = {
     this.city=new St.BoxLayout({vertical:true,style: "align: center;"});
     
     // container for right (horizontal) or lower (vertical) part of window
-    this.container= new St.BoxLayout({vertical: true, x_align: St.Align.MIDDLE, style: "padding-left: 5px;"});//definire coloana dreapta
+    this.container= new St.BoxLayout({vertical: true, x_align: 2});//definire coloana dreapta
     // container for left (horizontal) or upper (vertical) part of window
-    this.cweather = new St.BoxLayout({vertical: true}); //definire coloana stangz
+    this.cweather = new St.BoxLayout({vertical: true, x_align: 2}); //definire coloana stangz
     // current weather icon container
     this.cwicon = new St.Bin({height: (CC_ICON_HEIGHT*this.zoom), width: (CC_ICON_WIDTH*this.zoom)}); //icoana mare cu starea vremii
     // current weather text
