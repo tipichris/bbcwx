@@ -336,7 +336,7 @@ MyDesklet.prototype = {
       Mainloop.source_remove(this._timeoutId);
     }
     
-    this._timeoutId=Mainloop.timeout_add_seconds(600 + Math.round(Math.random()*120), Lang.bind(this, this.updateForecast));
+    this._timeoutId=Mainloop.timeout_add_seconds(1500 + Math.round(Math.random()*600), Lang.bind(this, this.updateForecast));
   },
 
   
