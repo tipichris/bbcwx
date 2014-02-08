@@ -125,14 +125,14 @@ MyDesklet.prototype = {
   //##########################REFRESH#########################  
     
   updateStyle: function() {
-    global.log("bbcwx (instance " + this.desklet_id + "): entering updateStyle");
     this._update_style();
+    // also need to run these to update icon style and size
     this.displayForecast();
     this.displayCurrent();
   },
   
   _update_style: function() {
-    global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
+    //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
     this.window.vertical = (this.layout==1) ? true : false;
     this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
@@ -180,7 +180,6 @@ MyDesklet.prototype = {
   },
   
   createwindow: function(){
-    global.log("bbcwx (instance " + this.desklet_id + "): entering createwindow");
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
     
     // container for link and refresh icon
@@ -290,12 +289,10 @@ MyDesklet.prototype = {
   },
   
   updateForecast: function() {
-    global.log("bbcwx (instance " + this.desklet_id + "): entering updateForecast");
     this._refreshweathers();
   },
   
   initForecast: function() {
-    global.log("bbcwx (instance " + this.desklet_id + "): entering initForecast");
     if (this.proces) {
       if(!this.windowcreated) {
         this.createwindow(); 
@@ -356,7 +353,7 @@ MyDesklet.prototype = {
   },
   
   displayForecast: function() {
-    global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
+    //global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
     this.cityname.text=this.days['city'];
     for(f=0;f<this.no;f++)
     {
@@ -373,13 +370,13 @@ MyDesklet.prototype = {
   },
   
   displayCurrent: function(){
-    global.log("bbcwx (instance " + this.desklet_id + "): entering displayCurrent");
+    //global.log("bbcwx (instance " + this.desklet_id + "): entering displayCurrent");
     let cwimage=this._getIconImage(this.cc['weathertext']);
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
     this.weathertext.text=_(this.cc['weathertext']) + ((this.cc['temperature']) ? ', ' + this._formatTemerature(this.cc['temperature'], true) : '');
     this.humidity.text= ((this.cc['humidity']) ? this.cc['humidity'] : '');
-    this.pressure.text=((this.cc['pressure']) ? this.cc['pressure'] : '');
+    this.pressure.text=this._formatPressure(this.cc['pressure']);
     this.windspeed.text=((this.cc['wind_direction']) ? _(this.cc['wind_direction']) + ", " + this._formatWindspeed(this.cc['wind_speed'], true) : '');    
   },
   
@@ -467,6 +464,22 @@ MyDesklet.prototype = {
     }
     return out;
   },
+  
+  // take a string with pressure in mb and pressure trajectory
+  // currently only needed for translation
+  _formatPressure: function(pressure, units) {
+    units = typeof units !== 'undefined' ? units : false;
+    if (!pressure) return '';
+    let parts = pressure.split(', ');
+    let number = parts[0].trim().replace('mb', '');
+    let trajectory = parts[1].trim();
+    out = number;
+    if (units) {
+      out += _('mb');
+    }
+    out += ', ' + _(trajectory);
+    return out;
+  },
     
   // take an rss feed of current observations and extract data into an array
   set_vars: function (rss) {
@@ -482,8 +495,8 @@ MyDesklet.prototype = {
     let cc=[];
     cc['weathertext'] = title.split(':')[2].split(',')[0].trim();
     let parts = desc.split(',');
-    let k, v;
     for (let b=0; b<parts.length; b++) {
+      let k, v;
       k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
       v = parts[b].slice(parts[b].indexOf(':')+1).trim();
       if (k == "wind_direction") {
@@ -513,7 +526,6 @@ MyDesklet.prototype = {
     let rootElem = doc.getRootElement();
     let channel = rootElem.getChildElement("channel");
     days['city'] = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
-    //global.log('City: ' + days['city']);
     let items = channel.getChildElements("item");
     let desc, title;
 
@@ -522,7 +534,6 @@ MyDesklet.prototype = {
       desc = items[i].getChildElement("description").getText();
       title = items[i].getChildElement("title").getText();
       data['link'] = items[i].getChildElement("link").getText();
-      //global.log('Link: ' + data['link']);
       data['day'] = title.split(':')[0].trim();
       data['weathertext'] = title.split(':')[1].split(',')[0].trim();
       let parts = desc.split(',');
@@ -542,14 +553,13 @@ MyDesklet.prototype = {
       days[i] = data;
       data = [];
     }
-    //global.log('returning from load_days');
     return days;
   },
   
   // async call to retrieve rss feed. 
   // -> type: either '3dayforecast' or 'observations'
   getWeather: function(type, callback) {
-    global.log("Called getWeather with type " + type);
+    //global.log("Called getWeather with type " + type);
     let here = this;
     let url = 'http://open.live.bbc.co.uk/weather/feeds/en/' + this.stationID +'/' + type + '.rss';
     let message = Soup.Message.new('GET', url);
