@@ -85,7 +85,7 @@ MyDesklet.prototype = {
     this.no=3; // number of days to show
     this.creditlink='www.bbc.co.uk/weather';
     this.driver = 'BBC';
-    this.dataDriver = new this.DriverBBC;
+    this.dataDriver = new wxDriverBBC;
     this.dataDriver.showType();
         
     //################################
@@ -577,28 +577,199 @@ MyDesklet.prototype = {
     });
   }, 
 
-  
   on_desklet_removed: function() {
     if(this._timeoutId != undefined) {
       Mainloop.source_remove(this._timeoutId);
     }
+  }
+  
+    
+};
+
+function wxDriver(stationID) {
+  this._init(stationID);
+};
+
+wxDriver.prototype = {
+  drivertype: 'Base',
+  linkURL: '',
+  linkText: '',
+  maxDays : 1,
+  
+  _init: function(stationID) {
+    this.stationID = stationID;
+    this.data=new Object();
+    this.emptyData();
   },
   
-  Driver: function() {
-    drivertype: 'Base',
-    showType: function() {
-      global.log('Type: ' + this.drivertype);
+  emptyData: function() {
+    this.data.city = '';
+    this.data.country = '';
+    this.data.days=[];
+    this.data.cc = new Object();
+    this.data.cc.wind_direction = '';
+    this.data.cc.wind_speed = '';
+    this.data.cc.pressure = '';
+    this.data.cc.pressure_direction = '';
+    this.data.cc.temperature = '';
+    this.data.cc.humidity = '';
+    this.data.cc.visibility = '';
+    this.data.cc.obstime = '';
+    this.data.cc.weathertext = '';
+    this.data.cc.weathericon = '';
+    for(let i=0; i<this.maxDays; i++) {
+      let day = new Object();
+      day.day = '';
+      day.weather = '';
+      day.icon = '';
+      day.maximum_temperature ='';
+      day.minimum_temperature = '';
+      day.wind_direction = '';
+      day.wind_speed = '';
+      day.visibility = '';
+      day.pressure = '';
+      day.humidity = '';
+      day.uv_risk = '';
+      day.pollution = '';
+      day.sunrise = '';
+      day.sunset = '';
+      this.data.days[i] = day;
+    };
+  },
+    
+  
+  showType: function() {
+    global.log('Using driver type: ' + this.drivertype);
+  },
+
+  // async call to retrieve rss feed. 
+  // -> url: url to call
+  _getWeather: function(url, callback) {
+    let here = this;
+    let message = Soup.Message.new('GET', url);
+    _httpSession.queue_message(message, function (session, message) {
+      if( message.status_code == 200) {
+        let mes = message.response_body.data;
+        callback.call(here,mes.toString()); 
+      } else {
+        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
+        callback.call(here,false);
+      }
+    });
+  }, 
+
+  getData: function() {
+  },
+
+};
+
+function wxDriverBBC(stationID) {
+  this._init(stationID);
+};
+
+wxDriverBBC.prototype = {
+  __proto__: wxDriver.prototype,
+  drivertype: 'BBC',
+  linkText: 'www.bbc.co.uk/weather',
+  linkURL: 'http://www.bbc.co.uk/weather' + this.stationID,
+  _baseURL: 'http://open.live.bbc.co.uk/weather/feeds/en/',
+
+  getData: function() {
+    // process the three day forecast
+    let a = this._getWeather(this._baseURL + this.stationID + '/' + '3dayforecast' + '.rss', function(weather) {
+      if (weather) {
+        this._load_days(weather);
+      }  else {
+        return false;
+      }
+    });
+
+    // process current observations
+    let b = this._getWeather(this._baseURL + this.stationID + '/' + 'observations' + '.rss', function(weather) {
+      if (weather) {
+        this._set_cc(weather); 
+      } else {
+        return false;
+      }
+    });    
+    
+    return this.data;
+  },
+
+  _load_days: function (rss) {
+    //global.log('entering load_days');
+    let days = [];
+    
+    let parser = new marknote.Parser();
+    let doc = parser.parse(rss);
+
+    let rootElem = doc.getRootElement();
+    let channel = rootElem.getChildElement("channel");
+    let location = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
+    this.city = location.split(',')[0].trim();
+    this.country = location.split(',')[1].trim();
+    let items = channel.getChildElements("item");
+    let desc, title;
+
+    for (let i=0; i<items.length; i++) {
+      let data = new Object();
+      desc = items[i].getChildElement("description").getText();
+      title = items[i].getChildElement("title").getText();
+      data.link = items[i].getChildElement("link").getText();
+      data.day = title.split(':')[0].trim();
+      data.weathertext = title.split(':')[1].split(',')[0].trim();
+      let parts = desc.split(',');
+      let k, v;
+      for (let b=0; b<parts.length; b++) {
+        k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
+        v = parts[b].slice(parts[b].indexOf(':')+1).trim();
+        if (k == "wind_direction") {
+          let vparts = v.split(" ");
+          v = '';
+          for (let c=0; c<vparts.length; c++) {
+            v += vparts[c].charAt(0).toUpperCase();
+          }
+        }
+        data[k] = v;
+      }
+      this.data.days[i] = data;
     }
   },
+
+  // take an rss feed of current observations and extract data into an array
+  _set_cc: function (rss) {
+    let parser = new marknote.Parser();
+    let doc = parser.parse(rss);
+    let rootElem = doc.getRootElement();
+    let channel = rootElem.getChildElement("channel");
+    let item = channel.getChildElement("item");
+    let desc = item.getChildElement("description").getText();
+    let title = item.getChildElement("title").getText();
+    desc = desc.replace('mb,', 'mb|');
+    this.cc.weathertext = title.split(':')[2].split(',')[0].trim();
+    let parts = desc.split(',');
+    for (let b=0; b<parts.length; b++) {
+      let k, v;
+      k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
+      v = parts[b].slice(parts[b].indexOf(':')+1).trim();
+      if (k == "wind_direction") {
+        let vparts = v.split(" ");
+        v = '';
+        for (let c=0; c<vparts.length; c++) {
+          v += vparts[c].charAt(0).toUpperCase();
+        }
+      }
+      if (k == "pressure") {
+        v=v.replace('|', ',');
+      }      
+      this.data.cc[k] = v;
+    }   
+  },
   
-  DriverBBC: function() {
-    __proto__: MyDesklet.Driver.prototype,
-    drivertype: 'BBC'
-  }
-    
-}
+
+};  
 
 function main(metadata, desklet_id){
   let desklet = new MyDesklet(metadata,desklet_id);
   return desklet;
-}
+};
