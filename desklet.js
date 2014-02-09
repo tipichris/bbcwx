@@ -84,6 +84,9 @@ MyDesklet.prototype = {
     this.windowcreated=false;
     this.no=3; // number of days to show
     this.creditlink='www.bbc.co.uk/weather';
+    this.driver = 'BBC';
+    this.dataDriver = new this.DriverBBC;
+    this.dataDriver.showType();
         
     //################################
 
@@ -576,9 +579,23 @@ MyDesklet.prototype = {
 
   
   on_desklet_removed: function() {
-    if(this._timeoutId != undefined)
-      {Mainloop.source_remove(this._timeoutId);}
+    if(this._timeoutId != undefined) {
+      Mainloop.source_remove(this._timeoutId);
     }
+  },
+  
+  Driver: function() {
+    drivertype: 'Base',
+    showType: function() {
+      global.log('Type: ' + this.drivertype);
+    }
+  },
+  
+  DriverBBC: function() {
+    __proto__: MyDesklet.Driver.prototype,
+    drivertype: 'BBC'
+  }
+    
 }
 
 function main(metadata, desklet_id){
