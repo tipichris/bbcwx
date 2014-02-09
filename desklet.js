@@ -84,9 +84,6 @@ MyDesklet.prototype = {
     this.windowcreated=false;
     this.no=3; // number of days to show
     this.creditlink='www.bbc.co.uk/weather';
-    this.driver = 'BBC';
-    this.dataDriver = new wxDriverBBC;
-    this.dataDriver.showType();
         
     //################################
 
@@ -311,29 +308,14 @@ MyDesklet.prototype = {
     let now=new Date().toLocaleFormat('%H:%M:%S');
     global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
     
-    // empty the arrays first, in case the refresh fails - don't want stale data left
-    this.cc = [];
-    this._emptyDays();
+    this.driver = new wxDriverBBC(this.stationID);
+    this.driver.showType();
+    this.data = this.driver.getData();
     
-    // process the three day forecast
-    let a = this.getWeather('3dayforecast', function(weather) {
-      if (weather) {
-        this.days=this.load_days(weather);
-      }  else {
-        this.days['city']=_('No data available');
-      }
-      this.displayForecast();
-    });
-
-    // process current observations
-    let b = this.getWeather('observations', function(weather) {
-      if (weather) {
-        this.cc=this.set_vars(weather); 
-      } else {
-        this.cc['weathertext']=_('No data available');
-      }
-      this.displayCurrent();
-    });
+    global.log("Data: " + print_r(this.data));
+    
+    this.displayForecast();
+    this.displayCurrent();
     
     if(this._timeoutId != undefined) {
       Mainloop.source_remove(this._timeoutId);
@@ -357,30 +339,30 @@ MyDesklet.prototype = {
   
   displayForecast: function() {
     //global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
-    this.cityname.text=this.days['city'];
     for(f=0;f<this.no;f++)
     {
-      this.labels[f].label=((this.daynames[this.days[f]['day']]) ? this.daynames[this.days[f]['day']] : '');
-      let fwiconimage = this._getIconImage(this.days[f]['weathertext']);
+      this.labels[f].label=((this.daynames[this.data.days[f].day]) ? this.daynames[this.data.days[f].day] : '');
+      let fwiconimage = this._getIconImage(this.data.days[f].weathertext);
       fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
       this.fwicons[f].set_child(fwiconimage);      
-      this.wxtooltip[f].set_text(((this.days[f]['weathertext']) ? _(this.days[f]['weathertext']) : _('No data available')));
-      this.max[f].text=this._formatTemerature(this.days[f]['maximum_temperature'], true);
-      this.min[f].text=this._formatTemerature(this.days[f]['minimum_temperature'], true);
-      this.winds[f].text=this._formatWindspeed(this.days[f]['wind_speed'], true);
-      this.windd[f].text= ((this.days[f]['wind_direction']) ? _(this.days[f]['wind_direction']) : '');
-    }    
+      this.wxtooltip[f].set_text(((this.data.days[f].weathertext) ? _(this.data.days[f].weathertext) : _('No data available')));
+      this.max[f].text=this._formatTemerature(this.data.days[f].maximum_temperature, true);
+      this.min[f].text=this._formatTemerature(this.data.days[f].minimum_temperature, true);
+      this.winds[f].text=this._formatWindspeed(this.data.days[f].wind_speed, true);
+      this.windd[f].text= ((this.data.days[f].wind_direction) ? _(this.data.days[f].wind_direction) : '');     
+    }
   },
   
   displayCurrent: function(){
+    this.cityname.text=this.data.city;
     //global.log("bbcwx (instance " + this.desklet_id + "): entering displayCurrent");
-    let cwimage=this._getIconImage(this.cc['weathertext']);
+    let cwimage=this._getIconImage(this.data.cc['weathertext']);
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
-    this.weathertext.text=_(this.cc['weathertext']) + ((this.cc['temperature']) ? ', ' + this._formatTemerature(this.cc['temperature'], true) : '');
-    this.humidity.text= ((this.cc['humidity']) ? this.cc['humidity'] : '');
-    this.pressure.text=this._formatPressure(this.cc['pressure']);
-    this.windspeed.text=((this.cc['wind_direction']) ? _(this.cc['wind_direction']) + ", " + this._formatWindspeed(this.cc['wind_speed'], true) : '');    
+    this.weathertext.text=_(this.data.cc.weathertext) + ((this.data.cc.temperature) ? ', ' + this._formatTemerature(this.data.cc.temperature, true) : '');
+    this.humidity.text= (this.data.cc.humidity) ? (this.data.cc.humidity) : '';
+    this.pressure.text=this._formatPressure(this.data.cc.pressure);
+    this.windspeed.text=((this.data.cc.wind_direction) ? _(this.data.cc.wind_direction) + ", " + this._formatWindspeed(this.data.cc.wind_speed, true) : '');      
   },
   
   _getIconImage: function(wxtext) {
@@ -620,7 +602,7 @@ wxDriver.prototype = {
     for(let i=0; i<this.maxDays; i++) {
       let day = new Object();
       day.day = '';
-      day.weather = '';
+      day.weathertext = '';
       day.icon = '';
       day.maximum_temperature ='';
       day.minimum_temperature = '';
@@ -645,7 +627,7 @@ wxDriver.prototype = {
   // async call to retrieve rss feed. 
   // -> url: url to call
   _getWeather: function(url, callback) {
-    let here = this;
+    var here = this;
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
       if( message.status_code == 200) {
@@ -659,6 +641,7 @@ wxDriver.prototype = {
   }, 
 
   getData: function() {
+    return this.data;
   },
 
 };
@@ -669,9 +652,13 @@ function wxDriverBBC(stationID) {
 
 wxDriverBBC.prototype = {
   __proto__: wxDriver.prototype,
+  
   drivertype: 'BBC',
+  
   linkText: 'www.bbc.co.uk/weather',
+  
   linkURL: 'http://www.bbc.co.uk/weather' + this.stationID,
+  
   _baseURL: 'http://open.live.bbc.co.uk/weather/feeds/en/',
 
   getData: function() {
@@ -697,7 +684,8 @@ wxDriverBBC.prototype = {
   },
 
   _load_days: function (rss) {
-    //global.log('entering load_days');
+    //global.log('_load_days called with: ' + rss);
+    //global.log("Prototype: " + Object.getPrototypeOf(this));
     let days = [];
     
     let parser = new marknote.Parser();
@@ -706,8 +694,8 @@ wxDriverBBC.prototype = {
     let rootElem = doc.getRootElement();
     let channel = rootElem.getChildElement("channel");
     let location = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
-    this.city = location.split(',')[0].trim();
-    this.country = location.split(',')[1].trim();
+    this.data.city = location.split(',')[0].trim();
+    this.data.country = location.split(',')[1].trim();
     let items = channel.getChildElements("item");
     let desc, title;
 
@@ -738,6 +726,7 @@ wxDriverBBC.prototype = {
 
   // take an rss feed of current observations and extract data into an array
   _set_cc: function (rss) {
+    //global.log('_set_cc called with: ' + rss);
     let parser = new marknote.Parser();
     let doc = parser.parse(rss);
     let rootElem = doc.getRootElement();
@@ -746,7 +735,7 @@ wxDriverBBC.prototype = {
     let desc = item.getChildElement("description").getText();
     let title = item.getChildElement("title").getText();
     desc = desc.replace('mb,', 'mb|');
-    this.cc.weathertext = title.split(':')[2].split(',')[0].trim();
+    this.data.cc.weathertext = title.split(':')[2].split(',')[0].trim();
     let parts = desc.split(',');
     for (let b=0; b<parts.length; b++) {
       let k, v;
@@ -769,7 +758,106 @@ wxDriverBBC.prototype = {
 
 };  
 
+function wxDriverMock(stationID) {
+  this._init(stationID);
+};
+
+wxDriverMock.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'Mock',
+  
+  linkText: 'Foo',
+  
+  maxDays: 3,
+  
+  linkURL: 'http://foo.com' + this.stationID,
+  
+  getData: function() { 
+    this.mockData();
+    return this.data;
+  },
+
+  mockData: function() {
+    this.data.city = 'Foo, UK';
+    this.data.country = 'Bar';
+    this.data.days=[];
+    this.data.cc = new Object();
+    this.data.cc.wind_direction = 'SW';
+    this.data.cc.wind_speed = '6';
+    this.data.cc.pressure = '125mb, falling';
+    this.data.cc.pressure_direction = 'Rising';
+    this.data.cc.temperature = '3iC (37iF)';
+    this.data.cc.humidity = '55';
+    this.data.cc.visibility = '';
+    this.data.cc.obstime = '';
+    this.data.cc.weathertext = 'Sunny';
+    this.data.cc.weathericon = '';
+    for(let i=0; i<this.maxDays; i++) {
+      let day = new Object();
+      day.day = 'Sunday';
+      day.weathertext = 'Sunny';
+      day.icon = '';
+      day.maximum_temperature ='99iC (37iF)';
+      day.minimum_temperature = '-33iC (37iF)';
+      day.wind_direction = 'N';
+      day.wind_speed = '1';
+      day.visibility = '';
+      day.pressure = '';
+      day.humidity = '';
+      day.uv_risk = '';
+      day.pollution = '';
+      day.sunrise = '';
+      day.sunset = '';
+      this.data.days[i] = day;
+    };
+  },
+};
+
 function main(metadata, desklet_id){
   let desklet = new MyDesklet(metadata,desklet_id);
   return desklet;
+};
+
+//#############################
+function print_r (obj, t) {
+
+    // define tab spacing
+    var tab = t || '';
+
+    // check if it's array
+    var isArr = Object.prototype.toString.call(obj) === '[object Array]';
+    
+    // use {} for object, [] for array
+    var str = isArr ? ('Array\n' + tab + '[\n') : ('Object\n' + tab + '{\n');
+
+    // walk through it's properties
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            var val1 = obj[prop];
+            var val2 = '';
+            var type = Object.prototype.toString.call(val1);
+            switch (type) {
+                
+                // recursive if object/array
+                case '[object Array]':
+                case '[object Object]':
+                    val2 = print_r(val1, (tab + '\t'));
+                    break;
+                    
+                case '[object String]':
+                    val2 = '\'' + val1 + '\'';
+                    break;
+                    
+                default:
+                    val2 = val1;
+            }
+            str += tab + '\t' + prop + ' => ' + val2 + ',\n';
+        }
+    }
+    
+    // remove extra comma for last property
+    str = str.substring(0, str.length - 2) + '\n' + tab;
+    
+    return isArr ? (str + ']') : (str + '}');
 };
