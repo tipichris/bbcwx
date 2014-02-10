@@ -307,6 +307,7 @@ MyDesklet.prototype = {
     delete this.service;
     this.service = new wxDriverBBC(this.stationID);
     //this.service.showType();
+    global.log(print_r(this.service.capabilities));
     this.service.refreshData(this);
     
     
@@ -341,10 +342,10 @@ MyDesklet.prototype = {
     let cwimage=this._getIconImage(this.service.data.cc.icon);
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
-    this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature) ? ', ' + this._formatTemperature(cc.temperature, true) : '');
+    this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature && cc.weathertext) ? ', ' : '' )+ this._formatTemperature(cc.temperature, true) ;
     this.humidity.text= this._formatHumidity(cc.humidity);
     this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
-    this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " + this._formatWindspeed(cc.wind_speed, true) : '');      
+    this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
   },
   
   displayMeta: function() {
@@ -376,7 +377,7 @@ MyDesklet.prototype = {
   // value. Append unit string if units is true
   _formatTemperature: function(temp, units) {
     units = typeof units !== 'undefined' ? units : false;
-    if (!temp) return ''; 
+    if (!temp.toString().length) return ''; 
     let celsius = 1*temp;
     let fahr = ((celsius + 40) * 1.8) - 40;
     let out = Math.round(((this.units==1) ? celsius : fahr));
@@ -390,7 +391,7 @@ MyDesklet.prototype = {
   // units. Append unit string if units is true
   _formatWindspeed: function(wind, units) {
     units = typeof units !== 'undefined' ? units : false;
-    if (!wind) return '';
+    if (!wind.toString().length) return '';
     let conversion = {
       'mph': 0.621,
       'knots': 0.54,
@@ -417,7 +418,7 @@ MyDesklet.prototype = {
   // -> units: boolean, append units
   _formatPressure: function(pressure, direction, units) {
     units = typeof units !== 'undefined' ? units : false;
-    if (!pressure) return '';
+    if (!pressure.toString().length) return '';
     out = Math.round(1*pressure);
     if (units) {
       out += _('mb');
@@ -429,8 +430,8 @@ MyDesklet.prototype = {
   },
   
   _formatHumidity: function(humidity) {
-    if (!humidity) return '';
-    return humidity + '%';
+    if (!humidity.toString().length) return '';
+    return 1*humidity + '%';
   },
 
   on_desklet_removed: function() {
@@ -452,6 +453,37 @@ wxDriver.prototype = {
   linkText: '',
   linkTooltip: 'Click for more information',
   maxDays : 1,
+  
+  capabilities: {
+    cc: {
+      humidity: true,
+      temperature: true,
+      pressure: true,
+      pressure_direction: true,
+      wind_speed: true,
+      wind_direction: true,
+      obstime: true,
+      weathertext: true,
+      visibility: true
+    },
+    forecast: {
+      humidity: true,
+      maximum_temperature: true,
+      minimum_temperature: true,
+      pressure: true,
+      pressure_direction: true,
+      wind_speed: true,
+      wind_direction: true,
+      weathertext: true,
+      visibility: true,
+      uv_risk: true
+    },
+    meta: {
+      city: true,
+      country: true,
+      region: true
+    }
+  },
   
   _init: function(stationID) {
     this.stationID = stationID;
@@ -524,7 +556,7 @@ wxDriver.prototype = {
 };
 
 function wxDriverBBC(stationID) {
-  this._init(stationID);
+  this._bbcinit(stationID);
 };
 
 wxDriverBBC.prototype = {
@@ -537,7 +569,12 @@ wxDriverBBC.prototype = {
   linkTooltip: 'Click for more information',
   
   _baseURL: 'http://open.live.bbc.co.uk/weather/feeds/en/',
-
+  
+  _bbcinit: function(stationID) {
+    this._init(stationID);
+    this.capabilities.meta.region =  false;
+  },
+  
   refreshData: function(deskletObj) {
     // reset the data object
     this.emptyData();
@@ -591,6 +628,7 @@ wxDriverBBC.prototype = {
       for (let b=0; b<parts.length; b++) {
         k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
         v = parts[b].slice(parts[b].indexOf(':')+1).trim();
+        if (v.toLowerCase() == 'null') v = '';
         if (k == "wind_direction") {
           let vparts = v.split(" ");
           v = '';
@@ -610,7 +648,7 @@ wxDriverBBC.prototype = {
     }
   },
 
-  // take an rss feed of current observations and extract data into an array
+  // take an rss feed of current observations and extract data into an object
   _load_observations: function (rss) {
     //global.log('_set_cc called with: ' + rss);
     let parser = new marknote.Parser();
@@ -622,11 +660,13 @@ wxDriverBBC.prototype = {
     let title = item.getChildElement("title").getText();
     desc = desc.replace('mb,', 'mb|');
     this.data.cc.weathertext = title.split(':')[2].split(',')[0].trim();
+    if (this.data.cc.weathertext.toLowerCase() == 'null') this.data.cc.weathertext = '';
     let parts = desc.split(',');
     for (let b=0; b<parts.length; b++) {
       let k, v;
       k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
       v = parts[b].slice(parts[b].indexOf(':')+1).trim();
+      if (v.toLowerCase() == 'null') v = '';
       if (k == "wind_direction") {
         let vparts = v.split(" ");
         v = '';
