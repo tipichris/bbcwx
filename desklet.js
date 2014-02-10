@@ -308,14 +308,10 @@ MyDesklet.prototype = {
     let now=new Date().toLocaleFormat('%H:%M:%S');
     global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
     
-    this.driver = new wxDriverBBC(this.stationID);
-    this.driver.showType();
-    this.data = this.driver.getData();
+    this.service = new wxDriverBBC(this.stationID);
+    this.service.showType();
+    this.service.refreshData(this);
     
-    global.log("Data: " + print_r(this.data));
-    
-    this.displayForecast();
-    this.displayCurrent();
     
     if(this._timeoutId != undefined) {
       Mainloop.source_remove(this._timeoutId);
@@ -323,46 +319,38 @@ MyDesklet.prototype = {
     
     this._timeoutId=Mainloop.timeout_add_seconds(1500 + Math.round(Math.random()*600), Lang.bind(this, this.updateForecast));
   },
-
-  
-  _emptyDays: function() {
-    for(f=0;f<this.no;f++) {
-      this.days[f]=[];
-      this.days[f]['day'] = '';
-      this.days[f]['weathertext'] = '';
-      this.days[f]['maximum_temperature'] = '';
-      this.days[f]['minimum_temperature'] = '';
-      this.days[f]['wind_speed'] = '';
-      this.days[f]['wind_direction'] = '';
-    }      
-  },
   
   displayForecast: function() {
-    //global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
+    global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
     for(f=0;f<this.no;f++)
     {
-      this.labels[f].label=((this.daynames[this.data.days[f].day]) ? this.daynames[this.data.days[f].day] : '');
-      let fwiconimage = this._getIconImage(this.data.days[f].weathertext);
+      let day = this.service.data.days[f];
+      //global.log("Data: " + print_r(day));
+      this.labels[f].label=((this.daynames[day.day]) ? this.daynames[day.day] : '');
+      let fwiconimage = this._getIconImage(day.weathertext);
       fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
       this.fwicons[f].set_child(fwiconimage);      
-      this.wxtooltip[f].set_text(((this.data.days[f].weathertext) ? _(this.data.days[f].weathertext) : _('No data available')));
-      this.max[f].text=this._formatTemerature(this.data.days[f].maximum_temperature, true);
-      this.min[f].text=this._formatTemerature(this.data.days[f].minimum_temperature, true);
-      this.winds[f].text=this._formatWindspeed(this.data.days[f].wind_speed, true);
-      this.windd[f].text= ((this.data.days[f].wind_direction) ? _(this.data.days[f].wind_direction) : '');     
+      this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
+      this.max[f].text=this._formatTemerature(day.maximum_temperature, true);
+      this.min[f].text=this._formatTemerature(day.minimum_temperature, true);
+      this.winds[f].text=this._formatWindspeed(day.wind_speed, true);
+      this.windd[f].text= ((day.wind_direction) ? _(day.wind_direction) : '');     
     }
   },
   
   displayCurrent: function(){
-    this.cityname.text=this.data.city;
     //global.log("bbcwx (instance " + this.desklet_id + "): entering displayCurrent");
-    let cwimage=this._getIconImage(this.data.cc['weathertext']);
+    let cwimage=this._getIconImage(this.service.data.cc['weathertext']);
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
-    this.weathertext.text=_(this.data.cc.weathertext) + ((this.data.cc.temperature) ? ', ' + this._formatTemerature(this.data.cc.temperature, true) : '');
-    this.humidity.text= (this.data.cc.humidity) ? (this.data.cc.humidity) : '';
-    this.pressure.text=this._formatPressure(this.data.cc.pressure);
-    this.windspeed.text=((this.data.cc.wind_direction) ? _(this.data.cc.wind_direction) + ", " + this._formatWindspeed(this.data.cc.wind_speed, true) : '');      
+    this.weathertext.text=_(this.service.data.cc.weathertext) + ((this.service.data.cc.temperature) ? ', ' + this._formatTemerature(this.service.data.cc.temperature, true) : '');
+    this.humidity.text= (this.service.data.cc.humidity) ? (this.service.data.cc.humidity) : '';
+    this.pressure.text=this._formatPressure(this.service.data.cc.pressure);
+    this.windspeed.text=((this.service.data.cc.wind_direction) ? _(this.service.data.cc.wind_direction) + ", " + this._formatWindspeed(this.service.data.cc.wind_speed, true) : '');      
+  },
+  
+  displayMeta: function() {
+    this.cityname.text=this.service.data.city;
   },
   
   _getIconImage: function(wxtext) {
@@ -465,99 +453,6 @@ MyDesklet.prototype = {
     out += ', ' + _(trajectory);
     return out;
   },
-    
-  // take an rss feed of current observations and extract data into an array
-  set_vars: function (rss) {
-    let parser = new marknote.Parser();
-    let doc = parser.parse(rss);
-    let rootElem = doc.getRootElement();
-    let channel = rootElem.getChildElement("channel");
-    let item = channel.getChildElement("item");
-    let desc = item.getChildElement("description").getText();
-    let title = item.getChildElement("title").getText();
-    desc = desc.replace('mb,', 'mb|');
-    parts
-    let cc=[];
-    cc['weathertext'] = title.split(':')[2].split(',')[0].trim();
-    let parts = desc.split(',');
-    for (let b=0; b<parts.length; b++) {
-      let k, v;
-      k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
-      v = parts[b].slice(parts[b].indexOf(':')+1).trim();
-      if (k == "wind_direction") {
-        let vparts = v.split(" ");
-        v = '';
-        for (let c=0; c<vparts.length; c++) {
-          v += vparts[c].charAt(0).toUpperCase();
-        }
-      }
-      if (k == "pressure") {
-        v=v.replace('|', ',');
-      }      
-      cc[k] = v;
-    }   
-    
-    return cc;
-  },
-  
-  // take an rss feed of 3 day forecast and extract data into an array
-  load_days: function (rss) {
-    //global.log('entering load_days');
-    let days = [];
-    
-    let parser = new marknote.Parser();
-    let doc = parser.parse(rss);
-
-    let rootElem = doc.getRootElement();
-    let channel = rootElem.getChildElement("channel");
-    days['city'] = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
-    let items = channel.getChildElements("item");
-    let desc, title;
-
-    let data = [];
-    for (let i=0; i<items.length; i++) {
-      desc = items[i].getChildElement("description").getText();
-      title = items[i].getChildElement("title").getText();
-      data['link'] = items[i].getChildElement("link").getText();
-      data['day'] = title.split(':')[0].trim();
-      data['weathertext'] = title.split(':')[1].split(',')[0].trim();
-      let parts = desc.split(',');
-      let k, v;
-      for (let b=0; b<parts.length; b++) {
-        k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
-        v = parts[b].slice(parts[b].indexOf(':')+1).trim();
-        if (k == "wind_direction") {
-          let vparts = v.split(" ");
-          v = '';
-          for (let c=0; c<vparts.length; c++) {
-            v += vparts[c].charAt(0).toUpperCase();
-          }
-        }
-        data[k] = v;
-      }
-      days[i] = data;
-      data = [];
-    }
-    return days;
-  },
-  
-  // async call to retrieve rss feed. 
-  // -> type: either '3dayforecast' or 'observations'
-  getWeather: function(type, callback) {
-    //global.log("Called getWeather with type " + type);
-    let here = this;
-    let url = 'http://open.live.bbc.co.uk/weather/feeds/en/' + this.stationID +'/' + type + '.rss';
-    let message = Soup.Message.new('GET', url);
-    _httpSession.queue_message(message, function (session, message) {
-      if( message.status_code == 200) {
-        let mes = message.response_body.data;
-        callback.call(here,mes.toString()); 
-      } else {
-        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
-        callback.call(here,false);
-      }
-    });
-  }, 
 
   on_desklet_removed: function() {
     if(this._timeoutId != undefined) {
@@ -654,36 +549,38 @@ wxDriverBBC.prototype = {
   __proto__: wxDriver.prototype,
   
   drivertype: 'BBC',
-  
+  maxDays: 3, 
   linkText: 'www.bbc.co.uk/weather',
-  
   linkURL: 'http://www.bbc.co.uk/weather' + this.stationID,
   
   _baseURL: 'http://open.live.bbc.co.uk/weather/feeds/en/',
 
-  getData: function() {
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this.emptyData();
+    
     // process the three day forecast
     let a = this._getWeather(this._baseURL + this.stationID + '/' + '3dayforecast' + '.rss', function(weather) {
       if (weather) {
-        this._load_days(weather);
-      }  else {
-        return false;
+        this._load_forecast(weather);
       }
+      deskletObj.displayForecast();
+      deskletObj.displayMeta();
     });
 
     // process current observations
     let b = this._getWeather(this._baseURL + this.stationID + '/' + 'observations' + '.rss', function(weather) {
       if (weather) {
-        this._set_cc(weather); 
-      } else {
-        return false;
+        this._load_observations(weather); 
+        deskletObj.displayCurrent();
       }
+      this._load_observations(weather); 
+      deskletObj.displayCurrent();      
     });    
     
-    return this.data;
   },
 
-  _load_days: function (rss) {
+  _load_forecast: function (rss) {
     //global.log('_load_days called with: ' + rss);
     //global.log("Prototype: " + Object.getPrototypeOf(this));
     let days = [];
@@ -725,7 +622,7 @@ wxDriverBBC.prototype = {
   },
 
   // take an rss feed of current observations and extract data into an array
-  _set_cc: function (rss) {
+  _load_observations: function (rss) {
     //global.log('_set_cc called with: ' + rss);
     let parser = new marknote.Parser();
     let doc = parser.parse(rss);
