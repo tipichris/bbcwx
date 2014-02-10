@@ -149,7 +149,7 @@ MyDesklet.prototype = {
     }
     this._separatorArea.height=5*this.zoom;
 
-    for(f=0;f<this.no;f++) {
+    for(let f=0;f<this.no;f++) {
       this.labels[f].style='text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px";
       this.fwicons[f].height=ICON_HEIGHT*this.zoom;this.fwicons[f].width= ICON_WIDTH*this.zoom;
       this.max[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
@@ -242,7 +242,7 @@ MyDesklet.prototype = {
     this.fwtable.add(this.minlabel,{row:3,col:0});
     this.fwtable.add(this.windlabel,{row:4,col:0});
     this.fwtable.add(this.winddlabel,{row:5,col:0}); 
-    for(f=0;f<this.no;f++) {
+    for(let f=0;f<this.no;f++) {
       this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+TEXT_SIZE*this.zoom+"px" });
       this.fwicons[f]=new St.Button({height:ICON_HEIGHT*this.zoom, width: ICON_WIDTH*this.zoom});
       this.max[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
@@ -331,8 +331,8 @@ MyDesklet.prototype = {
       fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
       this.fwicons[f].set_child(fwiconimage);      
       this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
-      this.max[f].text=this._formatTemerature(day.maximum_temperature, true);
-      this.min[f].text=this._formatTemerature(day.minimum_temperature, true);
+      this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
+      this.min[f].text=this._formatTemperature(day.minimum_temperature, true);
       this.winds[f].text=this._formatWindspeed(day.wind_speed, true);
       this.windd[f].text= ((day.wind_direction) ? _(day.wind_direction) : '');     
     }
@@ -340,18 +340,19 @@ MyDesklet.prototype = {
   
   displayCurrent: function(){
     //global.log("bbcwx (instance " + this.desklet_id + "): entering displayCurrent");
+    let cc = this.service.data.cc;
     let cwimage=this._getIconImage(this.service.data.cc.icon);
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
-    this.weathertext.text=_(this.service.data.cc.weathertext) + ((this.service.data.cc.temperature) ? ', ' + this._formatTemerature(this.service.data.cc.temperature, true) : '');
-    this.humidity.text= (this.service.data.cc.humidity) ? (this.service.data.cc.humidity) : '';
-    this.pressure.text=this._formatPressure(this.service.data.cc.pressure);
-    this.windspeed.text=((this.service.data.cc.wind_direction) ? _(this.service.data.cc.wind_direction) + ", " + this._formatWindspeed(this.service.data.cc.wind_speed, true) : '');      
+    this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature) ? ', ' + this._formatTemperature(cc.temperature, true) : '');
+    this.humidity.text= (cc.humidity) ? (cc.humidity) : '';
+    this.pressure.text=this._formatPressure(cc.pressure);
+    this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " + this._formatWindspeed(cc.wind_speed, true) : '');      
   },
   
   displayMeta: function() {
     this.cityname.text=this.service.data.city;
-    this.bannersig.disconnect();
+    if(this.bannersig) this.bannersig.disconnect();
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open http://" + this.creditlink + '/' + this.stationID);
     }));
@@ -373,12 +374,12 @@ MyDesklet.prototype = {
   
   // take a string with both C and F and extract the required 
   // value. Append unit string if units is true
-  _formatTemerature: function(temp, units) {
+  _formatTemperature: function(temp, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (!temp) return ''; 
-    let celsius = temp.slice(0, temp.indexOf('C')-1).trim();
-    let fahr = temp.slice(temp.indexOf('(')+1, temp.length - 3).trim();
-    let out = ((this.units==1) ? celsius : fahr);
+    let celsius = 1*temp;
+    let fahr = ((celsius + 40) * 1.8) - 40;
+    let out = Math.round(((this.units==1) ? celsius : fahr));
     if (units) {
       out += ((this.units==1) ? _("\u2103") : _("\u2109"))
     }
@@ -456,6 +457,7 @@ wxDriver.prototype = {
     this.data.city = '';
     this.data.country = '';
     this.data.days=[];
+    delete this.data.cc;
     this.data.cc = new Object();
     this.data.cc.wind_direction = '';
     this.data.cc.wind_speed = '';
@@ -483,6 +485,7 @@ wxDriver.prototype = {
       day.pollution = '';
       day.sunrise = '';
       day.sunset = '';
+      delete this.data.days[i];
       this.data.days[i] = day;
     };
   },
@@ -545,9 +548,7 @@ wxDriverBBC.prototype = {
     let b = this._getWeather(this._baseURL + this.stationID + '/' + 'observations' + '.rss', function(weather) {
       if (weather) {
         this._load_observations(weather); 
-        deskletObj.displayCurrent();
       }
-      this._load_observations(weather); 
       deskletObj.displayCurrent();      
     });    
     
@@ -590,6 +591,8 @@ wxDriverBBC.prototype = {
         }
         data[k] = v;
       }
+      data.maximum_temperature = this._getTemperature(data.maximum_temperature);
+      data.minimum_temperature = this._getTemperature(data.minimum_temperature);
       data.icon = this._getIconFromText(data.weathertext);
       this.data.days[i] = data;
     }
@@ -625,6 +628,7 @@ wxDriverBBC.prototype = {
       this.data.cc[k] = v;
     }
     this.data.cc.icon = this._getIconFromText(this.data.cc.weathertext);
+    this.data.cc.temperature = this._getTemperature(this.data.cc.temperature);
   },
   
   _getIconFromText: function(wxtext) {
@@ -664,6 +668,12 @@ wxDriverBBC.prototype = {
       }
     }
     return icon_name;
+  },
+  
+  _getTemperature: function(temp) {
+    if (!temp) return ''; 
+    let celsius = temp.slice(0, temp.indexOf('C')-1).trim();
+    return celsius;
   },
 
 };  
