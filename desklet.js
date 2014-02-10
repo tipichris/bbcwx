@@ -263,15 +263,12 @@ MyDesklet.prototype = {
     this.but.connect('clicked', Lang.bind(this, this.updateForecast));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
     this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";"});
-    this.banner=new St.Button({label: this.creditlink, 
+    this.banner=new St.Button({ 
       style: 'font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";",
       reactive: true,
       track_hover: true,
       style_class: 'bbcwx-link'});
-    this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
-        Util.spawnCommandLine("xdg-open http://" + this.creditlink + '/' + this.stationID);
-      }));
-    this.bannertooltip = new Tooltips.Tooltip(this.banner, _('Click to visit the BBC weather website'));
+    this.bannertooltip = new Tooltips.Tooltip(this.banner);
     this.refreshtooltip = new Tooltips.Tooltip(this.but, _('Refresh'));
     this.buttons.add_actor(this.bannerpre);
     this.buttons.add_actor(this.banner);
@@ -307,9 +304,9 @@ MyDesklet.prototype = {
   _refreshweathers: function() {
     let now=new Date().toLocaleFormat('%H:%M:%S');
     global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
-    
+    delete this.service;
     this.service = new wxDriverBBC(this.stationID);
-    this.service.showType();
+    //this.service.showType();
     this.service.refreshData(this);
     
     
@@ -345,16 +342,19 @@ MyDesklet.prototype = {
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
     this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature) ? ', ' + this._formatTemperature(cc.temperature, true) : '');
-    this.humidity.text= (cc.humidity) ? (cc.humidity) : '';
-    this.pressure.text=this._formatPressure(cc.pressure);
+    this.humidity.text= this._formatHumidity(cc.humidity);
+    this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
     this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " + this._formatWindspeed(cc.wind_speed, true) : '');      
   },
   
   displayMeta: function() {
     this.cityname.text=this.service.data.city;
+    this.banner.label = this.service.linkText;
+    this.bannertooltip.set_text(this.service.linkTooltip);
+    global.log('Tooltip: ' + this.service.linkTooltip);
     if(this.bannersig) this.bannersig.disconnect();
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
-        Util.spawnCommandLine("xdg-open http://" + this.creditlink + '/' + this.stationID);
+        Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
   },
   
@@ -386,16 +386,16 @@ MyDesklet.prototype = {
     return out;
   },
 
-  // take a string with speed in mph and convert to required 
+  // take a wind speed in km/h and convert to required 
   // units. Append unit string if units is true
   _formatWindspeed: function(wind, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (!wind) return '';
     let conversion = {
-      'mph': 1,
-      'knots': 0.869,
-      'kph': 1.6,
-      'mps': 0.447
+      'mph': 0.621,
+      'knots': 0.54,
+      'kph': 1,
+      'mps': 0.278
     };
     let unitstring = {
       'mph': _('mph'),
@@ -403,8 +403,8 @@ MyDesklet.prototype = {
       'kph': _('km/h'),
       'mps': _('m/s')
     }
-    let mph = wind.replace('mph', '');
-    let out = mph * conversion[this.wunits];
+    let kph = 1*wind;
+    let out = kph * conversion[this.wunits];
     out = out.toFixed(0);
     if (units) {
       out += unitstring[this.wunits];
@@ -412,20 +412,25 @@ MyDesklet.prototype = {
     return out;
   },
   
-  // take a string with pressure in mb and pressure trajectory
-  // currently only needed for translation
-  _formatPressure: function(pressure, units) {
+  // -> pressure: real, pressure (in mb)
+  // -> direction: string, direction of travel, or false
+  // -> units: boolean, append units
+  _formatPressure: function(pressure, direction, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (!pressure) return '';
-    let parts = pressure.split(', ');
-    let number = parts[0].trim().replace('mb', '');
-    let trajectory = parts[1].trim();
-    out = number;
+    out = Math.round(1*pressure);
     if (units) {
       out += _('mb');
     }
-    out += ', ' + _(trajectory);
+    if (direction) {
+      out += ', ' + _(direction);
+    }
     return out;
+  },
+  
+  _formatHumidity: function(humidity) {
+    if (!humidity) return '';
+    return humidity + '%';
   },
 
   on_desklet_removed: function() {
@@ -445,6 +450,7 @@ wxDriver.prototype = {
   drivertype: 'Base',
   linkURL: '',
   linkText: '',
+  linkTooltip: 'Click for more information',
   maxDays : 1,
   
   _init: function(stationID) {
@@ -527,7 +533,8 @@ wxDriverBBC.prototype = {
   drivertype: 'BBC',
   maxDays: 3, 
   linkText: 'www.bbc.co.uk/weather',
-  linkURL: 'http://www.bbc.co.uk/weather' + this.stationID,
+  linkURL: 'http://www.bbc.co.uk/weather/' + this.stationID,
+  linkTooltip: 'Click for more information',
   
   _baseURL: 'http://open.live.bbc.co.uk/weather/feeds/en/',
 
@@ -567,6 +574,8 @@ wxDriverBBC.prototype = {
     let location = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
     this.data.city = location.split(',')[0].trim();
     this.data.country = location.split(',')[1].trim();
+    this.linkTooltip = 'Click here to see the full forecast for ' + this.data.city;
+    this.linkURL = channel.getChildElement("link").getText();
     let items = channel.getChildElements("item");
     let desc, title;
 
@@ -593,6 +602,9 @@ wxDriverBBC.prototype = {
       }
       data.maximum_temperature = this._getTemperature(data.maximum_temperature);
       data.minimum_temperature = this._getTemperature(data.minimum_temperature);
+      data.wind_speed = this._getWindspeed(data.wind_speed);
+      data.pressure = data.pressure.replace('mb', '');
+      data.humidity = data.humidity.replace('%', '');
       data.icon = this._getIconFromText(data.weathertext);
       this.data.days[i] = data;
     }
@@ -623,12 +635,17 @@ wxDriverBBC.prototype = {
         }
       }
       if (k == "pressure") {
-        v=v.replace('|', ',');
+        let pparts=v.split('|');
+        v = pparts[0].trim();
+        this.data.cc.pressure_direction = pparts[1].trim();
       }      
       this.data.cc[k] = v;
     }
     this.data.cc.icon = this._getIconFromText(this.data.cc.weathertext);
     this.data.cc.temperature = this._getTemperature(this.data.cc.temperature);
+    this.data.cc.wind_speed = this._getWindspeed(this.data.cc.wind_speed);
+    this.data.cc.humidity = this.data.cc.humidity.replace('%', '');
+    this.data.cc.pressure = this.data.cc.pressure.replace('mb', '');
   },
   
   _getIconFromText: function(wxtext) {
@@ -674,6 +691,26 @@ wxDriverBBC.prototype = {
     if (!temp) return ''; 
     let celsius = temp.slice(0, temp.indexOf('C')-1).trim();
     return celsius;
+  },
+  
+  _getWindspeed: function(wind) {
+    if (!wind) return '';
+    let mph = wind.replace('mph', '');
+    let out = mph * 1.6;
+    return out;
+  },
+
+  _getPressure: function(pressure) {
+    if (!pressure) return '';
+    let parts = pressure.split(', ');
+    let number = parts[0].trim().replace('mb', '');
+    let trajectory = parts[1].trim();
+    out = number;
+    if (units) {
+      out += _('mb');
+    }
+    out += ', ' + _(trajectory);
+    return out;
   },
 
 };  
