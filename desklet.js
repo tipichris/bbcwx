@@ -268,7 +268,7 @@ MyDesklet.prototype = {
       reactive: true,
       track_hover: true,
       style_class: 'bbcwx-link'});
-    this.banner.connect('clicked', Lang.bind(this, function() {
+    this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open http://" + this.creditlink + '/' + this.stationID);
       }));
     this.bannertooltip = new Tooltips.Tooltip(this.banner, _('Click to visit the BBC weather website'));
@@ -327,7 +327,7 @@ MyDesklet.prototype = {
       let day = this.service.data.days[f];
       //global.log("Data: " + print_r(day));
       this.labels[f].label=((this.daynames[day.day]) ? this.daynames[day.day] : '');
-      let fwiconimage = this._getIconImage(day.weathertext);
+      let fwiconimage = this._getIconImage(day.icon);
       fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
       this.fwicons[f].set_child(fwiconimage);      
       this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
@@ -340,7 +340,7 @@ MyDesklet.prototype = {
   
   displayCurrent: function(){
     //global.log("bbcwx (instance " + this.desklet_id + "): entering displayCurrent");
-    let cwimage=this._getIconImage(this.service.data.cc['weathertext']);
+    let cwimage=this._getIconImage(this.service.data.cc.icon);
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
     this.weathertext.text=_(this.service.data.cc.weathertext) + ((this.service.data.cc.temperature) ? ', ' + this._formatTemerature(this.service.data.cc.temperature, true) : '');
@@ -351,44 +351,17 @@ MyDesklet.prototype = {
   
   displayMeta: function() {
     this.cityname.text=this.service.data.city;
+    this.bannersig.disconnect();
+    this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
+        Util.spawnCommandLine("xdg-open http://" + this.creditlink + '/' + this.stationID);
+    }));
   },
   
-  _getIconImage: function(wxtext) {
+  _getIconImage: function(iconcode) {
     let icon_name = 'na';
-    let iconmap = {
-      'clear sky' : '00', //night
-      'sunny' : '01',
-      'partly cloudy' : '02',  //night
-      'sunny intervals' : '03',
-      'sand storm' : '04', // not confirmed
-      'mist' : '05',
-      'fog' : '06',
-      'white cloud' : '07',
-      'light cloud' : '07',
-      'grey cloud' : '08',
-      'thick cloud' : '08',
-      'light rain shower' : '10',
-      'drizzle' : '11',
-      'light rain' : '12',
-      'heavy rain shower' : '14',
-      'heavy rain' : '15',
-      'sleet shower' : '17',
-      'sleet' : '18',
-      'light snow shower' : '23',
-      'light snow' : '24',
-      'heavy snow shower' : '26',
-      'heavy snow' : '27',
-      'thundery shower' : '29',
-      'thunder storm' : '30',
-      'thunderstorm' : '30',
-      'hazy' : '32'
-    }
     let icon_ext = '.png';
-    if (wxtext) {
-      wxtext = wxtext.toLowerCase();
-      if (typeof iconmap[wxtext] !== "undefined") {
-        icon_name = iconmap[wxtext];
-      }
+    if (iconcode) {
+      icon_name = iconcode;
     }
       
     let icon_file = DESKLET_DIR + '/icons/' + this.iconstyle +'/' + icon_name + icon_ext;
@@ -617,6 +590,7 @@ wxDriverBBC.prototype = {
         }
         data[k] = v;
       }
+      data.icon = this._getIconFromText(data.weathertext);
       this.data.days[i] = data;
     }
   },
@@ -649,9 +623,48 @@ wxDriverBBC.prototype = {
         v=v.replace('|', ',');
       }      
       this.data.cc[k] = v;
-    }   
+    }
+    this.data.cc.icon = this._getIconFromText(this.data.cc.weathertext);
   },
   
+  _getIconFromText: function(wxtext) {
+    let icon_name = 'na';
+    let iconmap = {
+      'clear sky' : '00', //night
+      'sunny' : '01',
+      'partly cloudy' : '02',  //night
+      'sunny intervals' : '03',
+      'sand storm' : '04', // not confirmed
+      'mist' : '05',
+      'fog' : '06',
+      'white cloud' : '07',
+      'light cloud' : '07',
+      'grey cloud' : '08',
+      'thick cloud' : '08',
+      'light rain shower' : '10',
+      'drizzle' : '11',
+      'light rain' : '12',
+      'heavy rain shower' : '14',
+      'heavy rain' : '15',
+      'sleet shower' : '17',
+      'sleet' : '18',
+      'light snow shower' : '23',
+      'light snow' : '24',
+      'heavy snow shower' : '26',
+      'heavy snow' : '27',
+      'thundery shower' : '29',
+      'thunder storm' : '30',
+      'thunderstorm' : '30',
+      'hazy' : '32'
+    }
+    if (wxtext) {
+      wxtext = wxtext.toLowerCase();
+      if (typeof iconmap[wxtext] !== "undefined") {
+        icon_name = iconmap[wxtext];
+      }
+    }
+    return icon_name;
+  },
 
 };  
 
