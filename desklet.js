@@ -428,6 +428,7 @@ MyDesklet.prototype = {
   // value. Append unit string if units is true
   _formatTemperature: function(temp, units) {
     units = typeof units !== 'undefined' ? units : false;
+    if (typeof temp === 'undefined') return '';
     if (!temp.toString().length) return ''; 
     let celsius = 1*temp;
     let fahr = ((celsius + 40) * 1.8) - 40;
@@ -470,6 +471,7 @@ MyDesklet.prototype = {
   // -> units: boolean, append units
   _formatPressure: function(pressure, direction, units) {
     units = typeof units !== 'undefined' ? units : false;
+    if (typeof pressure === 'undefined') return '';
     if (!pressure.toString().length) return '';
     let conversion = {
       'mb': 1,
@@ -925,8 +927,11 @@ wxDriverYahoo.prototype = {
     let doc = parser.parse(rss);
 
     let rootElem = doc.getRootElement();
-    let channel = rootElem.getChildElement("channel");
 
+    let channel = rootElem.getChildElement("channel");
+    let title = channel.getChildElement("title").getText();
+    if (title.indexOf('Error') != -1) return false;
+    
     let geo = channel.getChildElement('yweather:location');
     let wind = channel.getChildElement('yweather:wind');
     let atmosphere = channel.getChildElement('yweather:atmosphere');
@@ -953,7 +958,7 @@ wxDriverYahoo.prototype = {
     this.data.cc.obstime = conditions.getAttributeValue('date');
     this.data.cc.weathertext = conditions.getAttributeValue('text');
     this.data.cc.icon = conditions.getAttributeValue('code');
-    this.data.cc.feelslike = this.data.cc.temperature - wind.getAttributeValue('chill');
+    this.data.cc.feelslike = wind.getAttributeValue('chill');
     
     this.linkURL = items[0].getChildElement('link').getText();
     this.linkTooltip = 'Click here to see the full forecast for ' + this.data.city; 
