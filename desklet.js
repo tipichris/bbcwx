@@ -81,8 +81,8 @@ MyDesklet.prototype = {
     this.cc=[];this.days=[];
     this.metadata = metadata;
     this.proces=false;
-    this.windowcreated=false;
     this.no=3; // number of days to show
+    this.oldno=0 // test for a change in this.no
     this.creditlink='www.bbc.co.uk/weather';
         
     //################################
@@ -297,9 +297,12 @@ MyDesklet.prototype = {
   initForecast: function() {
     if (this.proces) {
       this.service = new wxDriverBBC(this.stationID);
-      if(!this.windowcreated) {
+      if (this.no > this.service.maxDays) {
+        this.no = this.service.maxDays;
+      }
+      if(this.no != this.oldno) {
         this.createwindow(); 
-        this.windowcreated=true;
+        this.oldno=this.no;
       }
       this._update_style();
       this.setContent(this.window);    
