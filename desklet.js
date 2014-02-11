@@ -91,7 +91,7 @@ MyDesklet.prototype = {
       Desklet.Desklet.prototype._init.call(this, metadata);
       //#########################binding configuration file################
       this.settings = new Settings.DeskletSettings(this, UUID, this.desklet_id);                    
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this.updateForecast,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this.changeStation,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"transparency","transparency",this.updateStyle,null);
@@ -289,8 +289,14 @@ MyDesklet.prototype = {
     this._refreshweathers();
   },
   
+  changeStation: function() {
+    this.service.setStation(this.stationID);
+    this._refreshweathers();
+  },
+  
   initForecast: function() {
     if (this.proces) {
+      this.service = new wxDriverBBC(this.stationID);
       if(!this.windowcreated) {
         this.createwindow(); 
         this.windowcreated=true;
@@ -304,12 +310,9 @@ MyDesklet.prototype = {
   _refreshweathers: function() {
     let now=new Date().toLocaleFormat('%H:%M:%S');
     global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
-    delete this.service;
-    this.service = new wxDriverBBC(this.stationID);
     //this.service.showType();
-    global.log(print_r(this.service.capabilities));
-    this.service.refreshData(this);
-    
+    //global.log(print_r(this.service.capabilities));
+    this.service.refreshData(this);  
     
     if(this._timeoutId != undefined) {
       Mainloop.source_remove(this._timeoutId);
@@ -352,7 +355,7 @@ MyDesklet.prototype = {
     this.cityname.text=this.service.data.city;
     this.banner.label = this.service.linkText;
     this.bannertooltip.set_text(this.service.linkTooltip);
-    global.log('Tooltip: ' + this.service.linkTooltip);
+    //global.log('Tooltip: ' + this.service.linkTooltip);
     if(this.bannersig) this.bannersig.disconnect();
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
@@ -488,10 +491,10 @@ wxDriver.prototype = {
   _init: function(stationID) {
     this.stationID = stationID;
     this.data=new Object();
-    this.emptyData();
+    this._emptyData();
   },
   
-  emptyData: function() {
+  _emptyData: function() {
     this.data.city = '';
     this.data.country = '';
     this.data.days=[];
@@ -528,6 +531,9 @@ wxDriver.prototype = {
     };
   },
     
+  setStation: function(stationID) {
+    this.stationID = stationID;
+  },
   
   showType: function() {
     global.log('Using driver type: ' + this.drivertype);
@@ -555,6 +561,7 @@ wxDriver.prototype = {
 
 };
 
+
 function wxDriverBBC(stationID) {
   this._bbcinit(stationID);
 };
@@ -565,8 +572,10 @@ wxDriverBBC.prototype = {
   drivertype: 'BBC',
   maxDays: 3, 
   linkText: 'www.bbc.co.uk/weather',
-  linkURL: 'http://www.bbc.co.uk/weather/' + this.stationID,
-  linkTooltip: 'Click for more information',
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'http://www.bbc.co.uk/weather/',
+  linkTooltip: 'Visit the BBC weather website',
   
   _baseURL: 'http://open.live.bbc.co.uk/weather/feeds/en/',
   
@@ -577,7 +586,9 @@ wxDriverBBC.prototype = {
   
   refreshData: function(deskletObj) {
     // reset the data object
-    this.emptyData();
+    this._emptyData();
+    this.linkTooltip = 'Visit the BBC weather website';
+    this.linkURL = 'http://www.bbc.co.uk/weather';
     
     // process the three day forecast
     let a = this._getWeather(this._baseURL + this.stationID + '/' + '3dayforecast' + '.rss', function(weather) {
