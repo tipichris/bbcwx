@@ -3,7 +3,18 @@
     "type" : "header",
     "description" : "Weather configuration"
   },
-
+  
+  "webservice" : {
+    "type": "combobox",
+    "default" : "bbc",
+    "description" : "Data service",
+    "options" : {
+        "BBC" : "bbc",
+        "Mock" : "mock"
+    },
+    "tooltip" : "Select the data service you wish to use"
+  },
+  
   "stationID": {
     "type" : "entry",
     "default" : "2643743",
@@ -35,6 +46,18 @@
     "tooltip" : "Measurement units used to display wind speed"
   },
 
+  "punits" : {
+    "type": "combobox",
+    "default" : "mb",
+    "description" : "Pressure measurement unit",
+    "options" : {
+        "mb" : "mb",
+        "in" : "in",
+        "mm": "mm"
+    },
+    "tooltip" : "Measurement units used to display atmospheric pressure"
+  },
+  
   "displaysep" : {
     "type" : "separator"
   },

@@ -81,9 +81,8 @@ MyDesklet.prototype = {
     this.cc=[];this.days=[];
     this.metadata = metadata;
     this.proces=false;
-    this.no=3; // number of days to show
+    this.userno=7; // number of days to show
     this.oldno=0 // test for a change in this.no
-    this.creditlink='www.bbc.co.uk/weather';
         
     //################################
 
@@ -94,6 +93,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this.changeStation,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"punits","punits",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"transparency","transparency",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"textcolor","textcolor",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bgcolor","bgcolor",this.updateStyle,null);
@@ -103,6 +103,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"citystyle","citystyle",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
 
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
@@ -164,10 +165,10 @@ MyDesklet.prototype = {
     this.banner.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
     this.bannerpre.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
     
-    this.maxlabel.style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
-    this.minlabel.style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
-    this.windlabel.style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
-    this.winddlabel.style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    let forecastlabels = ['maxlabel', 'minlabel', 'windlabel', 'winddlabel'];
+    for (let i = 0; i<forecastlabels.length; i++) {
+      this[forecastlabels[i]].style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    }
     
     this.cweather.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
     if (this.layout==1) {
@@ -296,17 +297,28 @@ MyDesklet.prototype = {
   
   initForecast: function() {
     if (this.proces) {
-      this.service = new wxDriverBBC(this.stationID);
-      if (this.no > this.service.maxDays) {
+      switch(this.webservice) {
+        case 'bbc':
+          this.service = new wxDriverBBC(this.stationID);
+          break;
+        case 'mock':
+          this.service = new wxDriverMock(this.stationID);
+          break;
+        default:
+          this.service = new wxDriverBBC(this.stationID);
+      }
+      if (this.userno > this.service.maxDays) {
         this.no = this.service.maxDays;
+      } else {
+        this.no = this.userno;
       }
       if(this.no != this.oldno) {
         this.createwindow(); 
         this.oldno=this.no;
       }
-      this._update_style();
       this.setContent(this.window);    
       this._refreshweathers(); 
+      this._update_style();
     }
   },
   
@@ -425,9 +437,26 @@ MyDesklet.prototype = {
   _formatPressure: function(pressure, direction, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (!pressure.toString().length) return '';
-    out = Math.round(1*pressure);
+    let conversion = {
+      'mb': 1,
+      'in': 0.02953,
+      'mm': 0.75
+    };
+    let unitstring = {
+      'mb': _('mb'),
+      'in': _('in'),
+      'mm': _('mm')
+    };
+    let precission = {
+      'mb': 0,
+      'in': 1,
+      'mm': 0
+    };
+    let mb = 1*pressure;
+    let out = mb * conversion[this.punits];
+    out = out.toFixed(precission[this.punits]);
     if (units) {
-      out += _('mb');
+      out += unitstring[this.punits];;
     }
     if (direction) {
       out += ', ' + _(direction);
@@ -449,17 +478,28 @@ MyDesklet.prototype = {
     
 };
 
+// a base driver class. This is overridden
+// by drivers that actually do the work
 function wxDriver(stationID) {
   this._init(stationID);
 };
 
 wxDriver.prototype = {
+  // name of the driver
   drivertype: 'Base',
+  // URL for credit link
   linkURL: '',
+  // text for credit link
   linkText: '',
+  // tooltip for credit link
   linkTooltip: 'Click for more information',
+  // the maximum number of days of forecast supported 
+  // by this driver
   maxDays : 1,
   
+  // a list of capabilities supported by the driver
+  // we set them all to true here and expect any children
+  // to disable those they don't support
   capabilities: {
     cc: {
       humidity: true,
@@ -491,12 +531,14 @@ wxDriver.prototype = {
     }
   },
   
+  // initialise
   _init: function(stationID) {
     this.stationID = stationID;
     this.data=new Object();
     this._emptyData();
   },
   
+  // empty out this.data
   _emptyData: function() {
     this.data.city = '';
     this.data.country = '';
@@ -533,11 +575,13 @@ wxDriver.prototype = {
       this.data.days[i] = day;
     };
   },
-    
+  
+  // change the stationID
   setStation: function(stationID) {
     this.stationID = stationID;
   },
   
+  // for debugging. Log the driver type
   showType: function() {
     global.log('Using driver type: ' + this.drivertype);
   },
@@ -558,8 +602,11 @@ wxDriver.prototype = {
     });
   }, 
 
-  getData: function() {
-    return this.data;
+  // stub function to be overridden by child classes. deskletObj is a reference
+  // to the main object. It is passed to allow deskletObj.displayForecast()
+  // deskletObj.displayMeta() and deskletObj.displayCurrent() to be called from
+  // within callback functions.
+  refreshData: function(deskletObj) {
   },
 
 };
@@ -582,6 +629,7 @@ wxDriverBBC.prototype = {
   
   _baseURL: 'http://open.live.bbc.co.uk/weather/feeds/en/',
   
+  // initialise the driver
   _bbcinit: function(stationID) {
     this._init(stationID);
     this.capabilities.meta.region =  false;
@@ -598,6 +646,7 @@ wxDriverBBC.prototype = {
       if (weather) {
         this._load_forecast(weather);
       }
+      // get the main object to update the display
       deskletObj.displayForecast();
       deskletObj.displayMeta();
     });
@@ -607,11 +656,13 @@ wxDriverBBC.prototype = {
       if (weather) {
         this._load_observations(weather); 
       }
+      // get the main object to update the display
       deskletObj.displayCurrent();      
     });    
     
   },
-
+  
+  // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (rss) {
     //global.log('_load_days called with: ' + rss);
     //global.log("Prototype: " + Object.getPrototypeOf(this));
@@ -662,7 +713,7 @@ wxDriverBBC.prototype = {
     }
   },
 
-  // take an rss feed of current observations and extract data into an object
+  // take an rss feed of current observations and extract data into this.data
   _load_observations: function (rss) {
     //global.log('_set_cc called with: ' + rss);
     let parser = new marknote.Parser();
@@ -780,37 +831,40 @@ wxDriverMock.prototype = {
   
   linkText: 'Foo',
   
-  maxDays: 3,
+  maxDays: 6,
   
-  linkURL: 'http://foo.com' + this.stationID,
+  linkURL: 'http://foo.com',
   
-  getData: function() { 
+  refreshData: function(deskletObj) { 
     this.mockData();
-    return this.data;
+    deskletObj.displayCurrent();
+    deskletObj.displayForecast();
+    deskletObj.displayMeta();
   },
 
   mockData: function() {
-    this.data.city = 'Foo, UK';
+    this.data.city = 'Foo';
     this.data.country = 'Bar';
     this.data.days=[];
     this.data.cc = new Object();
     this.data.cc.wind_direction = 'SW';
     this.data.cc.wind_speed = '6';
-    this.data.cc.pressure = '125mb, falling';
+    this.data.cc.pressure = '990';
     this.data.cc.pressure_direction = 'Rising';
-    this.data.cc.temperature = '3iC (37iF)';
+    this.data.cc.temperature = '3';
     this.data.cc.humidity = '55';
     this.data.cc.visibility = '';
     this.data.cc.obstime = '';
     this.data.cc.weathertext = 'Sunny';
     this.data.cc.weathericon = '';
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
     for(let i=0; i<this.maxDays; i++) {
       let day = new Object();
-      day.day = 'Sunday';
-      day.weathertext = 'Sunny';
-      day.icon = '';
-      day.maximum_temperature ='99iC (37iF)';
-      day.minimum_temperature = '-33iC (37iF)';
+      day.day = days[i +2];
+      day.weathertext = 'Clouds';
+      day.icon = i+10;
+      day.maximum_temperature ='99';
+      day.minimum_temperature = '-33';
       day.wind_direction = 'N';
       day.wind_speed = '1';
       day.visibility = '';
