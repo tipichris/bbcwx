@@ -76,13 +76,14 @@ MyDesklet.prototype = {
   _init: function(metadata,desklet_id){
     //############Variables###########
     this.desklet_id = desklet_id;
-    this.daynames={Monday: _('Mon'),Tuesday: _('Tue'), Wednesday: _('Wed'), Thursday: _('Thu'), Friday: _('Fri'), Saturday: _('Sat'), Sunday: _('Sun')};
+    this.daynames={Mon: _('Mon'),Tue: _('Tue'), Wed: _('Wed'), Thu: _('Thu'), Fri: _('Fri'), Sat: _('Sat'), Sun: _('Sun')};
     this.fwicons=[];this.labels=[];this.max=[];this.min=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
     this.cc=[];this.days=[];
     this.metadata = metadata;
     this.proces=false;
     this.userno=7; // number of days to show
-    this.oldno=0 // test for a change in this.no
+    this.oldno=0; // test for a change in this.no
+    this.oldwebservice='';
         
     //################################
 
@@ -134,6 +135,7 @@ MyDesklet.prototype = {
   
   _update_style: function() {
     //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
+    let fcap = this.service.capabilities.forecast;
     this.window.vertical = (this.layout==1) ? true : false;
     this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
@@ -153,10 +155,10 @@ MyDesklet.prototype = {
     for(let f=0;f<this.no;f++) {
       this.labels[f].style='text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px";
       this.fwicons[f].height=ICON_HEIGHT*this.zoom;this.fwicons[f].width= ICON_WIDTH*this.zoom;
-      this.max[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-      this.min[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-      this.winds[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-     this.windd[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      if(this.max[f]) this.max[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      if( this.min[f]) this.min[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      if(this.winds[f]) this.winds[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      if(this.windd[f]) this.windd[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
     }
     
     this.buttons.style="padding-top:"+BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BUTTON_PADDING*this.zoom+"px";
@@ -167,7 +169,7 @@ MyDesklet.prototype = {
     
     let forecastlabels = ['maxlabel', 'minlabel', 'windlabel', 'winddlabel'];
     for (let i = 0; i<forecastlabels.length; i++) {
-      this[forecastlabels[i]].style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+      if (this[forecastlabels[i]]) this[forecastlabels[i]].style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
     }
     
     this.cweather.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
@@ -181,6 +183,7 @@ MyDesklet.prototype = {
   },
   
   createwindow: function(){
+    
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
     
     // container for link and refresh icon
@@ -195,12 +198,19 @@ MyDesklet.prototype = {
     
     // these will hold the data for the three day forecast
     this.labels=[]; this.fwicons=[];this.max=[]; this.min=[]; this.windd=[]; this.winds=[]; this.eachday=[];
+    
+    // some labels need resetting incase we are redrawing after a change of service
+    this.humidity=null; this.pressure=null; this.windspeed=null; this.feelslike=null;
+    
     this._separatorArea = new St.DrawingArea({ style_class: STYLE_POPUP_SEPARATOR_MENU_ITEM });
     
+    let ccap = this.service.capabilities.cc;
+    
     // current weather values
-    this.humidity=new St.Label();
-    this.pressure=new St.Label();
-    this.windspeed=new St.Label();
+    if(ccap.humidity) this.humidity=new St.Label();
+    if(ccap.pressure) this.pressure=new St.Label();
+    if(ccap.wind_speed) this.windspeed=new St.Label();
+    if(ccap.feelslike) this.feelslike=new St.Label();
     
     // container for current weather values
     this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px"});
@@ -224,40 +234,49 @@ MyDesklet.prototype = {
     
     this.city.add_actor(this.cityname); 
 
-    this.ctemp_captions.add_actor(new St.Label({text: _('Humidity: ')}));
-    this.ctemp_captions.add_actor(new St.Label({text: _('Pressure: ')}));
-    this.ctemp_captions.add_actor(new St.Label({text: _('Wind: ')}));
-    this.ctemp_values.add_actor(this.humidity);
-    this.ctemp_values.add_actor(this.pressure);
-    this.ctemp_values.add_actor(this.windspeed);
+    if(ccap.humidity) this.ctemp_captions.add_actor(new St.Label({text: _('Humidity: ')}));
+    if(ccap.pressure) this.ctemp_captions.add_actor(new St.Label({text: _('Pressure: ')}));
+    if(ccap.wind_speed) this.ctemp_captions.add_actor(new St.Label({text: _('Wind: ')}));
+    if(ccap.feelslike) this.ctemp_captions.add_actor(new St.Label({text: _('Feels like: ')}));
+    
+    if(this.humidity) this.ctemp_values.add_actor(this.humidity);
+    if(this.pressure) this.ctemp_values.add_actor(this.pressure);
+    if(this.windspeed) this.ctemp_values.add_actor(this.windspeed);
+    if(this.feelslike) this.ctemp_values.add_actor(this.feelslike);
+    
     this.ctemp.add_actor(this.ctemp_captions); //-adauga coloana din stanga la informatii
     this.ctemp.add_actor(this.ctemp_values);  //adauga coloana din dreapta la informatii     
     
     // build table to hold three day forecast
     this.fwtable =new St.Table({style: "spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;"});
     this.maxlabel = new St.Label({text: _('Max:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
-    this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
-    this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"})
-    this.fwtable.add(this.maxlabel,{row:2,col:0});
-    this.fwtable.add(this.minlabel,{row:3,col:0});
-    this.fwtable.add(this.windlabel,{row:4,col:0});
-    this.fwtable.add(this.winddlabel,{row:5,col:0}); 
+    this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
+    
+    let fcap = this.service.capabilities.forecast;
+    let row = 2;
+    
+    if(fcap.maximum_temperature) {this.fwtable.add(this.maxlabel,{row:row,col:0}); row++}
+    if(fcap.minimum_temperature) {this.fwtable.add(this.minlabel,{row:row,col:0}); row++}
+    if(fcap.wind_speed) {this.fwtable.add(this.windlabel,{row:row,col:0}); row++}
+    if(fcap.wind_direction) {this.fwtable.add(this.winddlabel,{row:row,col:0}); row++}
     for(let f=0;f<this.no;f++) {
       this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+TEXT_SIZE*this.zoom+"px" });
       this.fwicons[f]=new St.Button({height:ICON_HEIGHT*this.zoom, width: ICON_WIDTH*this.zoom});
-      this.max[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      this.min[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      this.winds[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      this.windd[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      if(fcap.maximum_temperature) this.max[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      if(fcap.minimum_temperature) this.min[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      if(fcap.wind_speed) this.winds[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      if(fcap.wind_direction) this.windd[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
       this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
       
       this.fwtable.add(this.labels[f],{row:0,col:f+1});
       this.fwtable.add(this.fwicons[f],{row:1,col:f+1});
-      this.fwtable.add(this.max[f],{row:2,col:f+1});
-      this.fwtable.add(this.min[f],{row:3,col:f+1});
-      this.fwtable.add(this.winds[f],{row:4,col:f+1});
-      this.fwtable.add(this.windd[f],{row:5,col:f+1});
+      row = 2;
+      if(this.max[f]) {this.fwtable.add(this.max[f],{row:row,col:f+1}); row++}
+      if(this.min[f]) {this.fwtable.add(this.min[f],{row:row,col:f+1}); row++}
+      if(this.winds[f]) {this.fwtable.add(this.winds[f],{row:row,col:f+1}); row++}
+      if(this.windd[f]) {this.fwtable.add(this.windd[f],{row:row,col:f+1}); row++}
     }
     
     this.but.set_child(this.iconbutton);
@@ -296,6 +315,8 @@ MyDesklet.prototype = {
   },
   
   initForecast: function() {
+    global.log("bbcwx (instance " + this.desklet_id + "): entering initForecast");
+    if (this.service) delete this.service;
     if (this.proces) {
       switch(this.webservice) {
         case 'bbc':
@@ -304,29 +325,36 @@ MyDesklet.prototype = {
         case 'mock':
           this.service = new wxDriverMock(this.stationID);
           break;
+        case 'yahoo':
+          this.service = new wxDriverYahoo(this.stationID);
+          break;
         default:
           this.service = new wxDriverBBC(this.stationID);
       }
+      //global.log("bbcwx (instance " + this.desklet_id + "): capabilities: " + print_r(this.service.capabilities));
       if (this.userno > this.service.maxDays) {
         this.no = this.service.maxDays;
       } else {
         this.no = this.userno;
       }
-      if(this.no != this.oldno) {
+      if((this.no != this.oldno) || (this.oldwebservice != this.webservice)) {
+        global.log("bbcwx (instance " + this.desklet_id + "): recreating window");
+        //global.log("bbcwx (instance " + this.desklet_id + "): capabilities: " + print_r(this.service.capabilities));
         this.createwindow(); 
         this.oldno=this.no;
+        this.oldwebservice = this.webservice;
+        this.setContent(this.window);
       }
-      this.setContent(this.window);    
-      this._refreshweathers(); 
       this._update_style();
+      this._refreshweathers();    
     }
   },
   
   _refreshweathers: function() {
     let now=new Date().toLocaleFormat('%H:%M:%S');
     global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
-    //this.service.showType();
-    //global.log(print_r(this.service.capabilities));
+    this.service.showType();
+    //global.log(print_r(this.service.data));
     this.service.refreshData(this);  
     
     if(this._timeoutId != undefined) {
@@ -338,6 +366,7 @@ MyDesklet.prototype = {
   
   displayForecast: function() {
     global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
+    //global.log("bbcwx (instance " + this.desklet_id + "): forecasts: " +print_r(this.service.data.days));
     for(f=0;f<this.no;f++)
     {
       let day = this.service.data.days[f];
@@ -347,10 +376,10 @@ MyDesklet.prototype = {
       fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
       this.fwicons[f].set_child(fwiconimage);      
       this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
-      this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
-      this.min[f].text=this._formatTemperature(day.minimum_temperature, true);
-      this.winds[f].text=this._formatWindspeed(day.wind_speed, true);
-      this.windd[f].text= ((day.wind_direction) ? _(day.wind_direction) : '');     
+      if(this.max[f]) this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
+      if(this.min[f]) this.min[f].text=this._formatTemperature(day.minimum_temperature, true);
+      if(this.winds[f]) this.winds[f].text=this._formatWindspeed(day.wind_speed, true);
+      if(this.windd[f]) this.windd[f].text= ((day.wind_direction) ? _(day.wind_direction) : '');     
     }
   },
   
@@ -361,9 +390,10 @@ MyDesklet.prototype = {
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
     this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature && cc.weathertext) ? ', ' : '' )+ this._formatTemperature(cc.temperature, true) ;
-    this.humidity.text= this._formatHumidity(cc.humidity);
-    this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
-    this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
+    if (this.humidity) this.humidity.text= this._formatHumidity(cc.humidity);
+    if (this.pressure) this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
+    if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
+    if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true) ;
   },
   
   displayMeta: function() {
@@ -371,7 +401,10 @@ MyDesklet.prototype = {
     this.banner.label = this.service.linkText;
     this.bannertooltip.set_text(this.service.linkTooltip);
     //global.log('Tooltip: ' + this.service.linkTooltip);
-    if(this.bannersig) this.bannersig.disconnect();
+    try {
+      if(this.bannersig) this.bannersig.disconnect();
+    } catch(e) { }
+    
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
@@ -409,6 +442,7 @@ MyDesklet.prototype = {
   // units. Append unit string if units is true
   _formatWindspeed: function(wind, units) {
     units = typeof units !== 'undefined' ? units : false;
+    if (typeof wind === 'undefined') return '';
     if (!wind.toString().length) return '';
     let conversion = {
       'mph': 0.621,
@@ -497,43 +531,47 @@ wxDriver.prototype = {
   // by this driver
   maxDays : 1,
   
-  // a list of capabilities supported by the driver
-  // we set them all to true here and expect any children
-  // to disable those they don't support
-  capabilities: {
-    cc: {
-      humidity: true,
-      temperature: true,
-      pressure: true,
-      pressure_direction: true,
-      wind_speed: true,
-      wind_direction: true,
-      obstime: true,
-      weathertext: true,
-      visibility: true
-    },
-    forecast: {
-      humidity: true,
-      maximum_temperature: true,
-      minimum_temperature: true,
-      pressure: true,
-      pressure_direction: true,
-      wind_speed: true,
-      wind_direction: true,
-      weathertext: true,
-      visibility: true,
-      uv_risk: true
-    },
-    meta: {
-      city: true,
-      country: true,
-      region: true
-    }
-  },
+
   
   // initialise
   _init: function(stationID) {
     this.stationID = stationID;
+    
+    // a list of capabilities supported by the driver
+    // we set them all to true here and expect any children
+    // to disable those they don't support
+    this.capabilities = {
+      cc: {
+        humidity: true,
+        temperature: true,
+        pressure: true,
+        pressure_direction: true,
+        wind_speed: true,
+        wind_direction: true,
+        obstime: true,
+        weathertext: true,
+        visibility: true,
+        feelslike: true
+      },
+      forecast: {
+        humidity: true,
+        maximum_temperature: true,
+        minimum_temperature: true,
+        pressure: true,
+        pressure_direction: true,
+        wind_speed: true,
+        wind_direction: true,
+        weathertext: true,
+        visibility: true,
+        uv_risk: true
+      },
+      meta: {
+        city: true,
+        country: true,
+        region: true
+      }
+    };
+    
     this.data=new Object();
     this._emptyData();
   },
@@ -554,7 +592,8 @@ wxDriver.prototype = {
     this.data.cc.visibility = '';
     this.data.cc.obstime = '';
     this.data.cc.weathertext = '';
-    this.data.cc.weathericon = '';
+    this.data.cc.icon = '';
+    this.data.cc.feelslike = '';
     for(let i=0; i<this.maxDays; i++) {
       let day = new Object();
       day.day = '';
@@ -609,6 +648,12 @@ wxDriver.prototype = {
   refreshData: function(deskletObj) {
   },
 
+  compassDirection: function(deg) {
+    let directions = ['N', 'NNE','NE', 'ENE','E', 'ESE','SE','SSE', 'S','SSW', 'SW', 'WSW','W','WNW', 'NW','NNW'];
+    return directions[Math.round(deg / 22.5) % directions.length];
+  }
+
+
 };
 
 
@@ -633,6 +678,7 @@ wxDriverBBC.prototype = {
   _bbcinit: function(stationID) {
     this._init(stationID);
     this.capabilities.meta.region =  false;
+    this.capabilities.cc.feelslike = false;
   },
   
   refreshData: function(deskletObj) {
@@ -686,7 +732,7 @@ wxDriverBBC.prototype = {
       desc = items[i].getChildElement("description").getText();
       title = items[i].getChildElement("title").getText();
       data.link = items[i].getChildElement("link").getText();
-      data.day = title.split(':')[0].trim();
+      data.day = title.split(':')[0].trim().substring(0,3);
       data.weathertext = title.split(':')[1].split(',')[0].trim();
       let parts = desc.split(',');
       let k, v;
@@ -818,6 +864,152 @@ wxDriverBBC.prototype = {
     return out;
   },
 
+};  
+
+function wxDriverYahoo(stationID) {
+  this._yahooinit(stationID);
+};
+
+wxDriverYahoo.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'Yahoo',
+  maxDays: 5, 
+  linkText: 'Yahoo! Weather',
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'http://weather.yahoo.com',
+  linkTooltip: 'Visit the Yahoo! Weather website',
+  
+  _baseURL: 'http://weather.yahooapis.com/forecastrss?u=c&w=',
+  
+  // initialise the driver
+  _yahooinit: function(stationID) {
+    this._init(stationID);
+    this.capabilities.forecast.wind_direction =  false;
+    this.capabilities.forecast.wind_speed =  false;
+    this.capabilities.forecast.pressure =  false;
+    this.capabilities.forecast.pressure_direction =  false;
+    this.capabilities.forecast.visibility =  false;
+    this.capabilities.forecast.uv_risk =  false;
+    this.capabilities.forecast.humidity =  false;   
+  },
+  
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkTooltip = 'Visit the Yahoo! Weather website';
+    this.linkURL = 'http://weather.yahoo.com/';
+    
+    // process the three day forecast
+    let a = this._getWeather(this._baseURL + this.stationID, function(weather) {
+      if (weather) {
+        this._load_forecast(weather);
+      }
+      // get the main object to update the display
+      global.log("Yahoo data: " + print_r(this.data));
+      deskletObj.displayCurrent();  
+      deskletObj.displayMeta();
+      deskletObj.displayForecast();
+    });   
+    
+  },
+  
+  // process the rss for a 3dayforecast and populate this.data
+  _load_forecast: function (rss) {
+    //global.log('Yahoo _load_days called with: ' + rss);
+    //global.log("Prototype: " + Object.getPrototypeOf(this));
+    let days = [];
+    
+    let parser = new marknote.Parser();
+    let doc = parser.parse(rss);
+
+    let rootElem = doc.getRootElement();
+    let channel = rootElem.getChildElement("channel");
+
+    let geo = channel.getChildElement('yweather:location');
+    let wind = channel.getChildElement('yweather:wind');
+    let atmosphere = channel.getChildElement('yweather:atmosphere');
+
+
+    let pressurecodes = ['Steady', 'Rising', 'Falling'];
+
+    this.data.city = geo.getAttributeValue('city');
+    this.data.region = geo.getAttributeValue('region');
+    this.data.country = geo.getAttributeValue('country');
+
+
+    this.data.cc.wind_speed = wind.getAttributeValue('speed');
+    this.data.cc.wind_direction = this.compassDirection(wind.getAttributeValue('direction'));
+    this.data.cc.pressure = atmosphere.getAttributeValue('pressure');
+    this.data.cc.pressure_direction = pressurecodes[atmosphere.getAttributeValue('rising')];
+    this.data.cc.humidity = atmosphere.getAttributeValue('humidity');
+
+
+    let items = channel.getChildElements("item");
+    let conditions = items[0].getChildElement('yweather:condition');
+
+    this.data.cc.temperature = conditions.getAttributeValue('temp');
+    this.data.cc.obstime = conditions.getAttributeValue('date');
+    this.data.cc.weathertext = conditions.getAttributeValue('text');
+    this.data.cc.icon = conditions.getAttributeValue('code');
+    this.data.cc.feelslike = this.data.cc.temperature - wind.getAttributeValue('chill');
+    
+    this.linkURL = items[0].getChildElement('link').getText();
+    this.linkTooltip = 'Click here to see the full forecast for ' + this.data.city; 
+
+    let forecasts = items[0].getChildElements('yweather:forecast');
+
+    for ( let i=0; i<forecasts.length; i++) {
+      day = new Object();
+      day.day = forecasts[i].getAttributeValue('day');
+      day.maximum_temperature = forecasts[i].getAttributeValue('high');
+      day.minimum_temperature = forecasts[i].getAttributeValue('low');
+      day.weathertext = forecasts[i].getAttributeValue('text');
+      day.icon = forecasts[i].getAttributeValue('code');
+      this.data.days[i] = day;
+    }    
+  },
+  
+  _mapicon: function(code) {
+    let icon_name = 'na';
+    let iconmap = {
+      'clear sky' : '00', //night
+      'sunny' : '01',
+      'partly cloudy' : '02',  //night
+      'sunny intervals' : '03',
+      'sand storm' : '04', // not confirmed
+      'mist' : '05',
+      'fog' : '06',
+      'white cloud' : '07',
+      'light cloud' : '07',
+      'grey cloud' : '08',
+      'thick cloud' : '08',
+      'light rain shower' : '10',
+      'drizzle' : '11',
+      'light rain' : '12',
+      'heavy rain shower' : '14',
+      'heavy rain' : '15',
+      'sleet shower' : '17',
+      'sleet' : '18',
+      'light snow shower' : '23',
+      'light snow' : '24',
+      'heavy snow shower' : '26',
+      'heavy snow' : '27',
+      'thundery shower' : '29',
+      'thunder storm' : '30',
+      'thunderstorm' : '30',
+      'hazy' : '32'
+    }
+    if (wxtext) {
+      wxtext = wxtext.toLowerCase();
+      if (typeof iconmap[wxtext] !== "undefined") {
+        icon_name = iconmap[wxtext];
+      }
+    }
+    return icon_name;
+  },
+  
 };  
 
 function wxDriverMock(stationID) {

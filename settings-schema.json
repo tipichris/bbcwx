@@ -10,6 +10,7 @@
     "description" : "Data service",
     "options" : {
         "BBC" : "bbc",
+        "Yahoo" : "yahoo",
         "Mock" : "mock"
     },
     "tooltip" : "Select the data service you wish to use"
