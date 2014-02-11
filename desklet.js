@@ -449,7 +449,7 @@ MyDesklet.prototype = {
     };
     let precission = {
       'mb': 0,
-      'in': 1,
+      'in': 2,
       'mm': 0
     };
     let mb = 1*pressure;
