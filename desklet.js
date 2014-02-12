@@ -85,6 +85,7 @@ MyDesklet.prototype = {
     this.proces=false;
     this.oldno=0; // test for a change in this.no
     this.oldwebservice='';
+    this.oldshifttemp='';
         
     //################################
 
@@ -102,9 +103,10 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"zoom","zoom",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"border","border",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this.updateStyle,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"citystyle","citystyle",this.updateStyle,null);
+      // these changes potentially need a redraw of the window, so call initForecast
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.initForecast,null);
 
@@ -353,14 +355,18 @@ MyDesklet.prototype = {
         this.no = this.userno;
       }
       
-      this.shifttemp = (this.no > 4) ? true : false;
+      this.shifttemp = false;
+      if (this.no > 4 && this.layout == 0) {
+        this.shifttemp = true;
+      }
       
-      if((this.no != this.oldno) || (this.oldwebservice != this.webservice)) {
+      if((this.no != this.oldno) || (this.oldwebservice != this.webservice) || this.shiftemp != this.oldshifttemp) {
         global.log("bbcwx (instance " + this.desklet_id + "): recreating window");
         //global.log("bbcwx (instance " + this.desklet_id + "): capabilities: " + print_r(this.service.capabilities));
         this.createwindow(); 
         this.oldno=this.no;
         this.oldwebservice = this.webservice;
+        this.oldshifttemp = this.shifttemp;
         this.setContent(this.window);
       }
       this._update_style();
