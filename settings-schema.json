@@ -11,8 +11,7 @@
     "options" : {
         "BBC" : "bbc",
         "Yahoo" : "yahoo",
-        "Open Weather Map": "owm",
-        "Mock" : "mock"
+        "Open Weather Map": "owm"
     },
     "tooltip" : "Select the data service you wish to use"
   },
@@ -58,6 +57,21 @@
         "mm": "mm"
     },
     "tooltip" : "Measurement units used to display atmospheric pressure"
+  },
+  
+  "userno" : {
+    "type": "combobox",
+    "default": "3",
+    "description" : "Number of days",
+    "options" : {
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7"
+    },
+    "tooltip" : "The number of days of forecast to display. Note that not all services support all values"
   },
   
   "displaysep" : {

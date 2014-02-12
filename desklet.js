@@ -64,6 +64,7 @@ const ICON_WIDTH = 40;
 const CC_ICON_HEIGHT =170;
 const CC_ICON_WIDTH =170;
 const BUTTON_PADDING=3;
+const TEMP_PADDING=12;
 const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
 
 function MyDesklet(metadata,desklet_id){
@@ -82,7 +83,6 @@ MyDesklet.prototype = {
     this.cc=[];this.days=[];
     this.metadata = metadata;
     this.proces=false;
-    this.userno=7; // number of days to show
     this.oldno=0; // test for a change in this.no
     this.oldwebservice='';
         
@@ -106,6 +106,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"citystyle","citystyle",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.initForecast,null);
 
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
@@ -140,6 +141,8 @@ MyDesklet.prototype = {
     this.window.vertical = (this.layout==1) ? true : false;
     this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
+    if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
+    if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + TEMP_PADDING *this.zoom + 'px'
     this.fwtable.style="spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;";
     this.cityname.style="text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
     this.ctemp_captions.style = 'text-align : right;font-size: '+TEXT_SIZE*this.zoom+"px";
@@ -232,6 +235,14 @@ MyDesklet.prototype = {
     this.cwicon = new St.Bin({height: (CC_ICON_HEIGHT*this.zoom), width: (CC_ICON_WIDTH*this.zoom)}); //icoana mare cu starea vremii
     // current weather text
     this.weathertext=new St.Label({style: 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
+    
+    // current temp on wide layouts
+    if (this.shifttemp) {
+      this.ctemp_bigtemp = new St.BoxLayout({vertical: false, x_align: 3, y_align: 2, style : 'text-align : left; padding-right: ' + TEMP_PADDING *this.zoom + 'px'});
+      this.currenttemp=new St.Label({style: 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px'});
+      this.ctemp_bigtemp.add_actor(this.currenttemp);
+      this.ctemp.add_actor(this.ctemp_bigtemp);
+    }
     
     this.city.add_actor(this.cityname); 
 
@@ -341,6 +352,9 @@ MyDesklet.prototype = {
       } else {
         this.no = this.userno;
       }
+      
+      this.shifttemp = (this.no > 4) ? true : false;
+      
       if((this.no != this.oldno) || (this.oldwebservice != this.webservice)) {
         global.log("bbcwx (instance " + this.desklet_id + "): recreating window");
         //global.log("bbcwx (instance " + this.desklet_id + "): capabilities: " + print_r(this.service.capabilities));
@@ -393,7 +407,13 @@ MyDesklet.prototype = {
     let cwimage=this._getIconImage(this.service.data.cc.icon);
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
-    this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature && cc.weathertext) ? ', ' : '' )+ this._formatTemperature(cc.temperature, true) ;
+    if (this.shifttemp) {
+      this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '');
+      this.currenttemp.text = this._formatTemperature(cc.temperature, true) ;  
+    } else {
+      this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature && cc.weathertext) ? ', ' : '' )+ this._formatTemperature(cc.temperature, true) ;
+    }
+    
     if (this.humidity) this.humidity.text= this._formatHumidity(cc.humidity);
     if (this.pressure) this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
     if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
@@ -416,7 +436,7 @@ MyDesklet.prototype = {
   
   _getIconImage: function(iconcode) {
     let icon_name = 'na';
-    let icon_ext = '.png';
+    let icon_ext = '.svg';
     if (iconcode) {
       icon_name = iconcode;
     }
@@ -809,32 +829,32 @@ wxDriverBBC.prototype = {
   _getIconFromText: function(wxtext) {
     let icon_name = 'na';
     let iconmap = {
-      'clear sky' : '00', //night
-      'sunny' : '01',
-      'partly cloudy' : '02',  //night
-      'sunny intervals' : '03',
-      'sand storm' : '04', // not confirmed
-      'mist' : '05',
-      'fog' : '06',
-      'white cloud' : '07',
-      'light cloud' : '07',
-      'grey cloud' : '08',
-      'thick cloud' : '08',
-      'light rain shower' : '10',
-      'drizzle' : '11',
-      'light rain' : '12',
-      'heavy rain shower' : '14',
-      'heavy rain' : '15',
-      'sleet shower' : '17',
-      'sleet' : '18',
-      'light snow shower' : '23',
-      'light snow' : '24',
-      'heavy snow shower' : '26',
-      'heavy snow' : '27',
-      'thundery shower' : '29',
-      'thunder storm' : '30',
-      'thunderstorm' : '30',
-      'hazy' : '32'
+      'clear sky' : '31', //night
+      'sunny' : '32',
+      'partly cloudy' : '29',  //night
+      'sunny intervals' : '30',
+      'sand storm' : 'na', // not confirmed
+      'mist' : '20',
+      'fog' : '20',
+      'white cloud' : '26',
+      'light cloud' : '26',
+      'grey cloud' : '26d',
+      'thick cloud' : '26d',
+      'light rain shower' : '39',
+      'drizzle' : '9',
+      'light rain' : '11',
+      'heavy rain shower' : '39',
+      'heavy rain' : '01',
+      'sleet shower' : '07',
+      'sleet' : '07',
+      'light snow shower' : '41',
+      'light snow' : '13',
+      'heavy snow shower' : '41',
+      'heavy snow' : '16',
+      'thundery shower' : '37',
+      'thunder storm' : '03',
+      'thunderstorm' : '03',
+      'hazy' : '19'
     }
     if (wxtext) {
       wxtext = wxtext.toLowerCase();
@@ -962,7 +982,7 @@ wxDriverYahoo.prototype = {
     this.data.cc.temperature = conditions.getAttributeValue('temp');
     this.data.cc.obstime = conditions.getAttributeValue('date');
     this.data.cc.weathertext = conditions.getAttributeValue('text');
-    this.data.cc.icon = conditions.getAttributeValue('code');
+    this.data.cc.icon = this._mapicon(conditions.getAttributeValue('code'));
     this.data.cc.feelslike = wind.getAttributeValue('chill');
     
     this.linkURL = items[0].getChildElement('link').getText();
@@ -971,12 +991,12 @@ wxDriverYahoo.prototype = {
     let forecasts = items[0].getChildElements('yweather:forecast');
 
     for ( let i=0; i<forecasts.length; i++) {
-      day = new Object();
+      let day = new Object();
       day.day = forecasts[i].getAttributeValue('day');
       day.maximum_temperature = forecasts[i].getAttributeValue('high');
       day.minimum_temperature = forecasts[i].getAttributeValue('low');
       day.weathertext = forecasts[i].getAttributeValue('text');
-      day.icon = forecasts[i].getAttributeValue('code');
+      day.icon = this._mapicon(forecasts[i].getAttributeValue('code'));
       this.data.days[i] = day;
     }    
   },
@@ -984,38 +1004,60 @@ wxDriverYahoo.prototype = {
   _mapicon: function(code) {
     let icon_name = 'na';
     let iconmap = {
-      'clear sky' : '00', //night
-      'sunny' : '01',
-      'partly cloudy' : '02',  //night
-      'sunny intervals' : '03',
-      'sand storm' : '04', // not confirmed
-      'mist' : '05',
-      'fog' : '06',
-      'white cloud' : '07',
-      'light cloud' : '07',
-      'grey cloud' : '08',
-      'thick cloud' : '08',
-      'light rain shower' : '10',
-      'drizzle' : '11',
-      'light rain' : '12',
-      'heavy rain shower' : '14',
-      'heavy rain' : '15',
-      'sleet shower' : '17',
-      'sleet' : '18',
-      'light snow shower' : '23',
-      'light snow' : '24',
-      'heavy snow shower' : '26',
-      'heavy snow' : '27',
-      'thundery shower' : '29',
-      'thunder storm' : '30',
-      'thunderstorm' : '30',
-      'hazy' : '32'
+      '0' : '23',
+      '1' : '23',
+      '2' : '23',
+      '3' : '03',
+      '4' : '04',
+      '5' : '05',
+      '6' : '06',
+      '7' : '07',
+      '8' : '08',
+      '9' : '09',
+      '10' : '10',
+      '11' : '39',
+      '12' : '39',
+      '13' : '13',
+      '14' : '14',
+      '15' : '15',
+      '16' : '16',
+      '17' : '18',
+      '18' : '18',
+      '19' : '19',
+      '20' : '20',
+      '21' : '22',
+      '22' : '22',
+      '23' : '23',
+      '24' : '24',
+      '25' : '25',
+      '26' : '26',
+      '27' : '27',
+      '28' : '28',
+      '29' : '29',
+      '30' : '30',
+      '31' : '31',
+      '32' : '32',
+      '33' : '33',
+      '34' : '34',
+      '35' : '06',
+      '36' : '36',
+      '37' : '37',
+      '38' : '38',
+      '39' : '38',
+      '40' : '39',
+      '41' : '16',
+      '42' : '41',
+      '41' : '16',
+      '42' : '41',
+      '43' : '16',
+      '44' : '28',
+      '45' : '35',
+      '46' : '46',
+      '47' : '47',
+      '3200' : 'na'
     }
-    if (wxtext) {
-      wxtext = wxtext.toLowerCase();
-      if (typeof iconmap[wxtext] !== "undefined") {
-        icon_name = iconmap[wxtext];
-      }
+    if (code && (typeof iconmap[code] !== "undefined")) {
+      icon_name = iconmap[code];
     }
     return icon_name;
   },
@@ -1088,7 +1130,7 @@ wxDriverOWM.prototype = {
     this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
     this.linkTooltip = 'Click for the full forecast for ' + this.data.city;
 
-    for (i=0; i<json.list.length; i++) {
+    for (let i=0; i<json.list.length; i++) {
       let day = new Object();
       day.day = new Date(json.list[i].dt *1000).toLocaleFormat( "%a" );
       day.minimum_temperature = json.list[i].temp.min;
@@ -1120,14 +1162,38 @@ wxDriverOWM.prototype = {
     this.data.cc.wind_direction = this.compassDirection(json.wind.deg);
     this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
     this.data.cc.weathertext = json.weather[0].main;
-    this.data.cc.icon = json.weather[0].icon;
+    this.data.cc.icon = this._mapicon(json.weather[0].icon);
     
     global.log('json: ' + print_r(json));
   },
   
-  _mapicon: function(icon) {
-    return icon.replace('d', '');
-  }  
+  _mapicon: function(code) {
+    let icon_name = 'na';
+    let iconmap = {
+      '01d': '32',
+      '01n' : '31',
+      '02d' : '34',
+      '02n' : '33',
+      '03d' : '26',
+      '03n' : '26',
+      '04d' : '28',
+      '04n' : '27',
+      '09d' : '11',
+      '09n' : '11',
+      '10d' : '39',
+      '10n' : '45',
+      '11d' : '03',
+      '11n' : '03',
+      '13d' : '16',
+      '13n' : '16',
+      '50d' : '20',
+      '50n' : '20'
+    }
+    if (code && (typeof iconmap[code] !== "undefined")) {
+      icon_name = iconmap[code];
+    }
+    return icon_name;
+  }, 
 
 };  
 
