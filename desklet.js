@@ -38,6 +38,7 @@ const Cinnamon = imports.gi.Cinnamon;
 const Settings = imports.ui.settings;
 
 const Soup = imports.gi.Soup;
+// const JSON = imports.JSON;
 
 const UUID = "bbcwx@oak-wood.co.uk";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
@@ -328,6 +329,9 @@ MyDesklet.prototype = {
         case 'yahoo':
           this.service = new wxDriverYahoo(this.stationID);
           break;
+        case 'owm':
+          this.service = new wxDriverOWM(this.stationID);
+          break;
         default:
           this.service = new wxDriverBBC(this.stationID);
       }
@@ -367,7 +371,7 @@ MyDesklet.prototype = {
   displayForecast: function() {
     global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
     //global.log("bbcwx (instance " + this.desklet_id + "): forecasts: " +print_r(this.service.data.days));
-    for(f=0;f<this.no;f++)
+    for(let f=0;f<this.no;f++)
     {
       let day = this.service.data.days[f];
       //global.log("Data: " + print_r(day));
@@ -681,6 +685,7 @@ wxDriverBBC.prototype = {
     this._init(stationID);
     this.capabilities.meta.region =  false;
     this.capabilities.cc.feelslike = false;
+    this.capabilities.cc.obstime = false;
   },
   
   refreshData: function(deskletObj) {
@@ -909,7 +914,7 @@ wxDriverYahoo.prototype = {
         this._load_forecast(weather);
       }
       // get the main object to update the display
-      global.log("Yahoo data: " + print_r(this.data));
+      // global.log("Yahoo data: " + print_r(this.data));
       deskletObj.displayCurrent();  
       deskletObj.displayMeta();
       deskletObj.displayForecast();
@@ -1016,6 +1021,116 @@ wxDriverYahoo.prototype = {
   },
   
 };  
+
+function wxDriverOWM(stationID) {
+  this._owminit(stationID);
+};
+
+wxDriverOWM.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'OWM',
+  maxDays: 7, 
+  linkText: 'openweathermap.org',
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'http://openweathermap.org',
+  linkTooltip: 'Visit the Open Weather Map website',
+  
+  _baseURL: 'http://api.openweathermap.org/data/2.5/',
+  
+  // initialise the driver
+  _owminit: function(stationID) {
+    this._init(stationID);
+    this.capabilities.meta.region =  false;
+    this.capabilities.cc.feelslike = false;
+    this.capabilities.cc.pressure_direction = false;
+  },
+  
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkTooltip = 'Visit the Open Weather Map website';
+    this.linkURL = 'http://openweathermap.org';
+    
+    // process the 7 day forecast
+    let a = this._getWeather(this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + this.stationID, function(weather) {
+      if (weather) {
+        this._load_forecast(weather);
+      }
+      // get the main object to update the display
+      deskletObj.displayForecast();
+      deskletObj.displayMeta();
+    });
+
+    // process current observations
+    let b = this._getWeather(this._baseURL + 'weather?units=metric&id=' + this.stationID, function(weather) {
+      if (weather) {
+        this._load_observations(weather); 
+      }
+      // get the main object to update the display
+      deskletObj.displayCurrent();      
+    });    
+    
+  },
+  
+  // process the rss for a 3dayforecast and populate this.data
+  _load_forecast: function (data) {
+    //global.log('_load_days called with: ' + rss);
+    //global.log("Prototype: " + Object.getPrototypeOf(this));
+    let days = [];
+   
+    let json = JSON.parse(data);
+    if (json.cod != '200') return false;
+
+    this.data.city = json.city.name;
+    this.data.country = json.city.country;
+    this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
+    this.linkTooltip = 'Click for the full forecast for ' + this.data.city;
+
+    for (i=0; i<json.list.length; i++) {
+      let day = new Object();
+      day.day = new Date(json.list[i].dt *1000).toLocaleFormat( "%a" );
+      day.minimum_temperature = json.list[i].temp.min;
+      day.maximum_temperature = json.list[i].temp.max;
+      day.pressure = json.list[i].pressure;
+      day.humidity = json.list[i].humidity;
+      day.wind_speed = json.list[i].speed * 3.6;
+      day.wind_direction = this.compassDirection(json.list[i].deg);
+      day.weathertext = json.list[i].weather[0].description;
+      day.icon = this._mapicon(json.list[i].weather[0].icon);
+
+      this.data.days[i] = day;
+    }
+   
+    //global.log('OWM Data: ' + print_r(this.data));
+    
+  },
+
+  // take an rss feed of current observations and extract data into this.data
+  _load_observations: function (data) {
+    
+    let json = JSON.parse(data);
+    if (json.cod != '200') return false;
+    
+    this.data.cc.humidity = json.main.humidity;
+    this.data.cc.temperature = json.main.temp;
+    this.data.cc.pressure = json.main.pressure;
+    this.data.cc.wind_speed = json.wind.speed * 3.6;
+    this.data.cc.wind_direction = this.compassDirection(json.wind.deg);
+    this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
+    this.data.cc.weathertext = json.weather[0].main;
+    this.data.cc.icon = json.weather[0].icon;
+    
+    global.log('json: ' + print_r(json));
+  },
+  
+  _mapicon: function(icon) {
+    return icon.replace('d', '');
+  }  
+
+};  
+
 
 function wxDriverMock(stationID) {
   this._init(stationID);

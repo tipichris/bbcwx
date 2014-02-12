@@ -11,6 +11,7 @@
     "options" : {
         "BBC" : "bbc",
         "Yahoo" : "yahoo",
+        "Open Weather Map": "owm",
         "Mock" : "mock"
     },
     "tooltip" : "Select the data service you wish to use"
