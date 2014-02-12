@@ -7,9 +7,10 @@ html, body, div, span, h1, h2, h3, p, a, em, pre, code { margin: 0;padding: 0; b
 body {line-height: 1.5; margin: 0.7em 1em;}
 html { font-size:100.01%; }
 body {font-size: 11pt;color: #222;background: #fff;font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;}
-h1,h2 { font-weight: normal; color: #111; }
+h1,h2,h3 { font-weight: normal; color: #111; }
 h1 { font-size: 20.2pt; line-height: 1; margin-bottom: 0.5em; }
 h2 { font-size: 14pt;  margin-bottom: 0.75em; }
+h3 { font-size: 10pt; font-weight: bold; font-style: normal; line-height: 1; margin-bottom: 0.2em; }
 p { margin: 0 0 1.5em; }
 pre { margin: 1.5em 0; white-space: pre; }
 pre,code { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
@@ -22,29 +23,34 @@ td {padding: 10px 15px;}
 td.light {background-color: #666; color: #fff}
 .code { width: 90%; margin: 0 auto 1em auto; background-color: #dde; border: 1px #736C62 dotted; color: #000; display: block; padding: 7px; font-size: 1.1em;}
 </style>
-  <title>Using the BBC Weather Desklet</title>
+  <title>Using the Weather Desklet</title>
   </head>
   <body bgcolor="#ffffff" text="#000000">
-    <h1>Using the BBC Weather Desklet</h1>
+    <h1>Using the Weather Desklet</h1>
     <p>
-    The BBC weather desklet retrieves RSS feeds of weather from the BBC, parses
-    the information and displays them on your Cinnamon desktop in 
+    The Weather Desklet can retrieve weather data from several online weather
+    services and display them on your Cinnamon desktop in 
     a neat way. It comes with a choice of icons and plenty of options
-    for configuring how it looks. <strong>Please note that the desklet is not produced or endorsed
-    by the BBC.</strong>
+    for configuring how it looks. At present it can work with data from the 
+    <a href="http://www.bbc.co.uk/weather">BBC</a>,
+    <a href="http://weather.yahoo.com/">Yahoo! Weather</a> and 
+    <a href="http://openweathermap.org/">Open Weather Map</a>.
     </p>
     <p>
     The forecast will be refreshed approximately every thirty minutes.
     You can always force a refresh by clicking the refresh button at the 
     bottom right. Hovering over the icons in the forecast area will show
-    their descriptions, whilst the link to www.bbc.co.uk/weather at the 
+    their descriptions, whilst the link at the 
     bottom of the desklet will take you to a more detailed forecast for your area.  
     </p>
     <h2>Configuration</h2>
     <p>Right click on the desklet and select 'Configure...' to enter the 
     configuration screen.</p>
-    <p>The Location must be specified as a numeric code as used on the BBC
-    weather website. To find your location code visit 
+    <p>The Location must be specified as a code and these codes are specific
+    to the service that you are using.
+    <h3>BBC</h3>
+    <p>
+    To find your location code visit 
     <a href="http://www.bbc.co.uk/weather/">the BBC Weather site</a> and 
     search for your city. The code you need is the numeric part at
     the end of URL for the city's weather. For example, a search for London 
@@ -53,23 +59,42 @@ td.light {background-color: #666; color: #fff}
     <p>
     The Location code is therefore 2643743.
     </p>
+    <h3>Open Weather Map</h3>
+    <p>Visit <a href="http://openweathermap.org/">the Open Weather Map</a> and search
+    for your city. The code you need is the numeric part at
+    the end of URL for the city's weather. For example, a search for Chicago 
+    takes you to:</p>
+    <code class='code'>http://openweathermap.org/city/4887398</code>
+    <p>
+    The Location code is therefore 4887398.
+    </p>
+    <h3>Yahoo</h3>
+    <p>Visit <a href="http://weather.yahoo.com/">Yahoo! Weather</a> and search
+    for your city. The code you need is the numeric part at
+    the end of URL for the city's weather. For example, a search for Berlin 
+    takes you to:</p>
+    <code class='code'>http://weather.yahoo.com/deutschland/bundesland-berlin/berlin-638242/</code>
+    <p>
+    The Location code is therefore 638242.
+    </p>    
+    <h3>Other settings</h3>
     <p>You can experiment with the various display settings. Here's a sample of 
     what the different icon sets look like:</p>
     <table>
     <tr>
-      <td><img src="icons/colourful/10.png" class="iconsample" alt="colourful example"></td>
+      <td><img src="icons/colourful/39.svg" class="iconsample" alt="colourful example"></td>
       <td>Colourful</td>
-      <td class="light"><img src="icons/light/10.png" class="iconsample" alt="light example"></td>
+      <td class="light"><img src="icons/light/39.svg" class="iconsample" alt="light example"></td>
       <td class="light">Light</td>
-      <td><img src="icons/dark/10.png" class="iconsample" alt="dark example"></td>
+      <td><img src="icons/dark/39.svg" class="iconsample" alt="dark example"></td>
       <td>Dark</td>
     </tr>
     <tr>
-      <td><img src="icons/flat_colourful/10.png" class="iconsample" alt="flat colourful example"></td>
+      <td><img src="icons/flat_colourful/39.svg" class="iconsample" alt="flat colourful example"></td>
       <td>Flat colouful</td>
-      <td class="light"><img src="icons/flat_white/10.png" class="iconsample" alt="flat white example"></td>
+      <td class="light"><img src="icons/flat_white/39.svg" class="iconsample" alt="flat white example"></td>
       <td class="light">Flat white</td>  
-      <td><img src="icons/flat_black/10.png" class="iconsample" alt="flat black example"></td>
+      <td><img src="icons/flat_black/39.svg" class="iconsample" alt="flat black example"></td>
       <td>Flat black</td>       
     </tr>
     </table>
