@@ -329,7 +329,7 @@ MyDesklet.prototype = {
   },
   
   initForecast: function() {
-    global.log("bbcwx (instance " + this.desklet_id + "): entering initForecast");
+    //global.log("bbcwx (instance " + this.desklet_id + "): entering initForecast");
     if (this.service) delete this.service;
     if (this.proces) {
       switch(this.webservice) {
@@ -360,9 +360,7 @@ MyDesklet.prototype = {
         this.shifttemp = true;
       }
       
-      if((this.no != this.oldno) || (this.oldwebservice != this.webservice) || this.shiftemp != this.oldshifttemp) {
-        global.log("bbcwx (instance " + this.desklet_id + "): recreating window");
-        //global.log("bbcwx (instance " + this.desklet_id + "): capabilities: " + print_r(this.service.capabilities));
+      if((this.no != this.oldno) || (this.oldwebservice != this.webservice) || this.shiftemp != this.oldshifttemp) {       
         this.createwindow(); 
         this.oldno=this.no;
         this.oldwebservice = this.webservice;
@@ -377,8 +375,7 @@ MyDesklet.prototype = {
   _refreshweathers: function() {
     let now=new Date().toLocaleFormat('%H:%M:%S');
     global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
-    this.service.showType();
-    //global.log(print_r(this.service.data));
+    //this.service.showType();
     this.service.refreshData(this);  
     
     if(this._timeoutId != undefined) {
@@ -389,12 +386,10 @@ MyDesklet.prototype = {
   },
   
   displayForecast: function() {
-    global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
-    //global.log("bbcwx (instance " + this.desklet_id + "): forecasts: " +print_r(this.service.data.days));
+    //global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
     for(let f=0;f<this.no;f++)
     {
       let day = this.service.data.days[f];
-      //global.log("Data: " + print_r(day));
       this.labels[f].label=((this.daynames[day.day]) ? this.daynames[day.day] : '');
       let fwiconimage = this._getIconImage(day.icon);
       fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
@@ -408,7 +403,6 @@ MyDesklet.prototype = {
   },
   
   displayCurrent: function(){
-    //global.log("bbcwx (instance " + this.desklet_id + "): entering displayCurrent");
     let cc = this.service.data.cc;
     let cwimage=this._getIconImage(this.service.data.cc.icon);
     cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
@@ -430,7 +424,6 @@ MyDesklet.prototype = {
     this.cityname.text=this.service.data.city;
     this.banner.label = this.service.linkText;
     this.bannertooltip.set_text(this.service.linkTooltip);
-    //global.log('Tooltip: ' + this.service.linkTooltip);
     try {
       if(this.bannersig) this.bannersig.disconnect();
     } catch(e) { }
@@ -743,8 +736,6 @@ wxDriverBBC.prototype = {
   
   // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (rss) {
-    //global.log('_load_days called with: ' + rss);
-    //global.log("Prototype: " + Object.getPrototypeOf(this));
     let days = [];
     
     let parser = new marknote.Parser();
@@ -794,7 +785,6 @@ wxDriverBBC.prototype = {
 
   // take an rss feed of current observations and extract data into this.data
   _load_observations: function (rss) {
-    //global.log('_set_cc called with: ' + rss);
     let parser = new marknote.Parser();
     let doc = parser.parse(rss);
     let rootElem = doc.getRootElement();
@@ -940,7 +930,6 @@ wxDriverYahoo.prototype = {
         this._load_forecast(weather);
       }
       // get the main object to update the display
-      // global.log("Yahoo data: " + print_r(this.data));
       deskletObj.displayCurrent();  
       deskletObj.displayMeta();
       deskletObj.displayForecast();
@@ -950,8 +939,6 @@ wxDriverYahoo.prototype = {
   
   // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (rss) {
-    //global.log('Yahoo _load_days called with: ' + rss);
-    //global.log("Prototype: " + Object.getPrototypeOf(this));
     let days = [];
     
     let parser = new marknote.Parser();
@@ -1124,8 +1111,6 @@ wxDriverOWM.prototype = {
   
   // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (data) {
-    //global.log('_load_days called with: ' + rss);
-    //global.log("Prototype: " + Object.getPrototypeOf(this));
     let days = [];
    
     let json = JSON.parse(data);
@@ -1149,10 +1134,7 @@ wxDriverOWM.prototype = {
       day.icon = this._mapicon(json.list[i].weather[0].icon);
 
       this.data.days[i] = day;
-    }
-   
-    //global.log('OWM Data: ' + print_r(this.data));
-    
+    }    
   },
 
   // take an rss feed of current observations and extract data into this.data
@@ -1169,8 +1151,6 @@ wxDriverOWM.prototype = {
     this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
     this.data.cc.weathertext = json.weather[0].main;
     this.data.cc.icon = this._mapicon(json.weather[0].icon);
-    
-    global.log('json: ' + print_r(json));
   },
   
   _mapicon: function(code) {
@@ -1203,110 +1183,7 @@ wxDriverOWM.prototype = {
 
 };  
 
-
-function wxDriverMock(stationID) {
-  this._init(stationID);
-};
-
-wxDriverMock.prototype = {
-  __proto__: wxDriver.prototype,
-  
-  drivertype: 'Mock',
-  
-  linkText: 'Foo',
-  
-  maxDays: 6,
-  
-  linkURL: 'http://foo.com',
-  
-  refreshData: function(deskletObj) { 
-    this.mockData();
-    deskletObj.displayCurrent();
-    deskletObj.displayForecast();
-    deskletObj.displayMeta();
-  },
-
-  mockData: function() {
-    this.data.city = 'Foo';
-    this.data.country = 'Bar';
-    this.data.days=[];
-    this.data.cc = new Object();
-    this.data.cc.wind_direction = 'SW';
-    this.data.cc.wind_speed = '6';
-    this.data.cc.pressure = '990';
-    this.data.cc.pressure_direction = 'Rising';
-    this.data.cc.temperature = '3';
-    this.data.cc.humidity = '55';
-    this.data.cc.visibility = '';
-    this.data.cc.obstime = '';
-    this.data.cc.weathertext = 'Sunny';
-    this.data.cc.weathericon = '';
-    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-    for(let i=0; i<this.maxDays; i++) {
-      let day = new Object();
-      day.day = days[i +2];
-      day.weathertext = 'Clouds';
-      day.icon = i+10;
-      day.maximum_temperature ='99';
-      day.minimum_temperature = '-33';
-      day.wind_direction = 'N';
-      day.wind_speed = '1';
-      day.visibility = '';
-      day.pressure = '';
-      day.humidity = '';
-      day.uv_risk = '';
-      day.pollution = '';
-      day.sunrise = '';
-      day.sunset = '';
-      this.data.days[i] = day;
-    };
-  },
-};
-
 function main(metadata, desklet_id){
   let desklet = new MyDesklet(metadata,desklet_id);
   return desklet;
-};
-
-//#############################
-function print_r (obj, t) {
-
-    // define tab spacing
-    var tab = t || '';
-
-    // check if it's array
-    var isArr = Object.prototype.toString.call(obj) === '[object Array]';
-    
-    // use {} for object, [] for array
-    var str = isArr ? ('Array\n' + tab + '[\n') : ('Object\n' + tab + '{\n');
-
-    // walk through it's properties
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
-            var val1 = obj[prop];
-            var val2 = '';
-            var type = Object.prototype.toString.call(val1);
-            switch (type) {
-                
-                // recursive if object/array
-                case '[object Array]':
-                case '[object Object]':
-                    val2 = print_r(val1, (tab + '\t'));
-                    break;
-                    
-                case '[object String]':
-                    val2 = '\'' + val1 + '\'';
-                    break;
-                    
-                default:
-                    val2 = val1;
-            }
-            str += tab + '\t' + prop + ' => ' + val2 + ',\n';
-        }
-    }
-    
-    // remove extra comma for last property
-    str = str.substring(0, str.length - 2) + '\n' + tab;
-    
-    return isArr ? (str + ']') : (str + '}');
 };
