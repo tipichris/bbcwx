@@ -470,7 +470,7 @@ MyDesklet.prototype = {
   // Get an icon
   _getIconImage: function(iconcode) {
     let icon_name = 'na';
-    let icon_ext = '.svg';
+    let icon_ext = '.png';
     if (iconcode) {
       icon_name = iconcode;
     }
@@ -1329,7 +1329,16 @@ wxDriverOWM.prototype = {
       '900' : '24',
       '901' : '24',
       '902' : '24',
-    }
+    };
+    let nightmap = {
+      '39' : '45',
+      '41' : '46',
+      '30' : '29',
+      '28' : '27',
+      '32' : '31',
+      '22' : '21',
+      '47' : '38'
+    };
     let iconmap = {
       '01d' : '32',
       '01n' : '31',
@@ -1349,7 +1358,7 @@ wxDriverOWM.prototype = {
       '13n' : '16',
       '50d' : '20',
       '50n' : '20'
-    }
+    };
     if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
       icon_name = iconmap[iconcode];
     }
@@ -1358,6 +1367,10 @@ wxDriverOWM.prototype = {
     if (wxcode && (typeof wxmap[wxcode] !== "undefined")) {
       icon_name = wxmap[wxcode];
     }
+    // override with nighttime icons
+    if ((iconcode.charAt(2) == 'n') && (typeof nightmap[icon_name] !== "undefined")) {
+      icon_name = nightmap[icon_name];
+    }    
     return icon_name;
   }, 
 
