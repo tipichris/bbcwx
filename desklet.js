@@ -189,7 +189,6 @@ MyDesklet.prototype = {
   },
   
   createwindow: function(){
-    
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
     
     // container for link and refresh icon
@@ -361,6 +360,10 @@ MyDesklet.prototype = {
       }
       
       if((this.no != this.oldno) || (this.oldwebservice != this.webservice) || this.shiftemp != this.oldshifttemp) {       
+        // get rid of the signal to bannersig before we recreate a window
+        try {
+          if(this.bannersig) this.bannersig.disconnect();
+        } catch(e) { }        
         this.createwindow(); 
         this.oldno=this.no;
         this.oldwebservice = this.webservice;
@@ -426,8 +429,7 @@ MyDesklet.prototype = {
     this.bannertooltip.set_text(this.service.linkTooltip);
     try {
       if(this.bannersig) this.bannersig.disconnect();
-    } catch(e) { }
-    
+    } catch(e) { }  
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
@@ -476,7 +478,7 @@ MyDesklet.prototype = {
     };
     let unitstring = {
       'mph': _('mph'),
-      'knots': _('kts'),
+      'knots': _('kn'),
       'kph': _('km/h'),
       'mps': _('m/s')
     }
