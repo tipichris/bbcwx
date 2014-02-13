@@ -92,8 +92,8 @@ MyDesklet.prototype = {
     try {
       Desklet.Desklet.prototype._init.call(this, metadata);
       //#########################binding configuration file################
-      this.settings = new Settings.DeskletSettings(this, UUID, this.desklet_id);                    
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this.changeStation,null);
+      this.settings = new Settings.DeskletSettings(this, UUID, this.desklet_id);  
+      // these changes require only a change to the styling of the desklet:
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"punits","punits",this.updateStyle,null);
@@ -105,20 +105,22 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"citystyle","citystyle",this.updateStyle,null);
-      // these changes potentially need a redraw of the window, so call initForecast
+      
+      // this change requires us to fetch new data:
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this.changeStation,null);
+      
+      // these changes potentially need a redraw of the window, so call initForecast:
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.initForecast,null);
-
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
       this._menu.addAction(_("Help"), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
-
-           
+         
       this.proces=true;
-    
+      
       this.initForecast();
       
     }
@@ -127,9 +129,9 @@ MyDesklet.prototype = {
     }
     return true;
   },
-
-  //##########################REFRESH#########################  
-    
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Called when some change requires the styling of the desklet to be updated    
   updateStyle: function() {
     this._update_style();
     // also need to run these to update icon style and size
@@ -137,6 +139,8 @@ MyDesklet.prototype = {
     this.displayCurrent();
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Does the bulk of the work of updating style
   _update_style: function() {
     //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
     let fcap = this.service.capabilities.forecast;
@@ -188,6 +192,10 @@ MyDesklet.prototype = {
     
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Create the layout of our desklet. Certain settings changes require this
+  // to be called again (eg change service, as capabilities change, change number 
+  // days of forecast to display
   createwindow: function(){
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
     
@@ -318,19 +326,25 @@ MyDesklet.prototype = {
     
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Update the forecast, without changing layout or styling
   updateForecast: function() {
     this._refreshweathers();
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Change the location we are displaying weather for
   changeStation: function() {
     this.service.setStation(this.stationID);
     this._refreshweathers();
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Set everything up initially
   initForecast: function() {
-    //global.log("bbcwx (instance " + this.desklet_id + "): entering initForecast");
     if (this.service) delete this.service;
     if (this.proces) {
+      // select the the driver we need for this service
       switch(this.webservice) {
         case 'bbc':
           this.service = new wxDriverBBC(this.stationID);
@@ -347,18 +361,22 @@ MyDesklet.prototype = {
         default:
           this.service = new wxDriverBBC(this.stationID);
       }
-      //global.log("bbcwx (instance " + this.desklet_id + "): capabilities: " + print_r(this.service.capabilities));
+      // set the number of days of forecast to display; maximum of the number
+      // selected by the user and the maximum supported by the driver
       if (this.userno > this.service.maxDays) {
         this.no = this.service.maxDays;
       } else {
         this.no = this.userno;
       }
       
+      // if more than four days we'll shift the position of the current temperature,
+      // but only in horizontal layout
       this.shifttemp = false;
       if (this.no > 4 && this.layout == 0) {
         this.shifttemp = true;
       }
       
+      // in these circumstances we need to redraw the window from scratch as the layout has changed
       if((this.no != this.oldno) || (this.oldwebservice != this.webservice) || this.shiftemp != this.oldshifttemp) {       
         // get rid of the signal to bannersig before we recreate a window
         try {
@@ -375,10 +393,15 @@ MyDesklet.prototype = {
     }
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // update the data from the service and start the timeout to the next update
+  // refreshData will call the display* functions
   _refreshweathers: function() {
     let now=new Date().toLocaleFormat('%H:%M:%S');
     global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
-    //this.service.showType();
+    
+    // pass this to refreshData as it needs to call display* functions once the data
+    // is updated
     this.service.refreshData(this);  
     
     if(this._timeoutId != undefined) {
@@ -388,6 +411,8 @@ MyDesklet.prototype = {
     this._timeoutId=Mainloop.timeout_add_seconds(1500 + Math.round(Math.random()*600), Lang.bind(this, this.updateForecast));
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Update the display of the forecast data
   displayForecast: function() {
     //global.log("bbcwx (instance " + this.desklet_id + "): entering displayForecast");
     for(let f=0;f<this.no;f++)
@@ -405,6 +430,8 @@ MyDesklet.prototype = {
     }
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Update the display of the current observations
   displayCurrent: function(){
     let cc = this.service.data.cc;
     let cwimage=this._getIconImage(this.service.data.cc.icon);
@@ -424,6 +451,8 @@ MyDesklet.prototype = {
     if (this.service.data.status.cc != 2) this.weathertext.text = _('No data');
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Update the display of the meta data, eg city name
   displayMeta: function() {
     this.cityname.text=this.service.data.city;
     this.banner.label = this.service.linkText;
@@ -437,6 +466,8 @@ MyDesklet.prototype = {
     if (this.service.data.status.meta != 2) this.cityname.text = _('No data');
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Get an icon
   _getIconImage: function(iconcode) {
     let icon_name = 'na';
     let icon_ext = '.svg';
@@ -451,8 +482,9 @@ MyDesklet.prototype = {
     return St.TextureCache.get_default().load_uri_async(icon_uri, 200*this.zoom, 200*this.zoom);
   },
   
-  // take a string with both C and F and extract the required 
-  // value. Append unit string if units is true
+  ////////////////////////////////////////////////////////////////////////////
+  // take a temperature in C and convert as needed. 
+  // Append unit string if units is true
   _formatTemperature: function(temp, units) {
     units = typeof units !== 'undefined' ? units : false;
     if (typeof temp === 'undefined') return '';
@@ -466,6 +498,7 @@ MyDesklet.prototype = {
     return out;
   },
 
+  ////////////////////////////////////////////////////////////////////////////
   // take a wind speed in km/h and convert to required 
   // units. Append unit string if units is true
   _formatWindspeed: function(wind, units) {
@@ -493,6 +526,8 @@ MyDesklet.prototype = {
     return out;
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // take a pressure in mb and convert as needed. Append units and trajectory
   // -> pressure: real, pressure (in mb)
   // -> direction: string, direction of travel, or false
   // -> units: boolean, append units
@@ -528,11 +563,13 @@ MyDesklet.prototype = {
     return out;
   },
   
+  ////////////////////////////////////////////////////////////////////////////
   _formatHumidity: function(humidity) {
     if (!humidity.toString().length) return '';
     return 1*humidity + '%';
   },
-
+  
+  ////////////////////////////////////////////////////////////////////////////
   on_desklet_removed: function() {
     if(this._timeoutId != undefined) {
       Mainloop.source_remove(this._timeoutId);
@@ -542,8 +579,12 @@ MyDesklet.prototype = {
     
 };
 
-// a base driver class. This is overridden
-// by drivers that actually do the work
+////////////////////////////////////////////////////////////////////////////
+//          ### DRIVERS FOR ACCESSING DIFFERENT WEBSERVICES ###
+////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////
+// a base driver class. This is overridden by drivers that actually do the work
 function wxDriver(stationID) {
   this._init(stationID);
 };
@@ -562,8 +603,7 @@ wxDriver.prototype = {
   // by this driver
   maxDays : 1,
   
-
-  
+  ////////////////////////////////////////////////////////////////////////////
   // initialise
   _init: function(stationID) {
     this.stationID = stationID;
@@ -607,7 +647,8 @@ wxDriver.prototype = {
     this._emptyData();
   },
   
-  // empty out this.data
+  ////////////////////////////////////////////////////////////////////////////
+  // create an empty data structure to be filled in by child drivers
   _emptyData: function() {
     this.data.city = '';
     this.data.country = '';
@@ -654,18 +695,22 @@ wxDriver.prototype = {
     };
   },
   
+  ////////////////////////////////////////////////////////////////////////////
   // change the stationID
   setStation: function(stationID) {
     this.stationID = stationID;
   },
   
+  ////////////////////////////////////////////////////////////////////////////
   // for debugging. Log the driver type
   showType: function() {
     global.log('Using driver type: ' + this.drivertype);
   },
-
-  // async call to retrieve rss feed. 
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // async call to retrieve the data. 
   // -> url: url to call
+  // -> callback: callback function to which the retrieved data is passed
   _getWeather: function(url, callback) {
     var here = this;
     let message = Soup.Message.new('GET', url);
@@ -687,6 +732,8 @@ wxDriver.prototype = {
   refreshData: function(deskletObj) {
   },
 
+  ////////////////////////////////////////////////////////////////////////////
+  // Utility function to translate direction in degrees into 16 compass points
   compassDirection: function(deg) {
     let directions = ['N', 'NNE','NE', 'ENE','E', 'ESE','SE','SSE', 'S','SSW', 'SW', 'WSW','W','WNW', 'NW','NNW'];
     return directions[Math.round(deg / 22.5) % directions.length];
@@ -695,7 +742,8 @@ wxDriver.prototype = {
 
 };
 
-
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for the BBC
 function wxDriverBBC(stationID) {
   this._bbcinit(stationID);
 };
@@ -934,6 +982,8 @@ wxDriverBBC.prototype = {
 
 };  
 
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for Yahoo! Weather
 function wxDriverYahoo(stationID) {
   this._yahooinit(stationID);
 };
@@ -1127,6 +1177,8 @@ wxDriverYahoo.prototype = {
   
 };  
 
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for Open Weather Map
 function wxDriverOWM(stationID) {
   this._owminit(stationID);
 };
@@ -1209,7 +1261,7 @@ wxDriverOWM.prototype = {
       day.humidity = json.list[i].humidity;
       day.wind_speed = json.list[i].speed * 3.6;
       day.wind_direction = this.compassDirection(json.list[i].deg);
-      day.weathertext = json.list[i].weather[0].description.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+      day.weathertext = json.list[i].weather[0].description.ucwords();
       day.icon = this._mapicon(json.list[i].weather[0].icon, json.list[i].weather[0].id);
 
       this.data.days[i] = day;
@@ -1237,7 +1289,7 @@ wxDriverOWM.prototype = {
     this.data.cc.wind_speed = json.wind.speed * 3.6;
     this.data.cc.wind_direction = this.compassDirection(json.wind.deg);
     this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
-    this.data.cc.weathertext = json.weather[0].description.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+    this.data.cc.weathertext = json.weather[0].description.ucwords();
     this.data.cc.icon = this._mapicon(json.weather[0].icon, json.weather[0].id);
     this.data.status.cc = 2; 
   },
@@ -1310,6 +1362,15 @@ wxDriverOWM.prototype = {
   }, 
 
 };  
+
+////////////////////////////////////////////////////////////////////////////
+// ### END DRIVERS ###
+
+////////////////////////////////////////////////////////////////////////////
+// Utility function to capitalise first letter of each word in a string
+String.prototype.ucwords = function() {
+    return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+};
 
 function main(metadata, desklet_id){
   let desklet = new MyDesklet(metadata,desklet_id);
