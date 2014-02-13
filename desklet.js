@@ -1209,8 +1209,8 @@ wxDriverOWM.prototype = {
       day.humidity = json.list[i].humidity;
       day.wind_speed = json.list[i].speed * 3.6;
       day.wind_direction = this.compassDirection(json.list[i].deg);
-      day.weathertext = json.list[i].weather[0].description;
-      day.icon = this._mapicon(json.list[i].weather[0].icon);
+      day.weathertext = json.list[i].weather[0].description.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+      day.icon = this._mapicon(json.list[i].weather[0].icon, json.list[i].weather[0].id);
 
       this.data.days[i] = day;
     }    
@@ -1237,15 +1237,49 @@ wxDriverOWM.prototype = {
     this.data.cc.wind_speed = json.wind.speed * 3.6;
     this.data.cc.wind_direction = this.compassDirection(json.wind.deg);
     this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
-    this.data.cc.weathertext = json.weather[0].main;
-    this.data.cc.icon = this._mapicon(json.weather[0].icon);
+    this.data.cc.weathertext = json.weather[0].description.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+    this.data.cc.icon = this._mapicon(json.weather[0].icon, json.weather[0].id);
     this.data.status.cc = 2; 
   },
   
-  _mapicon: function(code) {
+  _mapicon: function(iconcode, wxcode) {
     let icon_name = 'na';
+    let wxmap = {
+      '300' : '09',
+      '301' : '09',
+      '302' : '12',
+      '310' : '09',
+      '311' : '09',
+      '312' : '12',
+      '313' : '39',
+      '314' : '39',
+      '321' : '39',
+      '500' : '11',
+      '511' : '10',
+      '521' : '39',
+      '522' : '39',
+      '531' : '39',
+      '600' : '13',
+      '601' : '14',
+      '602' : '16',
+      '611' : '06',
+      '612' : '06',
+      '615' : '05',
+      '616' : '07',
+      '620' : '41',
+      '621' : '41',
+      '622' : '41',
+      '802' : '30',
+      '803' : '28',
+      '804' : '26',
+      '904' : '36',
+      '905' : '24',
+      '900' : '24',
+      '901' : '24',
+      '902' : '24',
+    }
     let iconmap = {
-      '01d': '32',
+      '01d' : '32',
       '01n' : '31',
       '02d' : '34',
       '02n' : '33',
@@ -1264,8 +1298,13 @@ wxDriverOWM.prototype = {
       '50d' : '20',
       '50n' : '20'
     }
-    if (code && (typeof iconmap[code] !== "undefined")) {
-      icon_name = iconmap[code];
+    if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
+      icon_name = iconmap[iconcode];
+    }
+    // override with more precise icon from the weather code if
+    // we can
+    if (wxcode && (typeof wxmap[wxcode] !== "undefined")) {
+      icon_name = wxmap[wxcode];
     }
     return icon_name;
   }, 
