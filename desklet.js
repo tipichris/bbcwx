@@ -53,7 +53,7 @@ Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefa
 const TEXT_SIZE = 14;
 const CC_TEXT_SIZE = 24;
 const LABEL_TEXT_SIZE = 11;
-const LINK_TEXT_SIZE = 9;
+const LINK_TEXT_SIZE = 10;
 const REFRESH_ICON_SIZE=14;
 const TABLE_ROW_SPACING=2;
 const TABLE_COL_SPACING=5;
@@ -554,6 +554,7 @@ wxDriver.prototype = {
   linkText: '',
   // tooltip for credit link
   linkTooltip: 'Click for more information',
+  lttTemplate: _('Click for the full forecast for %s'),
   // the maximum number of days of forecast supported 
   // by this driver
   maxDays : 1,
@@ -748,7 +749,7 @@ wxDriverBBC.prototype = {
     let location = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
     this.data.city = location.split(',')[0].trim();
     this.data.country = location.split(',')[1].trim();
-    this.linkTooltip = 'Click here to see the full forecast for ' + this.data.city;
+    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
     this.linkURL = channel.getChildElement("link").getText();
     let items = channel.getChildElements("item");
     let desc, title;
@@ -981,7 +982,7 @@ wxDriverYahoo.prototype = {
     this.data.cc.feelslike = wind.getAttributeValue('chill');
     
     this.linkURL = items[0].getChildElement('link').getText();
-    this.linkTooltip = 'Click here to see the full forecast for ' + this.data.city; 
+    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
 
     let forecasts = items[0].getChildElements('yweather:forecast');
 
@@ -1121,7 +1122,7 @@ wxDriverOWM.prototype = {
     this.data.city = json.city.name;
     this.data.country = json.city.country;
     this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
-    this.linkTooltip = 'Click for the full forecast for ' + this.data.city;
+    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
 
     for (let i=0; i<json.list.length; i++) {
       let day = new Object();

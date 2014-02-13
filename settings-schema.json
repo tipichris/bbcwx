@@ -60,17 +60,13 @@
   },
   
   "userno" : {
-    "type": "combobox",
-    "default": "3",
-    "description" : "Number of days",
-    "options" : {
-      "2": "2",
-      "3": "3",
-      "4": "4",
-      "5": "5",
-      "6": "6",
-      "7": "7"
-    },
+    "type" : "spinbutton",
+    "default" : 3,
+    "min" : 2,
+    "max" : 7,
+    "step" : 1,
+    "units" : "days",
+    "description" : "Show forecast for",
     "tooltip" : "The number of days of forecast to display. Note that not all services support all values"
   },
   
@@ -84,18 +80,13 @@
   },
 
   "zoom" : {
-    "type": "combobox",
-    "default" : "1",
-    "description" : "Scale",
-    "options" : {
-      "200%" : "2",
-      "150%" : "1.5",
-      "125%" : "1.25",
-      "100%" : "1",
-      "85%" : "0.85",
-      "75%" : "0.75",
-      "50%" : "0.5"    
-    },
+    "type" : "spinbutton",
+    "default" : 1.0,
+    "min" : 0.5,
+    "max" : 2.0,
+    "step" : 0.1,
+    "units" : "times",
+    "description" : "Zoom by",
     "tooltip" : "Change the size of the desklet"
   },
   
@@ -154,7 +145,7 @@
     "min" : 0.0,
     "max" : 1.0,
     "step" : 0.05,
-    "description" : "Transparency:",
+    "description" : "Transparency",
     "tooltip" : "Set the transparency of the desklet"
   },
   
