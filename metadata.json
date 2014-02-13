@@ -1,7 +1,7 @@
 {
-    "description": "BBC Weather Desklet", 
+    "description": "Display weather from the BBC, Yahoo! or Open Weather Map", 
     "last-edited": "1391160776", 
-    "name": "BBC Weather Desklet", 
+    "name": "Weather Desklet", 
     "uuid": "bbcwx@oak-wood.co.uk",
     "max-instances": "10"
 }
