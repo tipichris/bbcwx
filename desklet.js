@@ -716,8 +716,7 @@ wxDriver.prototype = {
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
       if( message.status_code == 200) {
-        let mes = message.response_body.data;
-        callback.call(here,mes.toString()); 
+        callback.call(here,message.response_body.data.toString()); 
       } else {
         global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
         callback.call(here,false);
