@@ -1,18 +1,9 @@
-A desklet to display weather from the BBC's weather feeds.
+A desklet for the Cinnamon desktop to display weather from various
+web sources.
 
-** The desklet is not produced or endorsed by the BBC **
+See help.html for usage instructions, or visit
 
-To find your location's code go to 
-
-http://www.bbc.co.uk/weather/
-
-and search for your city. The station ID you need is the numeric part at
-the end of URL for the city's weather. For example, a search for London 
-takes you to
-
-http://www.bbc.co.uk/weather/2643743
-
-The StationID is 2643743
+http://www.oak-wood.co.uk/oss/other/bbcwx
 
 This desklet is a fork of Loganj's AccuWeather Desklet,
 http://cinnamon-spices.linuxmint.com/desklets/view/10. It makes use of
