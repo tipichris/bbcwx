@@ -129,67 +129,59 @@ MyDesklet.prototype = {
     }
     return true;
   },
-  
-  ////////////////////////////////////////////////////////////////////////////
-  // Called when some change requires the styling of the desklet to be updated    
-  updateStyle: function() {
-    this._update_style();
-    // also need to run these to update icon style and size
-    this.displayForecast();
-    this.displayCurrent();
-  },
-  
-  ////////////////////////////////////////////////////////////////////////////
-  // Does the bulk of the work of updating style
-  _update_style: function() {
-    //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
-    let fcap = this.service.capabilities.forecast;
-    this.window.vertical = (this.layout==1) ? true : false;
-    this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
-    this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
-    if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
-    if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + TEMP_PADDING *this.zoom + 'px'
-    this.fwtable.style="spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;";
-    this.cityname.style="text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
-    this.ctemp_captions.style = 'text-align : right;font-size: '+TEXT_SIZE*this.zoom+"px";
-    this.ctemp_values.style = 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px";
-    
-    if (this.border) {
-      this.window.style="border: 2px solid "+this.bordercolor+"; border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
-    }
-    else {
-      this.window.style="border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
-    }
-    this._separatorArea.height=5*this.zoom;
 
-    for(let f=0;f<this.no;f++) {
-      this.labels[f].style='text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px";
-      this.fwicons[f].height=ICON_HEIGHT*this.zoom;this.fwicons[f].width= ICON_WIDTH*this.zoom;
-      if(this.max[f]) this.max[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-      if( this.min[f]) this.min[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-      if(this.winds[f]) this.winds[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-      if(this.windd[f]) this.windd[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+  ////////////////////////////////////////////////////////////////////////////
+  // Set everything up initially
+  initForecast: function() {
+    if (this.service) delete this.service;
+    if (this.proces) {
+      // select the the driver we need for this service
+      switch(this.webservice) {
+        case 'bbc':
+          this.service = new wxDriverBBC(this.stationID);
+          break;
+        case 'mock':
+          this.service = new wxDriverMock(this.stationID);
+          break;
+        case 'yahoo':
+          this.service = new wxDriverYahoo(this.stationID);
+          break;
+        case 'owm':
+          this.service = new wxDriverOWM(this.stationID);
+          break;
+        default:
+          this.service = new wxDriverBBC(this.stationID);
+      }
+      // set the number of days of forecast to display; maximum of the number
+      // selected by the user and the maximum supported by the driver
+      if (this.userno > this.service.maxDays) {
+        this.no = this.service.maxDays;
+      } else {
+        this.no = this.userno;
+      }
+      
+      // if more than four days we'll shift the position of the current temperature,
+      // but only in horizontal layout
+      this.shifttemp = false;
+      if (this.no > 4 && this.layout == 0) {
+        this.shifttemp = true;
+      }
+      
+      // in these circumstances we need to redraw the window from scratch as the layout has changed
+      if((this.no != this.oldno) || (this.oldwebservice != this.webservice) || this.shiftemp != this.oldshifttemp) {       
+        // get rid of the signal to bannersig before we recreate a window
+        try {
+          if(this.bannersig) this.bannersig.disconnect();
+        } catch(e) { }        
+        this.createwindow(); 
+        this.oldno=this.no;
+        this.oldwebservice = this.webservice;
+        this.oldshifttemp = this.shifttemp;
+        this.setContent(this.window);
+      }
+      this._update_style();
+      this._refreshweathers();    
     }
-    
-    this.buttons.style="padding-top:"+BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BUTTON_PADDING*this.zoom+"px";
-    
-    this.iconbutton.icon_size=REFRESH_ICON_SIZE*this.zoom;
-    this.banner.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
-    this.bannerpre.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
-    
-    let forecastlabels = ['maxlabel', 'minlabel', 'windlabel', 'winddlabel'];
-    for (let i = 0; i<forecastlabels.length; i++) {
-      if (this[forecastlabels[i]]) this[forecastlabels[i]].style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
-    }
-    
-    this.cweather.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
-    if (this.layout==1) {
-      // loose the top padding on container in vertical mode (too much space)
-      this.container.style='padding: 0 ' + CONTAINER_PADDING*this.zoom+'px ' + CONTAINER_PADDING*this.zoom+'px ' + CONTAINER_PADDING*this.zoom+'px ' ;
-    } else {
-      this.container.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
-    }
-    
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -327,6 +319,68 @@ MyDesklet.prototype = {
   },
   
   ////////////////////////////////////////////////////////////////////////////
+  // Called when some change requires the styling of the desklet to be updated    
+  updateStyle: function() {
+    this._update_style();
+    // also need to run these to update icon style and size
+    this.displayForecast();
+    this.displayCurrent();
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Does the bulk of the work of updating style
+  _update_style: function() {
+    //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
+    let fcap = this.service.capabilities.forecast;
+    this.window.vertical = (this.layout==1) ? true : false;
+    this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
+    this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
+    if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
+    if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + TEMP_PADDING *this.zoom + 'px'
+    this.fwtable.style="spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;";
+    this.cityname.style="text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
+    this.ctemp_captions.style = 'text-align : right;font-size: '+TEXT_SIZE*this.zoom+"px";
+    this.ctemp_values.style = 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px";
+    
+    if (this.border) {
+      this.window.style="border: 2px solid "+this.bordercolor+"; border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
+    }
+    else {
+      this.window.style="border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
+    }
+    this._separatorArea.height=5*this.zoom;
+
+    for(let f=0;f<this.no;f++) {
+      this.labels[f].style='text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px";
+      this.fwicons[f].height=ICON_HEIGHT*this.zoom;this.fwicons[f].width= ICON_WIDTH*this.zoom;
+      if(this.max[f]) this.max[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      if( this.min[f]) this.min[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      if(this.winds[f]) this.winds[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      if(this.windd[f]) this.windd[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+    }
+    
+    this.buttons.style="padding-top:"+BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BUTTON_PADDING*this.zoom+"px";
+    
+    this.iconbutton.icon_size=REFRESH_ICON_SIZE*this.zoom;
+    this.banner.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
+    this.bannerpre.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
+    
+    let forecastlabels = ['maxlabel', 'minlabel', 'windlabel', 'winddlabel'];
+    for (let i = 0; i<forecastlabels.length; i++) {
+      if (this[forecastlabels[i]]) this[forecastlabels[i]].style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+    }
+    
+    this.cweather.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
+    if (this.layout==1) {
+      // loose the top padding on container in vertical mode (too much space)
+      this.container.style='padding: 0 ' + CONTAINER_PADDING*this.zoom+'px ' + CONTAINER_PADDING*this.zoom+'px ' + CONTAINER_PADDING*this.zoom+'px ' ;
+    } else {
+      this.container.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
+    }
+    
+  },
+    
+  ////////////////////////////////////////////////////////////////////////////
   // Update the forecast, without changing layout or styling
   updateForecast: function() {
     this._refreshweathers();
@@ -337,60 +391,6 @@ MyDesklet.prototype = {
   changeStation: function() {
     this.service.setStation(this.stationID);
     this._refreshweathers();
-  },
-  
-  ////////////////////////////////////////////////////////////////////////////
-  // Set everything up initially
-  initForecast: function() {
-    if (this.service) delete this.service;
-    if (this.proces) {
-      // select the the driver we need for this service
-      switch(this.webservice) {
-        case 'bbc':
-          this.service = new wxDriverBBC(this.stationID);
-          break;
-        case 'mock':
-          this.service = new wxDriverMock(this.stationID);
-          break;
-        case 'yahoo':
-          this.service = new wxDriverYahoo(this.stationID);
-          break;
-        case 'owm':
-          this.service = new wxDriverOWM(this.stationID);
-          break;
-        default:
-          this.service = new wxDriverBBC(this.stationID);
-      }
-      // set the number of days of forecast to display; maximum of the number
-      // selected by the user and the maximum supported by the driver
-      if (this.userno > this.service.maxDays) {
-        this.no = this.service.maxDays;
-      } else {
-        this.no = this.userno;
-      }
-      
-      // if more than four days we'll shift the position of the current temperature,
-      // but only in horizontal layout
-      this.shifttemp = false;
-      if (this.no > 4 && this.layout == 0) {
-        this.shifttemp = true;
-      }
-      
-      // in these circumstances we need to redraw the window from scratch as the layout has changed
-      if((this.no != this.oldno) || (this.oldwebservice != this.webservice) || this.shiftemp != this.oldshifttemp) {       
-        // get rid of the signal to bannersig before we recreate a window
-        try {
-          if(this.bannersig) this.bannersig.disconnect();
-        } catch(e) { }        
-        this.createwindow(); 
-        this.oldno=this.no;
-        this.oldwebservice = this.webservice;
-        this.oldshifttemp = this.shifttemp;
-        this.setContent(this.window);
-      }
-      this._update_style();
-      this._refreshweathers();    
-    }
   },
   
   ////////////////////////////////////////////////////////////////////////////
