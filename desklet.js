@@ -421,6 +421,7 @@ MyDesklet.prototype = {
     if (this.pressure) this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
     if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true) ;
+    if (this.service.data.status.cc != 2) this.weathertext.text = _('No data');
   },
   
   displayMeta: function() {
@@ -433,6 +434,7 @@ MyDesklet.prototype = {
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
+    if (this.service.data.status.meta != 2) this.cityname.text = _('No data');
   },
   
   _getIconImage: function(iconcode) {
@@ -496,6 +498,7 @@ MyDesklet.prototype = {
   // -> units: boolean, append units
   _formatPressure: function(pressure, direction, units) {
     units = typeof units !== 'undefined' ? units : false;
+    direction = typeof direction !== 'undefined' ? direction : '';
     if (typeof pressure === 'undefined') return '';
     if (!pressure.toString().length) return '';
     let conversion = {
@@ -609,6 +612,14 @@ wxDriver.prototype = {
     this.data.city = '';
     this.data.country = '';
     this.data.days=[];
+    
+    delete this.data.status;
+    this.data.status = new Object();
+    // 1: waiting; 2: success; 0; failed/error
+    this.data.status.cc = 1;
+    this.data.status.forecast = 1;
+    this.data.status.meta =1;
+    
     delete this.data.cc;
     this.data.cc = new Object();
     this.data.cc.wind_direction = '';
@@ -739,31 +750,94 @@ wxDriverBBC.prototype = {
   
   // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (rss) {
+    if (!rss) {
+      this.data.status.forecast = 0;
+      this.data.status.meta = 0;
+      return;
+    }
     let days = [];
     
     let parser = new marknote.Parser();
     let doc = parser.parse(rss);
+    if (!doc)  {
+      this.data.status.forecast = 0;
+      this.data.status.meta = 0;
+      return;
+    }
+    try {
+      let rootElem = doc.getRootElement();
+      let channel = rootElem.getChildElement("channel");
+      let location = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
+      this.data.city = location.split(',')[0].trim();
+      this.data.country = location.split(',')[1].trim();
+      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+      this.linkURL = channel.getChildElement("link").getText();
+      let items = channel.getChildElements("item");
+      let desc, title;
 
-    let rootElem = doc.getRootElement();
-    let channel = rootElem.getChildElement("channel");
-    let location = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
-    this.data.city = location.split(',')[0].trim();
-    this.data.country = location.split(',')[1].trim();
-    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-    this.linkURL = channel.getChildElement("link").getText();
-    let items = channel.getChildElements("item");
-    let desc, title;
+      for (let i=0; i<items.length; i++) {
+        let data = new Object();
+        desc = items[i].getChildElement("description").getText();
+        title = items[i].getChildElement("title").getText();
+        data.link = items[i].getChildElement("link").getText();
+        data.day = title.split(':')[0].trim().substring(0,3);
+        data.weathertext = title.split(':')[1].split(',')[0].trim();
+        let parts = desc.split(',');
+        let k, v;
+        for (let b=0; b<parts.length; b++) {
+          k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
+          v = parts[b].slice(parts[b].indexOf(':')+1).trim();
+          if (v.toLowerCase() == 'null') v = '';
+          if (k == "wind_direction") {
+            let vparts = v.split(" ");
+            v = '';
+            for (let c=0; c<vparts.length; c++) {
+              v += vparts[c].charAt(0).toUpperCase();
+            }
+          }
+          data[k] = v;
+        }
+        data.maximum_temperature = this._getTemperature(data.maximum_temperature);
+        data.minimum_temperature = this._getTemperature(data.minimum_temperature);
+        data.wind_speed = this._getWindspeed(data.wind_speed);
+        data.pressure = data.pressure.replace('mb', '');
+        data.humidity = data.humidity.replace('%', '');
+        data.icon = this._getIconFromText(data.weathertext);
+        this.data.days[i] = data;
+      }
+      this.data.status.forecast = 2;
+      this.data.status.meta = 2;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = 0;
+      this.data.status.meta = 0;
+    }
+  },
 
-    for (let i=0; i<items.length; i++) {
-      let data = new Object();
-      desc = items[i].getChildElement("description").getText();
-      title = items[i].getChildElement("title").getText();
-      data.link = items[i].getChildElement("link").getText();
-      data.day = title.split(':')[0].trim().substring(0,3);
-      data.weathertext = title.split(':')[1].split(',')[0].trim();
+  // take an rss feed of current observations and extract data into this.data
+  _load_observations: function (rss) {
+    if (!rss) {
+      this.data.status.cc = 0;
+      return;
+    }
+    let parser = new marknote.Parser();
+    let doc = parser.parse(rss);
+    if (!doc) {
+      this.data.status.cc = 0;
+      return;
+    }
+    try {
+      let rootElem = doc.getRootElement();
+      let channel = rootElem.getChildElement("channel");
+      let item = channel.getChildElement("item");
+      let desc = item.getChildElement("description").getText();
+      let title = item.getChildElement("title").getText();
+      desc = desc.replace('mb,', 'mb|');
+      this.data.cc.weathertext = title.split(':')[2].split(',')[0].trim();
+      if (this.data.cc.weathertext.toLowerCase() == 'null') this.data.cc.weathertext = '';
       let parts = desc.split(',');
-      let k, v;
       for (let b=0; b<parts.length; b++) {
+        let k, v;
         k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
         v = parts[b].slice(parts[b].indexOf(':')+1).trim();
         if (v.toLowerCase() == 'null') v = '';
@@ -774,55 +848,23 @@ wxDriverBBC.prototype = {
             v += vparts[c].charAt(0).toUpperCase();
           }
         }
-        data[k] = v;
+        if (k == "pressure") {
+          let pparts=v.split('|');
+          v = pparts[0].trim();
+          this.data.cc.pressure_direction = pparts[1].trim();
+        }      
+        this.data.cc[k] = v;
       }
-      data.maximum_temperature = this._getTemperature(data.maximum_temperature);
-      data.minimum_temperature = this._getTemperature(data.minimum_temperature);
-      data.wind_speed = this._getWindspeed(data.wind_speed);
-      data.pressure = data.pressure.replace('mb', '');
-      data.humidity = data.humidity.replace('%', '');
-      data.icon = this._getIconFromText(data.weathertext);
-      this.data.days[i] = data;
+      this.data.cc.icon = this._getIconFromText(this.data.cc.weathertext);
+      this.data.cc.temperature = this._getTemperature(this.data.cc.temperature);
+      this.data.cc.wind_speed = this._getWindspeed(this.data.cc.wind_speed);
+      this.data.cc.humidity = this.data.cc.humidity.replace('%', '');
+      this.data.cc.pressure = this.data.cc.pressure.replace('mb', '');
+      this.data.status.cc = 2;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.cc = 0;
     }
-  },
-
-  // take an rss feed of current observations and extract data into this.data
-  _load_observations: function (rss) {
-    let parser = new marknote.Parser();
-    let doc = parser.parse(rss);
-    let rootElem = doc.getRootElement();
-    let channel = rootElem.getChildElement("channel");
-    let item = channel.getChildElement("item");
-    let desc = item.getChildElement("description").getText();
-    let title = item.getChildElement("title").getText();
-    desc = desc.replace('mb,', 'mb|');
-    this.data.cc.weathertext = title.split(':')[2].split(',')[0].trim();
-    if (this.data.cc.weathertext.toLowerCase() == 'null') this.data.cc.weathertext = '';
-    let parts = desc.split(',');
-    for (let b=0; b<parts.length; b++) {
-      let k, v;
-      k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
-      v = parts[b].slice(parts[b].indexOf(':')+1).trim();
-      if (v.toLowerCase() == 'null') v = '';
-      if (k == "wind_direction") {
-        let vparts = v.split(" ");
-        v = '';
-        for (let c=0; c<vparts.length; c++) {
-          v += vparts[c].charAt(0).toUpperCase();
-        }
-      }
-      if (k == "pressure") {
-        let pparts=v.split('|');
-        v = pparts[0].trim();
-        this.data.cc.pressure_direction = pparts[1].trim();
-      }      
-      this.data.cc[k] = v;
-    }
-    this.data.cc.icon = this._getIconFromText(this.data.cc.weathertext);
-    this.data.cc.temperature = this._getTemperature(this.data.cc.temperature);
-    this.data.cc.wind_speed = this._getWindspeed(this.data.cc.wind_speed);
-    this.data.cc.humidity = this.data.cc.humidity.replace('%', '');
-    this.data.cc.pressure = this.data.cc.pressure.replace('mb', '');
   },
   
   _getIconFromText: function(wxtext) {
@@ -940,61 +982,88 @@ wxDriverYahoo.prototype = {
     
   },
   
-  // process the rss for a 3dayforecast and populate this.data
+  // process the rss and populate this.data
   _load_forecast: function (rss) {
+    if (!rss) {
+      this.data.status.forecast = 0;
+      this.data.status.meta = 0;
+      this.data.status.cc = 0;
+      return;
+    }    
     let days = [];
     
     let parser = new marknote.Parser();
     let doc = parser.parse(rss);
+    if (!doc) {
+      this.data.status.cc = 0;
+      this.data.status.meta = 0;
+      this.data.status.forecast = 0;
+      return;
+    }
+    try {
+      let rootElem = doc.getRootElement();
 
-    let rootElem = doc.getRootElement();
-
-    let channel = rootElem.getChildElement("channel");
-    let title = channel.getChildElement("title").getText();
-    if (title.indexOf('Error') != -1) return false;
-    
-    let geo = channel.getChildElement('yweather:location');
-    let wind = channel.getChildElement('yweather:wind');
-    let atmosphere = channel.getChildElement('yweather:atmosphere');
-
-
-    let pressurecodes = ['Steady', 'Rising', 'Falling'];
-
-    this.data.city = geo.getAttributeValue('city');
-    this.data.region = geo.getAttributeValue('region');
-    this.data.country = geo.getAttributeValue('country');
-
-
-    this.data.cc.wind_speed = wind.getAttributeValue('speed');
-    this.data.cc.wind_direction = this.compassDirection(wind.getAttributeValue('direction'));
-    this.data.cc.pressure = atmosphere.getAttributeValue('pressure');
-    this.data.cc.pressure_direction = pressurecodes[atmosphere.getAttributeValue('rising')];
-    this.data.cc.humidity = atmosphere.getAttributeValue('humidity');
+      let channel = rootElem.getChildElement("channel");
+      let title = channel.getChildElement("title").getText();
+      if (title.indexOf('Error') != -1) {
+        this.data.status.cc = 0;
+        this.data.status.meta = 0;
+        this.data.status.forecast = 0;
+        return;
+      }
+      
+      let geo = channel.getChildElement('yweather:location');
+      let wind = channel.getChildElement('yweather:wind');
+      let atmosphere = channel.getChildElement('yweather:atmosphere');
 
 
-    let items = channel.getChildElements("item");
-    let conditions = items[0].getChildElement('yweather:condition');
+      let pressurecodes = ['Steady', 'Rising', 'Falling'];
 
-    this.data.cc.temperature = conditions.getAttributeValue('temp');
-    this.data.cc.obstime = conditions.getAttributeValue('date');
-    this.data.cc.weathertext = conditions.getAttributeValue('text');
-    this.data.cc.icon = this._mapicon(conditions.getAttributeValue('code'));
-    this.data.cc.feelslike = wind.getAttributeValue('chill');
-    
-    this.linkURL = items[0].getChildElement('link').getText();
-    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+      this.data.city = geo.getAttributeValue('city');
+      this.data.region = geo.getAttributeValue('region');
+      this.data.country = geo.getAttributeValue('country');
 
-    let forecasts = items[0].getChildElements('yweather:forecast');
 
-    for ( let i=0; i<forecasts.length; i++) {
-      let day = new Object();
-      day.day = forecasts[i].getAttributeValue('day');
-      day.maximum_temperature = forecasts[i].getAttributeValue('high');
-      day.minimum_temperature = forecasts[i].getAttributeValue('low');
-      day.weathertext = forecasts[i].getAttributeValue('text');
-      day.icon = this._mapicon(forecasts[i].getAttributeValue('code'));
-      this.data.days[i] = day;
-    }    
+      this.data.cc.wind_speed = wind.getAttributeValue('speed');
+      this.data.cc.wind_direction = this.compassDirection(wind.getAttributeValue('direction'));
+      this.data.cc.pressure = atmosphere.getAttributeValue('pressure');
+      this.data.cc.pressure_direction = pressurecodes[atmosphere.getAttributeValue('rising')];
+      this.data.cc.humidity = atmosphere.getAttributeValue('humidity');
+
+
+      let items = channel.getChildElements("item");
+      let conditions = items[0].getChildElement('yweather:condition');
+
+      this.data.cc.temperature = conditions.getAttributeValue('temp');
+      this.data.cc.obstime = conditions.getAttributeValue('date');
+      this.data.cc.weathertext = conditions.getAttributeValue('text');
+      this.data.cc.icon = this._mapicon(conditions.getAttributeValue('code'));
+      this.data.cc.feelslike = wind.getAttributeValue('chill');
+      
+      this.linkURL = items[0].getChildElement('link').getText();
+      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+
+      let forecasts = items[0].getChildElements('yweather:forecast');
+
+      for ( let i=0; i<forecasts.length; i++) {
+        let day = new Object();
+        day.day = forecasts[i].getAttributeValue('day');
+        day.maximum_temperature = forecasts[i].getAttributeValue('high');
+        day.minimum_temperature = forecasts[i].getAttributeValue('low');
+        day.weathertext = forecasts[i].getAttributeValue('text');
+        day.icon = this._mapicon(forecasts[i].getAttributeValue('code'));
+        this.data.days[i] = day;
+      }
+      
+      this.data.status.forecast = 2;
+      this.data.status.meta = 2;
+      this.data.status.cc = 2;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = 0;
+      this.data.status.meta = 0;
+      this.data.status.cc = 0;
+    }
   },
   
   _mapicon: function(code) {
@@ -1041,8 +1110,6 @@ wxDriverYahoo.prototype = {
       '38' : '38',
       '39' : '38',
       '40' : '39',
-      '41' : '16',
-      '42' : '41',
       '41' : '16',
       '42' : '41',
       '43' : '16',
@@ -1114,10 +1181,19 @@ wxDriverOWM.prototype = {
   
   // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (data) {
+    if (!data) {
+      this.data.status.forecast = 0;
+      this.data.status.meta = 0;
+      return;
+    }    
     let days = [];
    
     let json = JSON.parse(data);
-    if (json.cod != '200') return false;
+    if (json.cod != '200') {
+      this.data.status.forecast = 0;
+      this.data.status.meta = 0;      
+      return;
+    }
 
     this.data.city = json.city.name;
     this.data.country = json.city.country;
@@ -1138,13 +1214,22 @@ wxDriverOWM.prototype = {
 
       this.data.days[i] = day;
     }    
+    
+    this.data.status.forecast = 2;
+    this.data.status.meta = 2;
   },
 
   // take an rss feed of current observations and extract data into this.data
   _load_observations: function (data) {
-    
+    if (!data) {
+      this.data.status.cc = 0;
+      return;
+    }     
     let json = JSON.parse(data);
-    if (json.cod != '200') return false;
+    if (json.cod != '200') {
+      this.data.status.cc = 0;     
+      return;
+    }
     
     this.data.cc.humidity = json.main.humidity;
     this.data.cc.temperature = json.main.temp;
@@ -1154,6 +1239,7 @@ wxDriverOWM.prototype = {
     this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
     this.data.cc.weathertext = json.weather[0].main;
     this.data.cc.icon = this._mapicon(json.weather[0].icon);
+    this.data.status.cc = 2; 
   },
   
   _mapicon: function(code) {
