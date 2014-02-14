@@ -66,6 +66,7 @@ const CC_ICON_WIDTH =170;
 const BUTTON_PADDING=3;
 const TEMP_PADDING=12;
 const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
+const REFRESH_TIME = 1800;
 
 function MyDesklet(metadata,desklet_id){
   this._init(metadata,desklet_id);
@@ -408,7 +409,8 @@ MyDesklet.prototype = {
       Mainloop.source_remove(this._timeoutId);
     }
     
-    this._timeoutId=Mainloop.timeout_add_seconds(1500 + Math.round(Math.random()*600), Lang.bind(this, this.updateForecast));
+    this._timeoutId=Mainloop.timeout_add_seconds(Math.round(REFRESH_TIME * (0.85 + Math.random()*0.3)),Lang.bind(this, this.updateForecast));
+    //this._timeoutId=Mainloop.timeout_add_seconds(1500 + Math.round(Math.random()*600), Lang.bind(this, this.updateForecast));
   },
   
   ////////////////////////////////////////////////////////////////////////////
