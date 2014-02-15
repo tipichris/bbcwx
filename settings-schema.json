@@ -78,6 +78,17 @@
     "tooltip" : "The number of days of forecast to display. Note that not all services support all values"
   },
   
+  "refreshtime" : {
+    "type" : "spinbutton",
+    "default" : 30,
+    "min" : 10,
+    "max" : 90,
+    "step" : 5,
+    "units" : "minutes",
+    "description" : "Refresh forecast every",
+    "tooltip" : "Period between refreshing forecasts. Note that not all services support lower refresh times"
+  },
+  
   "displaysep" : {
     "type" : "separator"
   },

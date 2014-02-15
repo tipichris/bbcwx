@@ -66,7 +66,6 @@ const CC_ICON_WIDTH =170;
 const BUTTON_PADDING=3;
 const TEMP_PADDING=12;
 const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
-const REFRESH_TIME = 1800;
 
 function MyDesklet(metadata,desklet_id){
   this._init(metadata,desklet_id);
@@ -113,6 +112,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"apikey","apikey",this.changeApiKey,null);
       
       // these changes potentially need a redraw of the window, so call initForecast:
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"refreshtime","refreshtime",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.initForecast,null);
@@ -165,6 +165,13 @@ MyDesklet.prototype = {
       } else {
         this.no = this.userno;
       }
+      
+      // set the refresh period; minimum of the number
+      // selected by the user and the minimum supported by the driver
+      this.refreshSec = this.refreshtime * 60;
+      if (this.refreshSec < this.service.minTTL) {
+        this.refreshSec = this.service.minTTL;
+      }    
       
       // if more than four days we'll shift the position of the current temperature,
       // but only in horizontal layout
@@ -422,7 +429,7 @@ MyDesklet.prototype = {
       Mainloop.source_remove(this._timeoutId);
     }
     
-    this._timeoutId=Mainloop.timeout_add_seconds(Math.round(REFRESH_TIME * (0.85 + Math.random()*0.3)),Lang.bind(this, this.updateForecast));
+    this._timeoutId=Mainloop.timeout_add_seconds(Math.round(this.refreshSec * (0.85 + Math.random()*0.3)),Lang.bind(this, this.updateForecast));
     //this._timeoutId=Mainloop.timeout_add_seconds(1500 + Math.round(Math.random()*600), Lang.bind(this, this.updateForecast));
   },
   
@@ -633,6 +640,8 @@ wxDriver.prototype = {
   maxDays : 1,
   // API key for use in some services
   apikey: '',
+  
+  minTTL: 600,
   
   ////////////////////////////////////////////////////////////////////////////
   // initialise
@@ -1493,7 +1502,7 @@ wxDriverWU.prototype = {
     
     var days = json.forecast.simpleforecast.forecastday;
 
-    for (i=0; i<days.length; i++) {
+    for (let i=0; i<days.length; i++) {
       let day = new Object();
       day.day = days[i].date.weekday_short;
       day.minimum_temperature = days[i].low.celsius;
