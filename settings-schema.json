@@ -83,7 +83,7 @@
     "default" : 30,
     "min" : 10,
     "max" : 90,
-    "step" : 10,
+    "step" : 5,
     "units" : "minutes",
     "description" : "Refresh forecast every",
     "tooltip" : "Period between refreshing forecasts. Note that not all services support lower refresh times"
