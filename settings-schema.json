@@ -11,7 +11,8 @@
     "options" : {
         "BBC" : "bbc",
         "Yahoo" : "yahoo",
-        "Open Weather Map": "owm"
+        "Open Weather Map": "owm",
+        "Wunderground": "wunderground"
     },
     "tooltip" : "Select the data service you wish to use"
   },
@@ -23,6 +24,13 @@
     "tooltip" : "Set your location here"
   },
 
+  "apikey": {
+    "type" : "entry",
+    "default" : "",
+    "description" : "API key",
+    "tooltip" : "Required for some services only. Enter your API key for your chosen service"
+  },
+  
   "units" : {
     "type": "combobox",
     "default" : "1",

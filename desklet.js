@@ -109,6 +109,8 @@ MyDesklet.prototype = {
       
       // this change requires us to fetch new data:
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this.changeStation,null);
+      // this requires a change of API key and refetch data
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"apikey","apikey",this.changeApiKey,null);
       
       // these changes potentially need a redraw of the window, so call initForecast:
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.initForecast,null);
@@ -149,6 +151,9 @@ MyDesklet.prototype = {
           break;
         case 'owm':
           this.service = new wxDriverOWM(this.stationID);
+          break;
+        case 'wunderground':
+          this.service = new wxDriverWU(this.stationID, this.apikey);
           break;
         default:
           this.service = new wxDriverBBC(this.stationID);
@@ -395,6 +400,13 @@ MyDesklet.prototype = {
   },
   
   ////////////////////////////////////////////////////////////////////////////
+  // Change the API key and reget weather data
+  changeApiKey: function() {
+    this.service.setApiKey(this.stationID);
+    this._refreshweathers();
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////
   // update the data from the service and start the timeout to the next update
   // refreshData will call the display* functions
   _refreshweathers: function() {
@@ -405,7 +417,7 @@ MyDesklet.prototype = {
     // is updated
     this.service.refreshData(this);  
     
-    if(this._timeoutId != undefined) {
+    if(typeof this._timeoutId !== 'undefined') {
       Mainloop.source_remove(this._timeoutId);
     }
     
@@ -573,7 +585,7 @@ MyDesklet.prototype = {
   
   ////////////////////////////////////////////////////////////////////////////
   on_desklet_removed: function() {
-    if(this._timeoutId != undefined) {
+    if(typeof this._timeoutId !== 'undefined') {
       Mainloop.source_remove(this._timeoutId);
     }
   }
@@ -587,8 +599,8 @@ MyDesklet.prototype = {
 
 ////////////////////////////////////////////////////////////////////////////
 // a base driver class. This is overridden by drivers that actually do the work
-function wxDriver(stationID) {
-  this._init(stationID);
+function wxDriver(stationID, apikey) {
+  this._init(stationID, apikey);
 };
 
 wxDriver.prototype = {
@@ -604,11 +616,15 @@ wxDriver.prototype = {
   // the maximum number of days of forecast supported 
   // by this driver
   maxDays : 1,
+  // API key for use in some services
+  apikey: '',
   
   ////////////////////////////////////////////////////////////////////////////
   // initialise
-  _init: function(stationID) {
+  _init: function(stationID, apikey) {
+    apikey = (typeof apikey !== 'undefined') ? apikey : '';
     this.stationID = stationID;
+    this.apikey = apikey;
     
     // a list of capabilities supported by the driver
     // we set them all to true here and expect any children
@@ -701,6 +717,12 @@ wxDriver.prototype = {
   // change the stationID
   setStation: function(stationID) {
     this.stationID = stationID;
+  },
+
+  ////////////////////////////////////////////////////////////////////////////
+  // change the apikey
+  setApiKey: function(apikey) {
+    this.apikey = apikey;
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -1239,7 +1261,6 @@ wxDriverOWM.prototype = {
       this.data.status.meta = 0;
       return;
     }    
-    let days = [];
    
     let json = JSON.parse(data);
     if (json.cod != '200') {
@@ -1378,6 +1399,158 @@ wxDriverOWM.prototype = {
 };  
 
 ////////////////////////////////////////////////////////////////////////////
+// ### Driver for Weather Underground
+function wxDriverWU(stationID, apikey) {
+  this._wuinit(stationID, apikey);
+};
+
+wxDriverWU.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'Wunderground',
+  maxDays: 7, 
+  linkText: 'wunderground.com',
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'http://wunderground.com',
+  linkTooltip: 'Visit the Weather Underground website',
+  
+  _baseURL: 'http://api.wunderground.com/api/',
+  
+  // initialise the driver
+  _wuinit: function(stationID, apikey) {
+    this._init(stationID, apikey);
+    this.capabilities.meta.region =  false;
+    this.capabilities.forecast.pressure = false;
+    this.capabilities.forecast.pressure_direction =  false;
+  },
+  
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkTooltip = 'Visit the Weather Underground website';
+    this.linkURL = 'http://wunderground.com';
+    
+    // process the 7 day forecast
+    let a = this._getWeather(this._baseURL + this.apikey + '/forecast10day/q/' + this.stationID + '.json', function(weather) {
+      if (weather) {
+        this._load_forecast(weather);
+      }
+      // get the main object to update the display
+      deskletObj.displayForecast();
+    });
+
+    // process current observations
+    let b = this._getWeather(this._baseURL + this.apikey + '/conditions/q/' + this.stationID + '.json', function(weather) {
+      if (weather) {
+        this._load_observations(weather); 
+      }
+      // get the main object to update the display
+      deskletObj.displayCurrent();    
+      deskletObj.displayMeta();
+    });    
+    
+  },
+  
+  // process the rss for a 3dayforecast and populate this.data
+  _load_forecast: function (data) {
+    global.log("WU: entering _load_forecast");
+    if (!data) {
+      this.data.status.forecast = 0;
+      return;
+    }    
+   
+    let json = JSON.parse(data);
+    if (typeof json.error !== 'undefined') {
+      this.data.status.forecast = 0;
+      return;
+    }
+    
+    var days = json.forecast.simpleforecast.forecastday;
+
+    for (i=0; i<days.length; i++) {
+      let day = new Object();
+      day.day = days[i].date.weekday_short;
+      day.minimum_temperature = days[i].low.celsius;
+      day.maximum_temperature = days[i].high.celsius;
+      day.humidity = days[i].avehumidity;
+      day.wind_speed = days[i].avewind.kph;
+      day.wind_direction = this.compassDirection(days[i].avewind.degrees);
+      day.weathertext = days[i].conditions;
+      day.icon = this._mapicon(days[i].icon);
+
+      this.data.days[i] = day;
+    }   
+    
+    this.data.status.forecast = 2;
+    global.log("WU: forecast: " + print_r(this.data.days));
+  },
+
+  // take an rss feed of current observations and extract data into this.data
+  _load_observations: function (data) {
+    if (!data) {
+      this.data.status.cc = 0;
+      this.data.status.meta = 0;
+      return;
+    }     
+    let json = JSON.parse(data);
+    if (typeof json.error !== 'undefined') {
+      this.data.status.cc = 0;  
+      this.data.status.meta = 0;
+      return;
+    }
+    
+    let co = json.current_observation;
+    this.data.cc.humidity = co.relative_humidity.replace('%', '');
+    this.data.cc.temperature = co.temp_c;
+    this.data.cc.pressure = co.pressure_mb;
+    this.data.cc.pressure_direction = co.pressure_trend;
+    this.data.cc.wind_speed = co.wind_kph;
+    this.data.cc.wind_direction = this.compassDirection(co.wind_degrees);
+    this.data.cc.obstime = new Date(co.local_epoch *1000).toLocaleFormat("%H:%M %Z");
+    this.data.cc.weathertext = co.weather;
+    this.data.cc.icon = this._mapicon(co.icon);
+    this.data.cc.feelslike = co.feelslike_c;
+    this.data.city = co.display_location.city;
+    this.data.country = co.display_location.country;
+    this.linkURL = co.forecast_url;
+    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+    this.data.status.cc = 2; 
+    this.data.status.meta = 2;
+  },
+  
+  _mapicon: function(iconcode) {
+    let icon_name = 'na';
+    let iconmap = {
+    'chanceflurries': '41',
+    'chancerain': '39',
+    'chancesleet': '05',
+    'chancesnow': '41',
+    'chancetstorms': '38',
+    'clear': '32',
+    'cloudy': '26',
+    'flurries': '13',
+    'fog': '20',
+    'hazy': '19',
+    'mostlycloudy': '28',
+    'mostlysunny': '34',
+    'partlycloudy': '30',
+    'partlysunny': '30',
+    'sleet': '07',
+    'rain': '40',
+    'snow': '16',
+    'sunny': '32',
+    'tstorms': '35'
+    };
+    if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
+      icon_name = iconmap[iconcode];
+    }   
+    return icon_name;
+  }, 
+
+};  
+
+////////////////////////////////////////////////////////////////////////////
 // ### END DRIVERS ###
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1389,4 +1562,47 @@ String.prototype.ucwords = function() {
 function main(metadata, desklet_id){
   let desklet = new MyDesklet(metadata,desklet_id);
   return desklet;
+};
+
+//////////////////////////////////////////////////////////////////////////
+function print_r (obj, t) {
+
+    // define tab spacing
+    var tab = t || '';
+
+    // check if it's array
+    var isArr = Object.prototype.toString.call(obj) === '[object Array]';
+    
+    // use {} for object, [] for array
+    var str = isArr ? ('Array\n' + tab + '[\n') : ('Object\n' + tab + '{\n');
+
+    // walk through it's properties
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            var val1 = obj[prop];
+            var val2 = '';
+            var type = Object.prototype.toString.call(val1);
+            switch (type) {
+                
+                // recursive if object/array
+                case '[object Array]':
+                case '[object Object]':
+                    val2 = print_r(val1, (tab + '\t'));
+                    break;
+                    
+                case '[object String]':
+                    val2 = '\'' + val1 + '\'';
+                    break;
+                    
+                default:
+                    val2 = val1;
+            }
+            str += tab + '\t' + prop + ' => ' + val2 + ',\n';
+        }
+    }
+    
+    // remove extra comma for last property
+    str = str.substring(0, str.length - 2) + '\n' + tab;
+    
+    return isArr ? (str + ']') : (str + '}');
 };
