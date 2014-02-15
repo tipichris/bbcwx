@@ -1558,7 +1558,8 @@ wxDriverWU.prototype = {
     let out = '';
     let map = {
       '+': _('Rising'),
-      '-': _('Falling')
+      '-': _('Falling'),
+      '0': _('Steady')
     };
     if (code && (typeof map[code] !== "undefined")) {
       out = map[code];
