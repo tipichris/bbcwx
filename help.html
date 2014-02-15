@@ -22,6 +22,7 @@ table {border-collapse:collapse; border: none; margin: 15px auto;}
 td {padding: 10px 15px;}
 td.light {background-color: #666; color: #fff}
 .code { width: 90%; margin: 0 auto 1em auto; background-color: #dde; border: 1px #736C62 dotted; color: #000; display: block; padding: 7px; font-size: 1.1em;}
+code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #dde; } 
 </style>
   <title>Using the Weather Desklet</title>
   </head>
@@ -31,23 +32,29 @@ td.light {background-color: #666; color: #fff}
     The Weather Desklet can retrieve weather data from several online weather
     services and display them on your Cinnamon desktop in 
     a neat way. It comes with a choice of icons and plenty of options
-    for configuring how it looks. At present it can work with data from the 
+    for configuring how it looks, and for those who like to keep an eye on the
+    weather in several locations it supports multiple instances. At present it 
+    can work with data from the 
     <a href="http://www.bbc.co.uk/weather">BBC</a>,
-    <a href="http://weather.yahoo.com/">Yahoo! Weather</a> and 
-    <a href="http://openweathermap.org/">Open Weather Map</a>.
+    <a href="http://weather.yahoo.com/">Yahoo! Weather</a>,
+    <a href="http://openweathermap.org/">Open Weather Map</a> and 
+    <a href="http://wunderground.com/">Weather Underground</a>.
     </p>
     <p>
-    The forecast will be refreshed approximately every thirty minutes.
+    By default the forecast will be refreshed approximately every thirty minutes.
     You can always force a refresh by clicking the refresh button at the 
     bottom right. Hovering over the icons in the forecast area will show
-    their descriptions, whilst the link at the 
+    their descriptions, whilst the credit link at the 
     bottom of the desklet will take you to a more detailed forecast for your area.  
     </p>
     <h2>Configuration</h2>
     <p>Right click on the desklet and select 'Configure...' to enter the 
     configuration screen.</p>
+    <p>Select the sevice you wish to use to provide weather data. Note that 
+    some services require you to obtain an API key by registering with them.</p>
     <p>The Location must be specified as a code and these codes are specific
-    to the service that you are using.
+    to the service that you are using. Below are notes on each of the services 
+    supported.</p>
     <h3>BBC</h3>
     <p>
     To find your location code visit 
@@ -57,7 +64,7 @@ td.light {background-color: #666; color: #fff}
     takes you to:</p>
     <code class='code'>http://www.bbc.co.uk/weather/2643743</code>
     <p>
-    The Location code is therefore 2643743.
+    The Location code is therefore <code class="loccode">2643743</code>.
     </p>
     <h3>Open Weather Map</h3>
     <p>Visit <a href="http://openweathermap.org/">the Open Weather Map</a> and search
@@ -66,7 +73,7 @@ td.light {background-color: #666; color: #fff}
     takes you to:</p>
     <code class='code'>http://openweathermap.org/city/4887398</code>
     <p>
-    The Location code is therefore 4887398.
+    The Location code is therefore <code class="loccode">4887398</code>.
     </p>
     <h3>Yahoo</h3>
     <p>Visit <a href="http://weather.yahoo.com/">Yahoo! Weather</a> and search
@@ -75,11 +82,29 @@ td.light {background-color: #666; color: #fff}
     takes you to:</p>
     <code class='code'>http://weather.yahoo.com/deutschland/bundesland-berlin/berlin-638242/</code>
     <p>
-    The Location code is therefore 638242.
+    The Location code is therefore <code class="loccode">638242</code>.
     </p>    
+    <h3>Weather Underground</h3>
+    <p>Weather Underground requires an API key. You can 
+    <a href="http://www.wunderground.com/weather/api/">obtain a free developer API key here</a>. 
+    Weather Desklet uses the 10 day forecast data, so you will need to get at least 
+    the Cumulus Plan.</p>
+    <p>
+    There are several ways to specify the location for Weather Underground. For locations in 
+    the USA you can simply use a zip code. You can also give a latitude and longitude. These 
+    should be decimals, separated by a comma, with positive being north or east. For example, for 
+    central London, 51.51N, 0.13W, use <code class="loccode">51.51,-0.13</code>.
+    </p>
+    <p>You can also find specify locations as Country/City, eg <code class="loccode">France/Paris</code>,
+    or within the USA as State/City, eg <code class="loccode">TX/Houston</code>. You should
+    check that your proposed location works by visiting the website, eg</p>
+    <code class='code'>http://www.wunderground.com/q/France/Paris</code>
     <h3>Other settings</h3>
-    <p>You can experiment with the various display settings. Here's a sample of 
-    what the different icon sets look like:</p>
+    <p>Most of the other settings should be obvious - just experiment. Please note, however, 
+    that the settings for the number of days to display and the refresh time may be overridden
+    by the data service you select. Some services only support a limited number of days, whilst
+    some require less frequent refreshes in order to control the load on their servers.</p>
+    <p>Here's a sample of what the different icon sets look like:</p>
     <table>
     <tr>
       <td><img src="icons/colourful/39.png" class="iconsample" alt="colourful example"></td>

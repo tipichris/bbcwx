@@ -1427,8 +1427,10 @@ wxDriverWU.prototype = {
   maxDays: 7, 
   linkText: 'wunderground.com\u00AE',
   
+  _referralRef: '?apiref=415600fd47df8d55',
+  
   // these will be dynamically reset when data is loaded
-  linkURL: 'http://wunderground.com',
+  linkURL: 'http://wunderground.com' + this._referralRef,
   linkTooltip: 'Visit the Weather Underground website',
   linkIcon: {
     file: 'wunderground',
@@ -1450,7 +1452,7 @@ wxDriverWU.prototype = {
     // reset the data object
     this._emptyData();
     this.linkTooltip = 'Visit the Weather Underground website';
-    this.linkURL = 'http://wunderground.com';
+    this.linkURL = 'http://wunderground.com' + this._referralRef;
     
     // process the 7 day forecast
     let a = this._getWeather(this._baseURL + this.apikey + '/forecast10day/q/' + this.stationID + '.json', function(weather) {
@@ -1473,7 +1475,7 @@ wxDriverWU.prototype = {
     
   },
   
-  // process the rss for a 3dayforecast and populate this.data
+  // process the data for a multi day forecast and populate this.data
   _load_forecast: function (data) {
     // global.log("WU: entering _load_forecast");
     if (!data) {
@@ -1537,7 +1539,7 @@ wxDriverWU.prototype = {
     this.data.cc.feelslike = co.feelslike_c;
     this.data.city = co.display_location.city;
     this.data.country = co.display_location.country;
-    this.linkURL = co.forecast_url;
+    this.linkURL = co.forecast_url + this._referralRef;
     this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
     this.data.status.cc = 2; 
     this.data.status.meta = 2;
@@ -1598,47 +1600,4 @@ String.prototype.ucwords = function() {
 function main(metadata, desklet_id){
   let desklet = new MyDesklet(metadata,desklet_id);
   return desklet;
-};
-
-//////////////////////////////////////////////////////////////////////////
-function print_r (obj, t) {
-
-    // define tab spacing
-    var tab = t || '';
-
-    // check if it's array
-    var isArr = Object.prototype.toString.call(obj) === '[object Array]';
-    
-    // use {} for object, [] for array
-    var str = isArr ? ('Array\n' + tab + '[\n') : ('Object\n' + tab + '{\n');
-
-    // walk through it's properties
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
-            var val1 = obj[prop];
-            var val2 = '';
-            var type = Object.prototype.toString.call(val1);
-            switch (type) {
-                
-                // recursive if object/array
-                case '[object Array]':
-                case '[object Object]':
-                    val2 = print_r(val1, (tab + '\t'));
-                    break;
-                    
-                case '[object String]':
-                    val2 = '\'' + val1 + '\'';
-                    break;
-                    
-                default:
-                    val2 = val1;
-            }
-            str += tab + '\t' + prop + ' => ' + val2 + ',\n';
-        }
-    }
-    
-    // remove extra comma for last property
-    str = str.substring(0, str.length - 2) + '\n' + tab;
-    
-    return isArr ? (str + ']') : (str + '}');
 };
