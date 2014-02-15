@@ -331,6 +331,7 @@ MyDesklet.prototype = {
     // also need to run these to update icon style and size
     this.displayForecast();
     this.displayCurrent();
+    this.displayMeta();
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -472,7 +473,14 @@ MyDesklet.prototype = {
   // Update the display of the meta data, eg city name
   displayMeta: function() {
     this.cityname.text=this.service.data.city;
-    this.banner.label = this.service.linkText;
+    if (this.service.linkIcon) {
+      this.banner.label = '';
+      let bannericonimage = this._getIconImage(this.service.linkIcon.file);
+      bannericonimage.set_size(this.service.linkIcon.width*this.zoom, this.service.linkIcon.height*this.zoom);
+      this.banner.set_child(bannericonimage); 
+    } else {
+      this.banner.label = this.service.linkText;
+    }
     this.bannertooltip.set_text(this.service.linkTooltip);
     try {
       if(this.bannersig) this.bannersig.disconnect();
@@ -619,6 +627,7 @@ wxDriver.prototype = {
   // tooltip for credit link
   linkTooltip: 'Click for more information',
   lttTemplate: _('Click for the full forecast for %s'),
+  linkIcon: false,
   // the maximum number of days of forecast supported 
   // by this driver
   maxDays : 1,
@@ -684,7 +693,7 @@ wxDriver.prototype = {
     this.data.status.cc = 1;
     this.data.status.forecast = 1;
     this.data.status.meta =1;
-    this.data.status.lasterror = '';
+    this.data.status.lasterror = false;
     
     delete this.data.cc;
     this.data.cc = new Object();
@@ -1416,11 +1425,16 @@ wxDriverWU.prototype = {
   
   drivertype: 'Wunderground',
   maxDays: 7, 
-  linkText: 'wunderground.com',
+  linkText: 'wunderground.com\u00AE',
   
   // these will be dynamically reset when data is loaded
   linkURL: 'http://wunderground.com',
   linkTooltip: 'Visit the Weather Underground website',
+  linkIcon: {
+    file: 'wunderground',
+    width: 145,
+    height: 17,
+  },
   
   _baseURL: 'http://api.wunderground.com/api/',
   
@@ -1461,7 +1475,7 @@ wxDriverWU.prototype = {
   
   // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (data) {
-    global.log("WU: entering _load_forecast");
+    // global.log("WU: entering _load_forecast");
     if (!data) {
       this.data.status.forecast = 0;
       return;
@@ -1492,7 +1506,6 @@ wxDriverWU.prototype = {
     }   
     
     this.data.status.forecast = 2;
-    global.log("WU: forecast: " + print_r(this.data.days));
   },
 
   // take an rss feed of current observations and extract data into this.data
@@ -1515,7 +1528,7 @@ wxDriverWU.prototype = {
     this.data.cc.humidity = co.relative_humidity.replace('%', '');
     this.data.cc.temperature = co.temp_c;
     this.data.cc.pressure = co.pressure_mb;
-    this.data.cc.pressure_direction = co.pressure_trend;
+    this.data.cc.pressure_direction = this._getPressureTrend(co.pressure_trend);
     this.data.cc.wind_speed = co.wind_kph;
     this.data.cc.wind_direction = this.compassDirection(co.wind_degrees);
     this.data.cc.obstime = new Date(co.local_epoch *1000).toLocaleFormat("%H:%M %Z");
@@ -1528,6 +1541,18 @@ wxDriverWU.prototype = {
     this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
     this.data.status.cc = 2; 
     this.data.status.meta = 2;
+  },
+ 
+  _getPressureTrend: function (code) {
+    let out = '';
+    let map = {
+      '+': _('Rising'),
+      '-': _('Falling')
+    };
+    if (code && (typeof map[code] !== "undefined")) {
+      out = map[code];
+    }    
+    return out;
   },
   
   _mapicon: function(iconcode) {
