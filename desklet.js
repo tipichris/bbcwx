@@ -402,7 +402,7 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Change the API key and reget weather data
   changeApiKey: function() {
-    this.service.setApiKey(this.stationID);
+    this.service.setApiKey(this.apikey);
     this._refreshweathers();
   },
   
@@ -462,7 +462,10 @@ MyDesklet.prototype = {
     if (this.pressure) this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
     if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true) ;
-    if (this.service.data.status.cc != 2) this.weathertext.text = _('No data');
+    if (this.service.data.status.cc != 2) {
+      this.weathertext.text = (this.service.data.status.lasterror) ? this.service.data.status.lasterror : _('No data') ;
+      //this.weathertext.text = _('No data') ;
+    }
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -477,7 +480,10 @@ MyDesklet.prototype = {
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
-    if (this.service.data.status.meta != 2) this.cityname.text = _('No data');
+    if (this.service.data.status.meta != 2) {
+      this.cityname.text = (this.service.data.status.lasterror) ? this.service.data.status.lasterror : _('No data') ;
+      //this.cityname.text = _('No data');
+    }
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -678,6 +684,7 @@ wxDriver.prototype = {
     this.data.status.cc = 1;
     this.data.status.forecast = 1;
     this.data.status.meta =1;
+    this.data.status.lasterror = '';
     
     delete this.data.cc;
     this.data.cc = new Object();
@@ -1461,8 +1468,10 @@ wxDriverWU.prototype = {
     }    
    
     let json = JSON.parse(data);
-    if (typeof json.error !== 'undefined') {
+    if (typeof json.response.error !== 'undefined') {
       this.data.status.forecast = 0;
+      this.data.status.lasterror = json.response.error.type;
+      global.logWarning("Error from wunderground: " + json.response.error.type + ": " + json.response.error.description);
       return;
     }
     
@@ -1494,9 +1503,11 @@ wxDriverWU.prototype = {
       return;
     }     
     let json = JSON.parse(data);
-    if (typeof json.error !== 'undefined') {
+    if (typeof json.response.error !== 'undefined') {
       this.data.status.cc = 0;  
       this.data.status.meta = 0;
+      this.data.status.lasterror = json.response.error.type;
+      global.logWarning("Error from wunderground: " + json.response.error.type + ": " + json.response.error.description);
       return;
     }
     

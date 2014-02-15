@@ -12,7 +12,7 @@
         "BBC" : "bbc",
         "Yahoo" : "yahoo",
         "Open Weather Map": "owm",
-        "Wunderground": "wunderground"
+        "Wunderground (requires API key)": "wunderground"
     },
     "tooltip" : "Select the data service you wish to use"
   },
