@@ -1617,10 +1617,20 @@ wxDriverWU.prototype = {
     
     // override with nighttime icons
     // this is a crude estimate of whether or not it's night
-    if (astro && ((1 * astro.current_time.hour < 1 * astro.sunrise.hour) || (1*astro.current_time.hour > 1*astro.sunset.hour))) {
-      if ( typeof nightmap[icon_name] !== "undefined") {
-        icon_name = nightmap[icon_name];
-      }    
+    // if (astro && ((1 * astro.current_time.hour < 1 * astro.sunrise.hour) || (1*astro.current_time.hour > 1*astro.sunset.hour))) {
+    if (astro) {
+      let sr = new Date();
+      let ss = new Date();
+      let now = new Date()
+
+      sr.setHours(astro.sunrise.hour,astro.sunrise.minute,0);
+      ss.setHours(astro.sunset.hour,astro.sunset.minute,0);
+      now.setHours(astro.current_time.hour,astro.current_time.minute,0);
+      if ((now < sr) || (now > ss)) {
+        if ( typeof nightmap[icon_name] !== "undefined") {
+          icon_name = nightmap[icon_name];
+        }    
+      }
     }
     return icon_name;
   }, 
