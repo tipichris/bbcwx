@@ -12,7 +12,8 @@
         "BBC" : "bbc",
         "Yahoo" : "yahoo",
         "Open Weather Map": "owm",
-        "Wunderground (requires API key)": "wunderground"
+        "Wunderground (requires API key)": "wunderground",
+        "World Weather Online (requires API key)": "wwo"
     },
     "tooltip" : "Select the data service you wish to use"
   },

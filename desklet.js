@@ -158,6 +158,9 @@ MyDesklet.prototype = {
         case 'wunderground':
           this.service = new wxDriverWU(this.stationID, this.apikey);
           break;
+        case 'wwo':
+          this.service = new wxDriverWWO(this.stationID, this.apikey);
+          break;
         default:
           this.service = new wxDriverBBC(this.stationID);
       }
@@ -1602,6 +1605,215 @@ wxDriverWU.prototype = {
     if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
       icon_name = iconmap[iconcode];
     }   
+    return icon_name;
+  }, 
+
+};  
+
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for World Weather Online
+function wxDriverWWO(stationID, apikey) {
+  this._wwoinit(stationID, apikey);
+};
+
+wxDriverWWO.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'WWO',
+  maxDays: 7, 
+  linkText: 'World Weather Online',
+  
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'http://www.worldweatheronline.com',
+  linkTooltip: 'Visit the World Weather Online website',
+
+  // see http://developer.worldweatheronline.com/free_api_terms_of_use,
+  // point 3
+  minTTL: 3600,
+  
+  _baseURL: 'http://api.worldweatheronline.com/free/v1/',
+  
+  // initialise the driver
+  _wwoinit: function(stationID, apikey) {
+    this._init(stationID, apikey);
+    this.capabilities.forecast.pressure = false;
+    this.capabilities.forecast.pressure_direction =  false;
+    this.capabilities.cc.pressure_direction = false;
+    this.capabilities.cc.feelslike = false;
+  },
+  
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkTooltip = 'Visit the World Weather Online website';
+    this.linkURL = 'http://www.worldweatheronline.com';
+    
+    // process the forecast
+    let a = this._getWeather(this._baseURL + 'weather.ashx?q=' + this.stationID + '&format=json&extra=localObsTime%2CisDayTime&num_of_days=5&key=' + this.apikey, function(weather) {
+      if (weather) {
+        this._load_forecast(weather);
+      }
+      // get the main object to update the display
+      deskletObj.displayForecast();
+      deskletObj.displayCurrent();         
+    });
+    
+    // Need a second call for some meta data
+    let b = this._getWeather(this._baseURL + 'search.ashx?q=' + this.stationID + '&format=json&key=' + this.apikey, function(weather) {
+      if (weather) {
+        this._load_meta(weather);
+      }
+      // get the main object to update the display   
+      deskletObj.displayMeta();      
+    });
+
+  },
+  
+  // process the data for a multi day forecast and populate this.data
+  _load_forecast: function (data) {
+    // global.log("WU: entering _load_forecast");
+    if (!data) {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+   
+    let json = JSON.parse(data);
+    
+    if (typeof json.data.error !== 'undefined') {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;  
+      this.data.status.lasterror = json.data.error[0].msg;
+      global.logWarning("Error from Worl Weather Online: " + json.data.error[0].msg);
+      return;
+    }
+    
+    let days = json.data.weather;
+
+    for (let i=0; i<days.length; i++) {
+      let day = new Object();
+      day.day = new Date(days[i].date).toLocaleFormat("%a");
+      day.minimum_temperature = days[i].tempMinC;
+      day.maximum_temperature = days[i].tempMaxC;
+      //day.pressure = json.list[i].pressure;
+      //day.humidity = days[i].avehumidity;
+      day.wind_speed = days[i].windspeedKmph;
+      day.wind_direction = days[i].winddir16Point;
+      day.weathertext = days[i].weatherDesc[0].value;
+      day.icon = this._mapicon(days[i].weatherCode, days[i].weatherIconUrl[0].value);
+
+      this.data.days[i] = day;
+    }   
+    let cc = json.data.current_condition[0];
+
+    this.data.cc.humidity = cc.humidity;
+    this.data.cc.temperature = cc.temp_C;
+    this.data.cc.pressure = cc.pressure;
+    this.data.cc.wind_speed = cc.windspeedKmph;
+    this.data.cc.wind_direction = cc.winddir16Point;
+    let dt = cc.localObsDateTime.split(/\-|\s/);
+    this.data.cc.obstime = new Date(dt.slice(0,3).join('/')+' '+dt[3]).toLocaleFormat("%H:%M %Z");
+    this.data.cc.weathertext = cc.weatherDesc[0].value;
+    this.data.cc.icon = this._mapicon(cc.weatherCode, cc.weatherIconUrl[0].value);
+    this.data.cc.visibility = cc.visibility;
+    this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+    this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+  },
+ 
+  _load_meta: function(data) {
+    if (!data) {
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+   
+    let json = JSON.parse(data);
+    
+    if (typeof json.data !== 'undefined' && typeof json.data.error !== 'undefined') {
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.lasterror = json.data.error[0].msg;
+      global.logWarning("Error from Worl Weather Online: " + json.data.error[0].msg);
+      return;
+    }    
+    let locdata = json.search_api.result[0];
+
+    this.data.city = locdata.areaName[0].value;
+    this.data.country = locdata.country[0].value;
+    this.data.region = locdata.region[0].value;
+    this.linkURL = locdata.weatherUrl[0].value;
+    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+    this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+  },
+  
+  _mapicon: function(iconcode, recommendedIcon) {
+    let icon_name = 'na';
+    let iconmap = {
+      '395': '16',
+      '392': '13',
+      '389': '35',
+      '386': '37',
+      '377': '06',
+      '374': '06',
+      '371': '16',
+      '368': '13',
+      '365': '07',
+      '362': '07',
+      '359': '12',
+      '356': '11',
+      '353': '39',
+      '350': '06',
+      '338': '16',
+      '335': '16',
+      '332': '14',
+      '329': '14',
+      '326': '13',
+      '323': '13',
+      '320': '07',
+      '317': '05',
+      '314': '08',
+      '311': '08',
+      '308': '12',
+      '305': '39',
+      '302': '11',
+      '299': '39',
+      '296': '09',
+      '293': '39',
+      '284': '08',
+      '281': '08',
+      '266': '09',
+      '263': '39',
+      '260': '20',
+      '248': '20',
+      '230': '15',
+      '227': '15',
+      '200': '38',
+      '185': '08',
+      '182': '05',
+      '179': '13',
+      '176': '39',
+      '143': '19',
+      '122': '26',
+      '119': '26',
+      '116': '28',
+      '113': '32'
+    };
+    let nightmap = {
+      '39' : '45',
+      '41' : '46',
+      '30' : '29',
+      '28' : '27',
+      '32' : '31',
+      '22' : '21',
+      '47' : '38'
+    };
+    
+    if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
+      icon_name = iconmap[iconcode];
+    }
+    // override with nighttime icons
+    if ((recommendedIcon.indexOf('night') > -1) && (typeof nightmap[icon_name] !== "undefined")) {
+      icon_name = nightmap[icon_name];
+    } 
     return icon_name;
   }, 
 
