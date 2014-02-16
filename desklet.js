@@ -1133,6 +1133,8 @@ wxDriverYahoo.prototype = {
         this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
         this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
         this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+        let items = channel.getChildElements("item");
+        this.data.status.lasterror = items[0].getChildElement("title").getText();
         return;
       }
       
