@@ -66,6 +66,9 @@ const BBCWX_CC_ICON_WIDTH =170;
 const BBCWX_BUTTON_PADDING=3;
 const BBCWX_TEMP_PADDING=12;
 const BBCWX_STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
+const BBCWX_SERVICE_STATUS_ERROR = 0;
+const BBCWX_SERVICE_STATUS_INIT = 2;
+const BBCWX_SERVICE_STATUS_OK = 2;
 
 function MyDesklet(metadata,desklet_id){
   this._init(metadata,desklet_id);
@@ -470,7 +473,7 @@ MyDesklet.prototype = {
     if (this.pressure) this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
     if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true) ;
-    if (this.service.data.status.cc != 2) {
+    if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK) {
       this.weathertext.text = (this.service.data.status.lasterror) ? this.service.data.status.lasterror : _('No data') ;
       //this.weathertext.text = _('No data') ;
     }
@@ -495,7 +498,7 @@ MyDesklet.prototype = {
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
-    if (this.service.data.status.meta != 2) {
+    if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
       this.cityname.text = (this.service.data.status.lasterror) ? this.service.data.status.lasterror : _('No data') ;
       //this.cityname.text = _('No data');
     }
@@ -699,9 +702,9 @@ wxDriver.prototype = {
     delete this.data.status;
     this.data.status = new Object();
     // 1: waiting; 2: success; 0; failed/error
-    this.data.status.cc = 1;
-    this.data.status.forecast = 1;
-    this.data.status.meta =1;
+    this.data.status.cc = BBCWX_SERVICE_STATUS_INIT;
+    this.data.status.forecast = BBCWX_SERVICE_STATUS_INIT;
+    this.data.status.meta = BBCWX_SERVICE_STATUS_INIT;
     this.data.status.lasterror = false;
     
     delete this.data.cc;
@@ -768,6 +771,7 @@ wxDriver.prototype = {
         callback.call(here,message.response_body.data.toString()); 
       } else {
         global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
+        this.data.status.lasterror = message.status_code;
         callback.call(here,false);
       }
     });
@@ -847,8 +851,8 @@ wxDriverBBC.prototype = {
   // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (rss) {
     if (!rss) {
-      this.data.status.forecast = 0;
-      this.data.status.meta = 0;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }
     let days = [];
@@ -856,8 +860,8 @@ wxDriverBBC.prototype = {
     let parser = new marknote.Parser();
     let doc = parser.parse(rss);
     if (!doc)  {
-      this.data.status.forecast = 0;
-      this.data.status.meta = 0;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }
     try {
@@ -901,25 +905,25 @@ wxDriverBBC.prototype = {
         data.icon = this._getIconFromText(data.weathertext);
         this.data.days[i] = data;
       }
-      this.data.status.forecast = 2;
-      this.data.status.meta = 2;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
     } catch(e) {
       global.logError(e);
-      this.data.status.forecast = 0;
-      this.data.status.meta = 0;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
     }
   },
 
   // take an rss feed of current observations and extract data into this.data
   _load_observations: function (rss) {
     if (!rss) {
-      this.data.status.cc = 0;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }
     let parser = new marknote.Parser();
     let doc = parser.parse(rss);
     if (!doc) {
-      this.data.status.cc = 0;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }
     try {
@@ -956,10 +960,10 @@ wxDriverBBC.prototype = {
       this.data.cc.wind_speed = this._getWindspeed(this.data.cc.wind_speed);
       this.data.cc.humidity = this.data.cc.humidity.replace('%', '');
       this.data.cc.pressure = this.data.cc.pressure.replace('mb', '');
-      this.data.status.cc = 2;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK;
     } catch(e) {
       global.logError(e);
-      this.data.status.cc = 0;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
     }
   },
   
@@ -1083,9 +1087,9 @@ wxDriverYahoo.prototype = {
   // process the rss and populate this.data
   _load_forecast: function (rss) {
     if (!rss) {
-      this.data.status.forecast = 0;
-      this.data.status.meta = 0;
-      this.data.status.cc = 0;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }    
     let days = [];
@@ -1093,9 +1097,9 @@ wxDriverYahoo.prototype = {
     let parser = new marknote.Parser();
     let doc = parser.parse(rss);
     if (!doc) {
-      this.data.status.cc = 0;
-      this.data.status.meta = 0;
-      this.data.status.forecast = 0;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }
     try {
@@ -1104,9 +1108,9 @@ wxDriverYahoo.prototype = {
       let channel = rootElem.getChildElement("channel");
       let title = channel.getChildElement("title").getText();
       if (title.indexOf('Error') != -1) {
-        this.data.status.cc = 0;
-        this.data.status.meta = 0;
-        this.data.status.forecast = 0;
+        this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
         return;
       }
       
@@ -1153,14 +1157,14 @@ wxDriverYahoo.prototype = {
         this.data.days[i] = day;
       }
       
-      this.data.status.forecast = 2;
-      this.data.status.meta = 2;
-      this.data.status.cc = 2;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK;
     } catch(e) {
       global.logError(e);
-      this.data.status.forecast = 0;
-      this.data.status.meta = 0;
-      this.data.status.cc = 0;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
     }
   },
   
@@ -1282,15 +1286,15 @@ wxDriverOWM.prototype = {
   // process the rss for a 3dayforecast and populate this.data
   _load_forecast: function (data) {
     if (!data) {
-      this.data.status.forecast = 0;
-      this.data.status.meta = 0;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }    
    
     let json = JSON.parse(data);
     if (json.cod != '200') {
-      this.data.status.forecast = 0;
-      this.data.status.meta = 0;      
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;      
       return;
     }
 
@@ -1314,19 +1318,19 @@ wxDriverOWM.prototype = {
       this.data.days[i] = day;
     }    
     
-    this.data.status.forecast = 2;
-    this.data.status.meta = 2;
+    this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+    this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
   },
 
   // take an rss feed of current observations and extract data into this.data
   _load_observations: function (data) {
     if (!data) {
-      this.data.status.cc = 0;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }     
     let json = JSON.parse(data);
     if (json.cod != '200') {
-      this.data.status.cc = 0;     
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;     
       return;
     }
     
@@ -1338,7 +1342,7 @@ wxDriverOWM.prototype = {
     this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
     this.data.cc.weathertext = json.weather[0].description.ucwords();
     this.data.cc.icon = this._mapicon(json.weather[0].icon, json.weather[0].id);
-    this.data.status.cc = 2; 
+    this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
   },
   
   _mapicon: function(iconcode, wxcode) {
@@ -1488,13 +1492,13 @@ wxDriverWU.prototype = {
   _load_forecast: function (data) {
     // global.log("WU: entering _load_forecast");
     if (!data) {
-      this.data.status.forecast = 0;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }    
    
     let json = JSON.parse(data);
     if (typeof json.response.error !== 'undefined') {
-      this.data.status.forecast = 0;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.lasterror = json.response.error.type;
       global.logWarning("Error from wunderground: " + json.response.error.type + ": " + json.response.error.description);
       return;
@@ -1516,20 +1520,20 @@ wxDriverWU.prototype = {
       this.data.days[i] = day;
     }   
     
-    this.data.status.forecast = 2;
+    this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
   },
 
   // take an rss feed of current observations and extract data into this.data
   _load_observations: function (data) {
     if (!data) {
-      this.data.status.cc = 0;
-      this.data.status.meta = 0;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }     
     let json = JSON.parse(data);
     if (typeof json.response.error !== 'undefined') {
-      this.data.status.cc = 0;  
-      this.data.status.meta = 0;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;  
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.lasterror = json.response.error.type;
       global.logWarning("Error from wunderground: " + json.response.error.type + ": " + json.response.error.description);
       return;
@@ -1550,8 +1554,8 @@ wxDriverWU.prototype = {
     this.data.country = co.display_location.country;
     this.linkURL = co.forecast_url + this._referralRef;
     this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-    this.data.status.cc = 2; 
-    this.data.status.meta = 2;
+    this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+    this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
   },
  
   _getPressureTrend: function (code) {
