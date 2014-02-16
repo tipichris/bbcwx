@@ -153,7 +153,7 @@ MyDesklet.prototype = {
           this.service = new wxDriverYahoo(this.stationID);
           break;
         case 'owm':
-          this.service = new wxDriverOWM(this.stationID);
+          this.service = new wxDriverOWM(this.stationID, this.apikey);
           break;
         case 'wunderground':
           this.service = new wxDriverWU(this.stationID, this.apikey);
@@ -1250,8 +1250,8 @@ wxDriverYahoo.prototype = {
 
 ////////////////////////////////////////////////////////////////////////////
 // ### Driver for Open Weather Map
-function wxDriverOWM(stationID) {
-  this._owminit(stationID);
+function wxDriverOWM(stationID, apikey) {
+  this._owminit(stationID, apikey);
 };
 
 wxDriverOWM.prototype = {
@@ -1268,8 +1268,8 @@ wxDriverOWM.prototype = {
   _baseURL: 'http://api.openweathermap.org/data/2.5/',
   
   // initialise the driver
-  _owminit: function(stationID) {
-    this._init(stationID);
+  _owminit: function(stationID, apikey) {
+    this._init(stationID, apikey);
     this.capabilities.meta.region =  false;
     this.capabilities.cc.feelslike = false;
     this.capabilities.cc.pressure_direction = false;
@@ -1282,7 +1282,10 @@ wxDriverOWM.prototype = {
     this.linkURL = 'http://openweathermap.org';
     
     // process the 7 day forecast
-    let a = this._getWeather(this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + this.stationID, function(weather) {
+    let apiforecasturl = this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + this.stationID;
+    if (this.apikey) apiforecasturl = apiforecasturl + '&APPID=' + this.apikey;
+    //global.log ("Going to retrieve forecast URL " + apiforecasturl);
+    let a = this._getWeather(apiforecasturl, function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
@@ -1292,7 +1295,10 @@ wxDriverOWM.prototype = {
     });
 
     // process current observations
-    let b = this._getWeather(this._baseURL + 'weather?units=metric&id=' + this.stationID, function(weather) {
+    let apiccurl = this._baseURL + 'weather?units=metric&id=' + this.stationID;
+    if (this.apikey) apiccurl = apiccurl + '&APPID=' + this.apikey;
+    //global.log ("Going to retrieve observations URL " + apiccurl);
+    let b = this._getWeather(apiccurl, function(weather) {
       if (weather) {
         this._load_observations(weather); 
       }
@@ -1313,7 +1319,8 @@ wxDriverOWM.prototype = {
     let json = JSON.parse(data);
     if (json.cod != '200') {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
-      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;      
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;    
+      this.data.status.lasterror = json.cod;
       return;
     }
 
@@ -1349,7 +1356,8 @@ wxDriverOWM.prototype = {
     }     
     let json = JSON.parse(data);
     if (json.cod != '200') {
-      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;     
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;    
+      this.data.status.lasterror = json.cod;
       return;
     }
     
