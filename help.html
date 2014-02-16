@@ -22,7 +22,7 @@ table {border-collapse:collapse; border: none; margin: 15px auto;}
 td {padding: 10px 15px;}
 td.light {background-color: #666; color: #fff}
 .code { width: 90%; margin: 0 auto 1em auto; background-color: #dde; border: 1px #736C62 dotted; color: #000; display: block; padding: 7px; font-size: 1.1em;}
-code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #dde; } 
+code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #99FF99; } 
 </style>
   <title>Using the Weather Desklet</title>
   </head>
@@ -103,6 +103,15 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #dde; 
     or within the USA as State/City, eg <code class="loccode">TX/Houston</code>. You should
     check that your proposed location works by visiting the website, eg</p>
     <code class='code'>http://www.wunderground.com/q/France/Paris</code>
+    <p>If you search for your city on <a href="http://wunderground.com">wunderground.com</a> and are
+    taken to URL of this form:</p>
+    <code class="code">http://www.wunderground.com/q/zmw:00000.16.03541</code>
+    <p>use the section following the q, eg <code class="loccode">zmw:00000.16.03541</code>. If you 
+    are taken to a URL with a station ID such as:</p>
+    <code class="code">http://www.wunderground.com/global/stations/03541.html</code>
+    <p>you can convert this to a zmw code by taking the station number (03541 in this case)
+    and prefixing it with zmw:00000.1. to give
+    <code class="loccode">zmw:00000.1.03541</code>
     <h3>Other settings</h3>
     <p>Most of the other settings should be obvious - just experiment. Please note, however, 
     that the settings for the number of days to display and the refresh time may be overridden
