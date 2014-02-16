@@ -1094,7 +1094,7 @@ wxDriverYahoo.prototype = {
     this.linkURL = 'http://weather.yahoo.com/';
     
     // process the three day forecast
-    let a = this._getWeather(this._baseURL + this.stationID, function(weather) {
+    let a = this._getWeather(this._baseURL + encodeURIComponent(this.stationID), function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
@@ -1285,7 +1285,7 @@ wxDriverOWM.prototype = {
     this.linkURL = 'http://openweathermap.org';
     
     // process the 7 day forecast
-    let apiforecasturl = this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + this.stationID;
+    let apiforecasturl = this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + encodeURIComponent(this.stationID);
     if (this.apikey) apiforecasturl = apiforecasturl + '&APPID=' + this.apikey;
     //global.log ("Going to retrieve forecast URL " + apiforecasturl);
     let a = this._getWeather(apiforecasturl, function(weather) {
@@ -1498,7 +1498,7 @@ wxDriverWU.prototype = {
     this.linkURL = 'http://wunderground.com' + this._referralRef;
     
     // process the forecast - single call for both current conditions and 10 day forecast
-    let a = this._getWeather(this._baseURL + this.apikey + '/forecast10day/conditions/astronomy/q/' + this.stationID + '.json', function(weather) {
+    let a = this._getWeather(this._baseURL + encodeURIComponent(this.apikey) + '/forecast10day/conditions/astronomy/q/' + encodeURIComponent(this.stationID) + '.json', function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
@@ -1617,7 +1617,7 @@ wxDriverWU.prototype = {
     
     // override with nighttime icons
     // this is a crude estimate of whether or not it's night
-    // if (astro && ((1 * astro.current_time.hour < 1 * astro.sunrise.hour) || (1*astro.current_time.hour > 1*astro.sunset.hour))) {
+    // TODO test with high latitudes in Winter / Summer
     if (astro) {
       let sr = new Date();
       let ss = new Date();
@@ -1677,7 +1677,7 @@ wxDriverWWO.prototype = {
     this.linkURL = 'http://www.worldweatheronline.com';
     
     // process the forecast
-    let a = this._getWeather(this._baseURL + 'weather.ashx?q=' + this.stationID + '&format=json&extra=localObsTime%2CisDayTime&num_of_days=5&includelocation=yes&key=' + this.apikey, function(weather) {
+    let a = this._getWeather(this._baseURL + 'weather.ashx?q=' + encodeURIComponent(this.stationID) + '&format=json&extra=localObsTime%2CisDayTime&num_of_days=5&includelocation=yes&key=' + encodeURIComponent(this.apikey), function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
@@ -1686,6 +1686,7 @@ wxDriverWWO.prototype = {
       deskletObj.displayCurrent();   
       deskletObj.displayMeta(); 
     });
+    
   },
   
   // process the data for a multi day forecast and populate this.data
@@ -1741,7 +1742,13 @@ wxDriverWWO.prototype = {
     this.data.city = locdata.areaName[0].value;
     this.data.country = locdata.country[0].value;
     this.data.region = locdata.region[0].value;
-    this.linkURL = locdata.weatherUrl[0].value;
+    // we don't reliably get weatherURL in the response :(
+    if (typeof locdata.weatherUrl != 'undefined') {
+      this.linkURL = locdata.weatherUrl[0].value;
+    } else {
+      this.linkURL = 'http://www.worldweatheronline.com/v2/weather.aspx?q=' + encodeURIComponent(this.stationID);
+    }
+    
     this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
     this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
     this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
@@ -1759,7 +1766,7 @@ wxDriverWWO.prototype = {
     if (typeof json.data !== 'undefined' && typeof json.data.error !== 'undefined') {
       this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.lasterror = json.data.error[0].msg;
-      global.logWarning("Error from Worl Weather Online: " + json.data.error[0].msg);
+      global.logWarning("Error from World Weather Online: " + json.data.error[0].msg);
       return;
     }    
     let locdata = json.search_api.result[0];

@@ -9,8 +9,8 @@ html { font-size:100.01%; }
 body {font-size: 11pt;color: #222;background: #fff;font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;}
 h1,h2,h3 { font-weight: normal; color: #111; }
 h1 { font-size: 20.2pt; line-height: 1; margin-bottom: 0.5em; }
-h2 { font-size: 14pt;  margin-bottom: 0.75em; }
-h3 { font-size: 10pt; font-weight: bold; font-style: normal; line-height: 1; margin-bottom: 0.2em; }
+h2 { font-size: 15pt;  margin-bottom: 0.75em; }
+h3 { font-size: 13pt; font-weight: bold; font-style: normal; line-height: 1; margin-bottom: 0.2em; }
 p { margin: 0 0 1.5em; }
 pre { margin: 1.5em 0; white-space: pre; }
 pre,code { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
@@ -22,7 +22,7 @@ table {border-collapse:collapse; border: none; margin: 15px auto;}
 td {padding: 10px 15px;}
 td.light {background-color: #666; color: #fff}
 .code { width: 90%; margin: 0 auto 1em auto; background-color: #dde; border: 1px #736C62 dotted; color: #000; display: block; padding: 7px; font-size: 1.1em;}
-code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #99FF99; } 
+code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B5; } 
 </style>
   <title>Using the Weather Desklet</title>
   </head>
@@ -37,8 +37,9 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #99FF9
     can work with data from the 
     <a href="http://www.bbc.co.uk/weather">BBC</a>,
     <a href="http://weather.yahoo.com/">Yahoo! Weather</a>,
-    <a href="http://openweathermap.org/">Open Weather Map</a> and 
-    <a href="http://wunderground.com/">Weather Underground</a>.
+    <a href="http://openweathermap.org/">Open Weather Map</a>,
+    <a href="http://wunderground.com/">Weather Underground</a> and
+    <a href="http://www.worldweatheronline.com">World Weather Online</a>.
     </p>
     <p>
     By default the forecast will be refreshed approximately every thirty minutes.
@@ -89,7 +90,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #99FF9
     The Location code is therefore <code class="loccode">638242</code>.
     </p>    
     <h3>Weather Underground</h3>
-    <p>Weather Underground requires an API key. You can 
+    <p><strong>Weather Underground requires an API key</strong>. You can 
     <a href="http://www.wunderground.com/weather/api/">obtain a free developer API key here</a>. 
     Weather Desklet uses the 10 day forecast data, so you will need to get at least 
     the Cumulus Plan.</p>
@@ -112,11 +113,26 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #99FF9
     <p>you can convert this to a zmw code by taking the station number (03541 in this case)
     and prefixing it with zmw:00000.1. to give
     <code class="loccode">zmw:00000.1.03541</code>
+    <h3>World Weather Online</h3>
+    <p><strong>World Weather Online requires an API key</strong>. You can 
+    <a href="http://developer.worldweatheronline.com/member/register">register for a free API key here</a>.</p>
+    <p>
+    Locations can be specified as a US zipcode, a UK or Canadian post code, or as a latitude and longitude.  
+    Latitude and longitude should be given as decimals, separated by a comma, with positive being north or east. For example, for 
+    central London, 51.51N, 0.13W, use <code class="loccode">51.51,-0.13</code>.
+    </p>
+    <h3>Refresh time</h3>
+    <p>
+    Select the period between refreshing forecasts. The default of 30 minutes should be adequate
+    for most purposes. Please consider the impact of lower refresh times on the service provider's
+    servers and do not use lower refresh periods unless you have a very good reason.
+    In order to comply with the terms of use of some providers Weather Desklet will override
+    low settings in some cases and enforce a minimum.
+    </p>
     <h3>Other settings</h3>
     <p>Most of the other settings should be obvious - just experiment. Please note, however, 
-    that the settings for the number of days to display and the refresh time may be overridden
-    by the data service you select. Some services only support a limited number of days, whilst
-    some require less frequent refreshes in order to control the load on their servers.</p>
+    that the settings for the number of days may be overridden
+    by the data service you select as some services only support a limited number of days.</p>
     <p>Here's a sample of what the different icon sets look like:</p>
     <table>
     <tr>
