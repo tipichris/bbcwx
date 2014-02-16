@@ -50,22 +50,22 @@ const _httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
 // Set up some constants for layout and styling
-const TEXT_SIZE = 14;
-const CC_TEXT_SIZE = 24;
-const LABEL_TEXT_SIZE = 11;
-const LINK_TEXT_SIZE = 10;
-const REFRESH_ICON_SIZE=14;
-const TABLE_ROW_SPACING=2;
-const TABLE_COL_SPACING=5;
-const TABLE_PADDING=5;
-const CONTAINER_PADDING=12;
-const ICON_HEIGHT = 40;
-const ICON_WIDTH = 40;
-const CC_ICON_HEIGHT =170;
-const CC_ICON_WIDTH =170;
-const BUTTON_PADDING=3;
-const TEMP_PADDING=12;
-const STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
+const BBCWX_TEXT_SIZE = 14;
+const BBCWX_CC_TEXT_SIZE = 24;
+const BBCWX_LABEL_TEXT_SIZE = 11;
+const BBCWX_LINK_TEXT_SIZE = 10;
+const BBCWX_REFRESH_ICON_SIZE=14;
+const BBCWX_TABLE_ROW_SPACING=2;
+const BBCWX_TABLE_COL_SPACING=5;
+const BBCWX_TABLE_PADDING=5;
+const BBCWX_CONTAINER_PADDING=12;
+const BBCWX_ICON_HEIGHT = 40;
+const BBCWX_ICON_WIDTH = 40;
+const BBCWX_CC_ICON_HEIGHT =170;
+const BBCWX_CC_ICON_WIDTH =170;
+const BBCWX_BUTTON_PADDING=3;
+const BBCWX_TEMP_PADDING=12;
+const BBCWX_STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
 
 function MyDesklet(metadata,desklet_id){
   this._init(metadata,desklet_id);
@@ -205,10 +205,10 @@ MyDesklet.prototype = {
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
     
     // container for link and refresh icon
-    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BUTTON_PADDING*this.zoom+"px",x_align:2, y_align:2 });
+    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+BBCWX_BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BBCWX_BUTTON_PADDING*this.zoom+"px",x_align:2, y_align:2 });
     // refresh icon
     this.iconbutton=new St.Icon({ icon_name: 'view-refresh-symbolic',
-      icon_size: REFRESH_ICON_SIZE*this.zoom+'',
+      icon_size: BBCWX_REFRESH_ICON_SIZE*this.zoom+'',
       icon_type: St.IconType.SYMBOLIC,
       style: "padding: 0 0 0 3px;"
     });
@@ -220,7 +220,7 @@ MyDesklet.prototype = {
     // some labels need resetting incase we are redrawing after a change of service
     this.humidity=null; this.pressure=null; this.windspeed=null; this.feelslike=null;
     
-    this._separatorArea = new St.DrawingArea({ style_class: STYLE_POPUP_SEPARATOR_MENU_ITEM });
+    this._separatorArea = new St.DrawingArea({ style_class: BBCWX_STYLE_POPUP_SEPARATOR_MENU_ITEM });
     
     let ccap = this.service.capabilities.cc;
     
@@ -231,14 +231,14 @@ MyDesklet.prototype = {
     if(ccap.feelslike) this.feelslike=new St.Label();
     
     // container for current weather values
-    this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px"});
+    this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
     // container for current weather labels
     this.ctemp_captions = new St.BoxLayout({vertical: true,style : 'text-align : right'});
     // container for current weather
     this.ctemp = new St.BoxLayout({vertical: false,x_align: 2});
     
     // city and city container
-    this.cityname=new St.Label({style: "text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px" });
+    this.cityname=new St.Label({style: "text-align: center;font-size: "+BBCWX_TEXT_SIZE*this.zoom+"px" });
     this.city=new St.BoxLayout({vertical:true,style: "align: center;"});
     
     // container for right (horizontal) or lower (vertical) part of window
@@ -246,14 +246,14 @@ MyDesklet.prototype = {
     // container for left (horizontal) or upper (vertical) part of window
     this.cweather = new St.BoxLayout({vertical: true, x_align: 2}); //definire coloana stangz
     // current weather icon container
-    this.cwicon = new St.Bin({height: (CC_ICON_HEIGHT*this.zoom), width: (CC_ICON_WIDTH*this.zoom)}); //icoana mare cu starea vremii
+    this.cwicon = new St.Bin({height: (BBCWX_CC_ICON_HEIGHT*this.zoom), width: (BBCWX_CC_ICON_WIDTH*this.zoom)}); //icoana mare cu starea vremii
     // current weather text
-    this.weathertext=new St.Label({style: 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
+    this.weathertext=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
     
     // current temp on wide layouts
     if (this.shifttemp) {
-      this.ctemp_bigtemp = new St.BoxLayout({vertical: false, x_align: 3, y_align: 2, style : 'text-align : left; padding-right: ' + TEMP_PADDING *this.zoom + 'px'});
-      this.currenttemp=new St.Label({style: 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px'});
+      this.ctemp_bigtemp = new St.BoxLayout({vertical: false, x_align: 3, y_align: 2, style : 'text-align : left; padding-right: ' + BBCWX_TEMP_PADDING *this.zoom + 'px'});
+      this.currenttemp=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'});
       this.ctemp_bigtemp.add_actor(this.currenttemp);
       this.ctemp.add_actor(this.ctemp_bigtemp);
     }
@@ -274,11 +274,11 @@ MyDesklet.prototype = {
     this.ctemp.add_actor(this.ctemp_values);  //adauga coloana din dreapta la informatii     
     
     // build table to hold three day forecast
-    this.fwtable =new St.Table({style: "spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;"});
-    this.maxlabel = new St.Label({text: _('Max:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.fwtable =new St.Table({style: "spacing-rows: "+BBCWX_TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+BBCWX_TABLE_COL_SPACING*this.zoom+"px;padding: "+BBCWX_TABLE_PADDING*this.zoom+"px;"});
+    this.maxlabel = new St.Label({text: _('Max:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
     
     let fcap = this.service.capabilities.forecast;
     let row = 2;
@@ -288,12 +288,12 @@ MyDesklet.prototype = {
     if(fcap.wind_speed) {this.fwtable.add(this.windlabel,{row:row,col:0}); row++}
     if(fcap.wind_direction) {this.fwtable.add(this.winddlabel,{row:row,col:0}); row++}
     for(let f=0;f<this.no;f++) {
-      this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+TEXT_SIZE*this.zoom+"px" });
-      this.fwicons[f]=new St.Button({height:ICON_HEIGHT*this.zoom, width: ICON_WIDTH*this.zoom});
-      if(fcap.maximum_temperature) this.max[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      if(fcap.minimum_temperature) this.min[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      if(fcap.wind_speed) this.winds[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
-      if(fcap.wind_direction) this.windd[f]=new St.Label({style: 'text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px"});
+      this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px" });
+      this.fwicons[f]=new St.Button({height:BBCWX_ICON_HEIGHT*this.zoom, width: BBCWX_ICON_WIDTH*this.zoom});
+      if(fcap.maximum_temperature) this.max[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
+      if(fcap.minimum_temperature) this.min[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
+      if(fcap.wind_speed) this.winds[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
+      if(fcap.wind_direction) this.windd[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
       this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
       
       this.fwtable.add(this.labels[f],{row:0,col:f+1});
@@ -308,9 +308,9 @@ MyDesklet.prototype = {
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.updateForecast));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
-    this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";"});
+    this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";"});
     this.banner=new St.Button({ 
-      style: 'font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";",
+      style: 'font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";",
       reactive: true,
       track_hover: true,
       style_class: 'bbcwx-link'});
@@ -347,14 +347,14 @@ MyDesklet.prototype = {
     //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
     let fcap = this.service.capabilities.forecast;
     this.window.vertical = (this.layout==1) ? true : false;
-    this.cwicon.height=CC_ICON_HEIGHT*this.zoom;this.cwicon.width=CC_ICON_WIDTH*this.zoom;
-    this.weathertext.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
-    if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+CC_TEXT_SIZE*this.zoom+'px';
-    if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + TEMP_PADDING *this.zoom + 'px'
-    this.fwtable.style="spacing-rows: "+TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+TABLE_COL_SPACING*this.zoom+"px;padding: "+TABLE_PADDING*this.zoom+"px;";
-    this.cityname.style="text-align: center;font-size: "+TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
-    this.ctemp_captions.style = 'text-align : right;font-size: '+TEXT_SIZE*this.zoom+"px";
-    this.ctemp_values.style = 'text-align : left; font-size: '+TEXT_SIZE*this.zoom+"px";
+    this.cwicon.height=BBCWX_CC_ICON_HEIGHT*this.zoom;this.cwicon.width=BBCWX_CC_ICON_WIDTH*this.zoom;
+    this.weathertext.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
+    if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
+    if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + BBCWX_TEMP_PADDING *this.zoom + 'px'
+    this.fwtable.style="spacing-rows: "+BBCWX_TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+BBCWX_TABLE_COL_SPACING*this.zoom+"px;padding: "+BBCWX_TABLE_PADDING*this.zoom+"px;";
+    this.cityname.style="text-align: center;font-size: "+BBCWX_TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
+    this.ctemp_captions.style = 'text-align : right;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+    this.ctemp_values.style = 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     
     if (this.border) {
       this.window.style="border: 2px solid "+this.bordercolor+"; border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
@@ -365,31 +365,31 @@ MyDesklet.prototype = {
     this._separatorArea.height=5*this.zoom;
 
     for(let f=0;f<this.no;f++) {
-      this.labels[f].style='text-align : center;font-size: '+TEXT_SIZE*this.zoom+"px";
-      this.fwicons[f].height=ICON_HEIGHT*this.zoom;this.fwicons[f].width= ICON_WIDTH*this.zoom;
-      if(this.max[f]) this.max[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-      if( this.min[f]) this.min[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-      if(this.winds[f]) this.winds[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
-      if(this.windd[f]) this.windd[f].style= 'text-align : center; font-size: '+TEXT_SIZE*this.zoom+"px";
+      this.labels[f].style='text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+      this.fwicons[f].height=BBCWX_ICON_HEIGHT*this.zoom;this.fwicons[f].width= BBCWX_ICON_WIDTH*this.zoom;
+      if(this.max[f]) this.max[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+      if( this.min[f]) this.min[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+      if(this.winds[f]) this.winds[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+      if(this.windd[f]) this.windd[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     }
     
-    this.buttons.style="padding-top:"+BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BUTTON_PADDING*this.zoom+"px";
+    this.buttons.style="padding-top:"+BBCWX_BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BBCWX_BUTTON_PADDING*this.zoom+"px";
     
-    this.iconbutton.icon_size=REFRESH_ICON_SIZE*this.zoom;
-    this.banner.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
-    this.bannerpre.style='font-size: '+LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
+    this.iconbutton.icon_size=BBCWX_REFRESH_ICON_SIZE*this.zoom;
+    this.banner.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
+    this.bannerpre.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
     
     let forecastlabels = ['maxlabel', 'minlabel', 'windlabel', 'winddlabel'];
     for (let i = 0; i<forecastlabels.length; i++) {
-      if (this[forecastlabels[i]]) this[forecastlabels[i]].style = 'text-align : right;font-size: '+LABEL_TEXT_SIZE*this.zoom+"px";
+      if (this[forecastlabels[i]]) this[forecastlabels[i]].style = 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px";
     }
     
-    this.cweather.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
+    this.cweather.style='padding: ' + BBCWX_CONTAINER_PADDING*this.zoom+'px';
     if (this.layout==1) {
       // loose the top padding on container in vertical mode (too much space)
-      this.container.style='padding: 0 ' + CONTAINER_PADDING*this.zoom+'px ' + CONTAINER_PADDING*this.zoom+'px ' + CONTAINER_PADDING*this.zoom+'px ' ;
+      this.container.style='padding: 0 ' + BBCWX_CONTAINER_PADDING*this.zoom+'px ' + BBCWX_CONTAINER_PADDING*this.zoom+'px ' + BBCWX_CONTAINER_PADDING*this.zoom+'px ' ;
     } else {
-      this.container.style='padding: ' + CONTAINER_PADDING*this.zoom+'px';
+      this.container.style='padding: ' + BBCWX_CONTAINER_PADDING*this.zoom+'px';
     }
     
   },
@@ -442,7 +442,7 @@ MyDesklet.prototype = {
       let day = this.service.data.days[f];
       this.labels[f].label=((this.daynames[day.day]) ? this.daynames[day.day] : '');
       let fwiconimage = this._getIconImage(day.icon);
-      fwiconimage.set_size(ICON_WIDTH*this.zoom, ICON_HEIGHT*this.zoom);
+      fwiconimage.set_size(BBCWX_ICON_WIDTH*this.zoom, BBCWX_ICON_HEIGHT*this.zoom);
       this.fwicons[f].set_child(fwiconimage);      
       this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
       if(this.max[f]) this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
@@ -457,7 +457,7 @@ MyDesklet.prototype = {
   displayCurrent: function(){
     let cc = this.service.data.cc;
     let cwimage=this._getIconImage(this.service.data.cc.icon);
-    cwimage.set_size(CC_ICON_WIDTH*this.zoom, CC_ICON_HEIGHT*this.zoom);
+    cwimage.set_size(BBCWX_CC_ICON_WIDTH*this.zoom, BBCWX_CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
     if (this.shifttemp) {
       this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '');
