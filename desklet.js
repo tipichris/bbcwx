@@ -1498,7 +1498,7 @@ wxDriverWU.prototype = {
     this.linkURL = 'http://wunderground.com' + this._referralRef;
     
     // process the forecast - single call for both current conditions and 10 day forecast
-    let a = this._getWeather(this._baseURL + this.apikey + '/forecast10day/conditions/q/' + this.stationID + '.json', function(weather) {
+    let a = this._getWeather(this._baseURL + this.apikey + '/forecast10day/conditions/astronomy/q/' + this.stationID + '.json', function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
@@ -1542,7 +1542,7 @@ wxDriverWU.prototype = {
       day.wind_speed = days[i].avewind.kph;
       day.wind_direction = this.compassDirection(days[i].avewind.degrees);
       day.weathertext = days[i].conditions;
-      day.icon = this._mapicon(days[i].icon);
+      day.icon = this._mapicon(days[i].icon, false);
 
       this.data.days[i] = day;
     }   
@@ -1555,7 +1555,7 @@ wxDriverWU.prototype = {
     this.data.cc.wind_direction = this.compassDirection(co.wind_degrees);
     this.data.cc.obstime = new Date(co.local_epoch *1000).toLocaleFormat("%H:%M %Z");
     this.data.cc.weathertext = co.weather;
-    this.data.cc.icon = this._mapicon(co.icon);
+    this.data.cc.icon = this._mapicon(co.icon, json.moon_phase);
     this.data.cc.feelslike = co.feelslike_c;
     this.data.city = co.display_location.city;
     this.data.country = co.display_location.country;
@@ -1579,7 +1579,7 @@ wxDriverWU.prototype = {
     return out;
   },
   
-  _mapicon: function(iconcode) {
+  _mapicon: function(iconcode, astro) {
     let icon_name = 'na';
     let iconmap = {
     'chanceflurries': '41',
@@ -1602,9 +1602,26 @@ wxDriverWU.prototype = {
     'sunny': '32',
     'tstorms': '35'
     };
+    let nightmap = {
+      '39' : '45',
+      '41' : '46',
+      '30' : '29',
+      '28' : '27',
+      '32' : '31',
+      '22' : '21',
+      '47' : '38'
+    };
     if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
       icon_name = iconmap[iconcode];
-    }   
+    } 
+    
+    // override with nighttime icons
+    // this is a crude estimate of whether or not it's night
+    if (astro && ((1 * astro.current_time.hour < 1 * astro.sunrise.hour) || (1*astro.current_time.hour > 1*astro.sunset.hour))) {
+      if ( typeof nightmap[icon_name] !== "undefined") {
+        icon_name = nightmap[icon_name];
+      }    
+    }
     return icon_name;
   }, 
 
@@ -1650,32 +1667,23 @@ wxDriverWWO.prototype = {
     this.linkURL = 'http://www.worldweatheronline.com';
     
     // process the forecast
-    let a = this._getWeather(this._baseURL + 'weather.ashx?q=' + this.stationID + '&format=json&extra=localObsTime%2CisDayTime&num_of_days=5&key=' + this.apikey, function(weather) {
+    let a = this._getWeather(this._baseURL + 'weather.ashx?q=' + this.stationID + '&format=json&extra=localObsTime%2CisDayTime&num_of_days=5&includelocation=yes&key=' + this.apikey, function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
       // get the main object to update the display
       deskletObj.displayForecast();
-      deskletObj.displayCurrent();         
+      deskletObj.displayCurrent();   
+      deskletObj.displayMeta(); 
     });
-    
-    // Need a second call for some meta data
-    let b = this._getWeather(this._baseURL + 'search.ashx?q=' + this.stationID + '&format=json&key=' + this.apikey, function(weather) {
-      if (weather) {
-        this._load_meta(weather);
-      }
-      // get the main object to update the display   
-      deskletObj.displayMeta();      
-    });
-
   },
   
   // process the data for a multi day forecast and populate this.data
   _load_forecast: function (data) {
-    // global.log("WU: entering _load_forecast");
     if (!data) {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }    
    
@@ -1684,8 +1692,9 @@ wxDriverWWO.prototype = {
     if (typeof json.data.error !== 'undefined') {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;  
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.lasterror = json.data.error[0].msg;
-      global.logWarning("Error from Worl Weather Online: " + json.data.error[0].msg);
+      global.logWarning("Error from World Weather Online: " + json.data.error[0].msg);
       return;
     }
     
@@ -1717,6 +1726,14 @@ wxDriverWWO.prototype = {
     this.data.cc.weathertext = cc.weatherDesc[0].value;
     this.data.cc.icon = this._mapicon(cc.weatherCode, cc.weatherIconUrl[0].value);
     this.data.cc.visibility = cc.visibility;
+    
+    let locdata = json.data.nearest_area[0];
+    this.data.city = locdata.areaName[0].value;
+    this.data.country = locdata.country[0].value;
+    this.data.region = locdata.region[0].value;
+    this.linkURL = locdata.weatherUrl[0].value;
+    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+    this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
     this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
     this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
   },
@@ -1832,3 +1849,5 @@ function main(metadata, desklet_id){
   let desklet = new MyDesklet(metadata,desklet_id);
   return desklet;
 };
+
+
