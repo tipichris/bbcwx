@@ -115,7 +115,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"apikey","apikey",this.changeApiKey,null);
       
       // these changes potentially need a redraw of the window, so call initForecast:
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"refreshtime","refreshtime",this.initForecast,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"refreshtime","refreshtime",this.changeRefresh,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.initForecast,null);
@@ -418,6 +418,18 @@ MyDesklet.prototype = {
   },
   
   ////////////////////////////////////////////////////////////////////////////
+  // Change the refresh period and restart the loop
+  changeRefresh: function() {
+      // set the refresh period; minimum of the number
+      // selected by the user and the minimum supported by the driver
+      this.refreshSec = this.refreshtime * 60;
+      if (this.refreshSec < this.service.minTTL) {
+        this.refreshSec = this.service.minTTL;
+      } 
+      this._doLoop();
+  },
+      
+  ////////////////////////////////////////////////////////////////////////////
   // update the data from the service and start the timeout to the next update
   // refreshData will call the display* functions
   _refreshweathers: function() {
@@ -428,12 +440,17 @@ MyDesklet.prototype = {
     // is updated
     this.service.refreshData(this);  
     
+    this._doLoop();
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Begin / restart the main loop, waiting for refreshSec before updating again  
+  _doLoop: function() {
     if(typeof this._timeoutId !== 'undefined') {
       Mainloop.source_remove(this._timeoutId);
     }
     
     this._timeoutId=Mainloop.timeout_add_seconds(Math.round(this.refreshSec * (0.9 + Math.random()*0.2)),Lang.bind(this, this.updateForecast));
-    //this._timeoutId=Mainloop.timeout_add_seconds(1500 + Math.round(Math.random()*600), Lang.bind(this, this.updateForecast));
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -644,6 +661,8 @@ wxDriver.prototype = {
   // API key for use in some services
   apikey: '',
   
+  // minimum allowed interval between refreshes: refer to each service's
+  // terms of service when setting specific values
   minTTL: 600,
   
   ////////////////////////////////////////////////////////////////////////////
