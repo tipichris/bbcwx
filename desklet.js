@@ -67,7 +67,7 @@ const BBCWX_BUTTON_PADDING=3;
 const BBCWX_TEMP_PADDING=12;
 const BBCWX_STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
 const BBCWX_SERVICE_STATUS_ERROR = 0;
-const BBCWX_SERVICE_STATUS_INIT = 2;
+const BBCWX_SERVICE_STATUS_INIT = 1;
 const BBCWX_SERVICE_STATUS_OK = 2;
 
 function MyDesklet(metadata,desklet_id){
@@ -474,7 +474,7 @@ MyDesklet.prototype = {
     if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true) ;
     if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK) {
-      this.weathertext.text = (this.service.data.status.lasterror) ? this.service.data.status.lasterror : _('No data') ;
+      this.weathertext.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
       //this.weathertext.text = _('No data') ;
     }
   },
@@ -499,7 +499,7 @@ MyDesklet.prototype = {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
     if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
-      this.cityname.text = (this.service.data.status.lasterror) ? this.service.data.status.lasterror : _('No data') ;
+      this.cityname.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
       //this.cityname.text = _('No data');
     }
   },
@@ -771,7 +771,7 @@ wxDriver.prototype = {
         callback.call(here,message.response_body.data.toString()); 
       } else {
         global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
-        this.data.status.lasterror = message.status_code;
+        here.data.status.lasterror = message.status_code;
         callback.call(here,false);
       }
     });
