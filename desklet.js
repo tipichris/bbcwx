@@ -1486,25 +1486,17 @@ wxDriverWU.prototype = {
     this.linkTooltip = 'Visit the Weather Underground website';
     this.linkURL = 'http://wunderground.com' + this._referralRef;
     
-    // process the 7 day forecast
-    let a = this._getWeather(this._baseURL + this.apikey + '/forecast10day/q/' + this.stationID + '.json', function(weather) {
+    // process the forecast - single call for both current conditions and 10 day forecast
+    let a = this._getWeather(this._baseURL + this.apikey + '/forecast10day/conditions/q/' + this.stationID + '.json', function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
       // get the main object to update the display
       deskletObj.displayForecast();
+      deskletObj.displayCurrent();    
+      deskletObj.displayMeta();      
     });
 
-    // process current observations
-    let b = this._getWeather(this._baseURL + this.apikey + '/conditions/q/' + this.stationID + '.json', function(weather) {
-      if (weather) {
-        this._load_observations(weather); 
-      }
-      // get the main object to update the display
-      deskletObj.displayCurrent();    
-      deskletObj.displayMeta();
-    });    
-    
   },
   
   // process the data for a multi day forecast and populate this.data
@@ -1512,12 +1504,17 @@ wxDriverWU.prototype = {
     // global.log("WU: entering _load_forecast");
     if (!data) {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }    
    
     let json = JSON.parse(data);
+    
     if (typeof json.response.error !== 'undefined') {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;  
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.lasterror = json.response.error.type;
       global.logWarning("Error from wunderground: " + json.response.error.type + ": " + json.response.error.description);
       return;
@@ -1538,26 +1535,6 @@ wxDriverWU.prototype = {
 
       this.data.days[i] = day;
     }   
-    
-    this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
-  },
-
-  // take an rss feed of current observations and extract data into this.data
-  _load_observations: function (data) {
-    if (!data) {
-      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
-      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-      return;
-    }     
-    let json = JSON.parse(data);
-    if (typeof json.response.error !== 'undefined') {
-      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;  
-      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-      this.data.status.lasterror = json.response.error.type;
-      global.logWarning("Error from wunderground: " + json.response.error.type + ": " + json.response.error.description);
-      return;
-    }
-    
     let co = json.current_observation;
     this.data.cc.humidity = co.relative_humidity.replace('%', '');
     this.data.cc.temperature = co.temp_c;
@@ -1575,6 +1552,7 @@ wxDriverWU.prototype = {
     this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
     this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
     this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+    this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
   },
  
   _getPressureTrend: function (code) {
