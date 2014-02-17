@@ -193,6 +193,7 @@ MyDesklet.prototype = {
         // get rid of the signal to bannersig before we recreate a window
         try {
           if (this.bannersig) this.banner.disconnect(this.bannersig);
+          this.bannersig = null;
         } catch(e) { }        
         this.createwindow(); 
         this.oldno=this.no;
@@ -515,6 +516,7 @@ MyDesklet.prototype = {
     this.bannertooltip.set_text(this.service.linkTooltip);
     try {
       if (this.bannersig) this.banner.disconnect(this.bannersig);
+      this.bannersig = null;
     } catch(e) { global.logWarning("Failed to disconnect signal from link banner") }  
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
