@@ -108,14 +108,16 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"iconstyle","iconstyle",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"citystyle","citystyle",this.updateStyle,null);
-      
       // this change requires us to fetch new data:
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"stationID","stationID",this.changeStation,null);
       // this requires a change of API key and refetch data
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"apikey","apikey",this.changeApiKey,null);
-      
-      // these changes potentially need a redraw of the window, so call initForecast:
+      // this change requires the main loop to be restarted, but no other updates
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"refreshtime","refreshtime",this.changeRefresh,null);
+      // these changes potentially need a redraw of the window, so call initForecast:
+      // layout because the position of the current temperature may change
+      // webservice because different capabilities mean different parameters need to be shown
+      // userno because of change to number of days in table, and possibly position of current temperature
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.initForecast,null);
