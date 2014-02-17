@@ -495,7 +495,6 @@ MyDesklet.prototype = {
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true) ;
     if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK) {
       this.weathertext.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
-      //this.weathertext.text = _('No data') ;
     }
   },
   
@@ -520,7 +519,6 @@ MyDesklet.prototype = {
     }));
     if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
       this.cityname.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
-      //this.cityname.text = _('No data');
     }
   },
   
@@ -709,6 +707,8 @@ wxDriver.prototype = {
         region: true
       }
     };
+    // ### TODO: if we later use visibility, we need to indicate if driver returns
+    // a value (in km) or a descriptive string (good/fair/poor - BBC)
     
     this.data=new Object();
     this._emptyData();
@@ -1084,7 +1084,8 @@ wxDriverYahoo.prototype = {
     this.capabilities.forecast.pressure_direction =  false;
     this.capabilities.forecast.visibility =  false;
     this.capabilities.forecast.uv_risk =  false;
-    this.capabilities.forecast.humidity =  false;   
+    this.capabilities.forecast.humidity =  false;  
+    this.capabilities.cc.visibility = false;
   },
   
   refreshData: function(deskletObj) {
@@ -1278,6 +1279,9 @@ wxDriverOWM.prototype = {
     this.capabilities.meta.region =  false;
     this.capabilities.cc.feelslike = false;
     this.capabilities.cc.pressure_direction = false;
+    this.capabilities.cc.visibility = false;
+    this.capabilities.forecast.visibility = false;
+    this.capabilities.forecast.uv_risk = false;
   },
   
   refreshData: function(deskletObj) {
@@ -1500,6 +1504,8 @@ wxDriverWU.prototype = {
     this.capabilities.meta.region =  false;
     this.capabilities.forecast.pressure = false;
     this.capabilities.forecast.pressure_direction =  false;
+    this.capabilities.forecast.visibility = false;
+    this.capabilities.forecast.uv_risk = false;
   },
   
   refreshData: function(deskletObj) {
@@ -1569,6 +1575,7 @@ wxDriverWU.prototype = {
       this.data.cc.weathertext = co.weather;
       this.data.cc.icon = this._mapicon(co.icon, json.moon_phase);
       this.data.cc.feelslike = co.feelslike_c;
+      this.data.cc.visibility = co.visibility_km;
       this.data.city = co.display_location.city;
       this.data.country = co.display_location.country;
       this.linkURL = co.forecast_url + this._referralRef;
@@ -1686,6 +1693,8 @@ wxDriverWWO.prototype = {
     this.capabilities.forecast.pressure_direction =  false;
     this.capabilities.cc.pressure_direction = false;
     this.capabilities.cc.feelslike = false;
+    this.capabilities.forecast.visibility = false;
+    this.capabilities.forecast.uv_risk = false;
   },
   
   refreshData: function(deskletObj) {
@@ -1755,6 +1764,7 @@ wxDriverWWO.prototype = {
       this.data.cc.obstime = new Date(dt.slice(0,3).join('/')+' '+dt[3]).toLocaleFormat("%H:%M %Z");
       this.data.cc.weathertext = cc.weatherDesc[0].value;
       this.data.cc.icon = this._mapicon(cc.weatherCode, cc.weatherIconUrl[0].value);
+      // vis is in km
       this.data.cc.visibility = cc.visibility;
       
       let locdata = json.data.nearest_area[0];
