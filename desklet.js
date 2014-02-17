@@ -1289,7 +1289,6 @@ wxDriverOWM.prototype = {
     // process the 7 day forecast
     let apiforecasturl = this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + encodeURIComponent(this.stationID);
     if (this.apikey) apiforecasturl = apiforecasturl + '&APPID=' + this.apikey;
-    //global.log ("Going to retrieve forecast URL " + apiforecasturl);
     let a = this._getWeather(apiforecasturl, function(weather) {
       if (weather) {
         this._load_forecast(weather);
@@ -1302,7 +1301,6 @@ wxDriverOWM.prototype = {
     // process current observations
     let apiccurl = this._baseURL + 'weather?units=metric&id=' + this.stationID;
     if (this.apikey) apiccurl = apiccurl + '&APPID=' + this.apikey;
-    //global.log ("Going to retrieve observations URL " + apiccurl);
     let b = this._getWeather(apiccurl, function(weather) {
       if (weather) {
         this._load_observations(weather); 
@@ -1329,28 +1327,34 @@ wxDriverOWM.prototype = {
       return;
     }
 
-    this.data.city = json.city.name;
-    this.data.country = json.city.country;
-    this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
-    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+    try {
+      this.data.city = json.city.name;
+      this.data.country = json.city.country;
+      this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
+      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
 
-    for (let i=0; i<json.list.length; i++) {
-      let day = new Object();
-      day.day = new Date(json.list[i].dt *1000).toLocaleFormat( "%a" );
-      day.minimum_temperature = json.list[i].temp.min;
-      day.maximum_temperature = json.list[i].temp.max;
-      day.pressure = json.list[i].pressure;
-      day.humidity = json.list[i].humidity;
-      day.wind_speed = json.list[i].speed * 3.6;
-      day.wind_direction = this.compassDirection(json.list[i].deg);
-      day.weathertext = json.list[i].weather[0].description.ucwords();
-      day.icon = this._mapicon(json.list[i].weather[0].icon, json.list[i].weather[0].id);
+      for (let i=0; i<json.list.length; i++) {
+        let day = new Object();
+        day.day = new Date(json.list[i].dt *1000).toLocaleFormat( "%a" );
+        day.minimum_temperature = json.list[i].temp.min;
+        day.maximum_temperature = json.list[i].temp.max;
+        day.pressure = json.list[i].pressure;
+        day.humidity = json.list[i].humidity;
+        day.wind_speed = json.list[i].speed * 3.6;
+        day.wind_direction = this.compassDirection(json.list[i].deg);
+        day.weathertext = json.list[i].weather[0].description.ucwords();
+        day.icon = this._mapicon(json.list[i].weather[0].icon, json.list[i].weather[0].id);
 
-      this.data.days[i] = day;
-    }    
-    
-    this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
-    this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+        this.data.days[i] = day;
+      }    
+      
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;     
+    }
   },
 
   // take an rss feed of current observations and extract data into this.data
@@ -1366,15 +1370,20 @@ wxDriverOWM.prototype = {
       return;
     }
     
-    this.data.cc.humidity = json.main.humidity;
-    this.data.cc.temperature = json.main.temp;
-    this.data.cc.pressure = json.main.pressure;
-    this.data.cc.wind_speed = json.wind.speed * 3.6;
-    this.data.cc.wind_direction = this.compassDirection(json.wind.deg);
-    this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
-    this.data.cc.weathertext = json.weather[0].description.ucwords();
-    this.data.cc.icon = this._mapicon(json.weather[0].icon, json.weather[0].id);
-    this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+    try {
+      this.data.cc.humidity = json.main.humidity;
+      this.data.cc.temperature = json.main.temp;
+      this.data.cc.pressure = json.main.pressure;
+      this.data.cc.wind_speed = json.wind.speed * 3.6;
+      this.data.cc.wind_direction = this.compassDirection(json.wind.deg);
+      this.data.cc.obstime = new Date(json.dt *1000).toLocaleFormat("%H:%M %Z");
+      this.data.cc.weathertext = json.weather[0].description.ucwords();
+      this.data.cc.icon = this._mapicon(json.weather[0].icon, json.weather[0].id);
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+    } catch(e) {
+      global.logError(e);
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
+    }
   },
   
   _mapicon: function(iconcode, wxcode) {
@@ -1533,39 +1542,46 @@ wxDriverWU.prototype = {
       return;
     }
     
-    var days = json.forecast.simpleforecast.forecastday;
+    try {
+      var days = json.forecast.simpleforecast.forecastday;
 
-    for (let i=0; i<days.length; i++) {
-      let day = new Object();
-      day.day = days[i].date.weekday_short;
-      day.minimum_temperature = days[i].low.celsius;
-      day.maximum_temperature = days[i].high.celsius;
-      day.humidity = days[i].avehumidity;
-      day.wind_speed = days[i].avewind.kph;
-      day.wind_direction = this.compassDirection(days[i].avewind.degrees);
-      day.weathertext = days[i].conditions;
-      day.icon = this._mapicon(days[i].icon, false);
+      for (let i=0; i<days.length; i++) {
+        let day = new Object();
+        day.day = days[i].date.weekday_short;
+        day.minimum_temperature = days[i].low.celsius;
+        day.maximum_temperature = days[i].high.celsius;
+        day.humidity = days[i].avehumidity;
+        day.wind_speed = days[i].avewind.kph;
+        day.wind_direction = this.compassDirection(days[i].avewind.degrees);
+        day.weathertext = days[i].conditions;
+        day.icon = this._mapicon(days[i].icon, false);
 
-      this.data.days[i] = day;
-    }   
-    let co = json.current_observation;
-    this.data.cc.humidity = co.relative_humidity.replace('%', '');
-    this.data.cc.temperature = co.temp_c;
-    this.data.cc.pressure = co.pressure_mb;
-    this.data.cc.pressure_direction = this._getPressureTrend(co.pressure_trend);
-    this.data.cc.wind_speed = co.wind_kph;
-    this.data.cc.wind_direction = this.compassDirection(co.wind_degrees);
-    this.data.cc.obstime = new Date(co.local_epoch *1000).toLocaleFormat("%H:%M %Z");
-    this.data.cc.weathertext = co.weather;
-    this.data.cc.icon = this._mapicon(co.icon, json.moon_phase);
-    this.data.cc.feelslike = co.feelslike_c;
-    this.data.city = co.display_location.city;
-    this.data.country = co.display_location.country;
-    this.linkURL = co.forecast_url + this._referralRef;
-    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-    this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
-    this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
-    this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+        this.data.days[i] = day;
+      }   
+      let co = json.current_observation;
+      this.data.cc.humidity = co.relative_humidity.replace('%', '');
+      this.data.cc.temperature = co.temp_c;
+      this.data.cc.pressure = co.pressure_mb;
+      this.data.cc.pressure_direction = this._getPressureTrend(co.pressure_trend);
+      this.data.cc.wind_speed = co.wind_kph;
+      this.data.cc.wind_direction = this.compassDirection(co.wind_degrees);
+      this.data.cc.obstime = new Date(co.local_epoch *1000).toLocaleFormat("%H:%M %Z");
+      this.data.cc.weathertext = co.weather;
+      this.data.cc.icon = this._mapicon(co.icon, json.moon_phase);
+      this.data.cc.feelslike = co.feelslike_c;
+      this.data.city = co.display_location.city;
+      this.data.country = co.display_location.country;
+      this.linkURL = co.forecast_url + this._referralRef;
+      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
+    }      
   },
  
   _getPressureTrend: function (code) {
@@ -1711,74 +1727,57 @@ wxDriverWWO.prototype = {
       return;
     }
     
-    let days = json.data.weather;
+    try {
+      let days = json.data.weather;
 
-    for (let i=0; i<days.length; i++) {
-      let day = new Object();
-      day.day = new Date(days[i].date).toLocaleFormat("%a");
-      day.minimum_temperature = days[i].tempMinC;
-      day.maximum_temperature = days[i].tempMaxC;
-      //day.pressure = json.list[i].pressure;
-      //day.humidity = days[i].avehumidity;
-      day.wind_speed = days[i].windspeedKmph;
-      day.wind_direction = days[i].winddir16Point;
-      day.weathertext = days[i].weatherDesc[0].value;
-      day.icon = this._mapicon(days[i].weatherCode, days[i].weatherIconUrl[0].value);
+      for (let i=0; i<days.length; i++) {
+        let day = new Object();
+        day.day = new Date(days[i].date).toLocaleFormat("%a");
+        day.minimum_temperature = days[i].tempMinC;
+        day.maximum_temperature = days[i].tempMaxC;
+        //day.pressure = json.list[i].pressure;
+        //day.humidity = days[i].avehumidity;
+        day.wind_speed = days[i].windspeedKmph;
+        day.wind_direction = days[i].winddir16Point;
+        day.weathertext = days[i].weatherDesc[0].value;
+        day.icon = this._mapicon(days[i].weatherCode, days[i].weatherIconUrl[0].value);
 
-      this.data.days[i] = day;
-    }   
-    let cc = json.data.current_condition[0];
+        this.data.days[i] = day;
+      }   
+      let cc = json.data.current_condition[0];
 
-    this.data.cc.humidity = cc.humidity;
-    this.data.cc.temperature = cc.temp_C;
-    this.data.cc.pressure = cc.pressure;
-    this.data.cc.wind_speed = cc.windspeedKmph;
-    this.data.cc.wind_direction = cc.winddir16Point;
-    let dt = cc.localObsDateTime.split(/\-|\s/);
-    this.data.cc.obstime = new Date(dt.slice(0,3).join('/')+' '+dt[3]).toLocaleFormat("%H:%M %Z");
-    this.data.cc.weathertext = cc.weatherDesc[0].value;
-    this.data.cc.icon = this._mapicon(cc.weatherCode, cc.weatherIconUrl[0].value);
-    this.data.cc.visibility = cc.visibility;
-    
-    let locdata = json.data.nearest_area[0];
-    this.data.city = locdata.areaName[0].value;
-    this.data.country = locdata.country[0].value;
-    this.data.region = locdata.region[0].value;
-    // we don't reliably get weatherURL in the response :(
-    if (typeof locdata.weatherUrl != 'undefined') {
-      this.linkURL = locdata.weatherUrl[0].value;
-    } else {
-      this.linkURL = 'http://www.worldweatheronline.com/v2/weather.aspx?q=' + encodeURIComponent(this.stationID);
-    }
-    
-    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-    this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
-    this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
-    this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
-  },
- 
-  _load_meta: function(data) {
-    if (!data) {
+      this.data.cc.humidity = cc.humidity;
+      this.data.cc.temperature = cc.temp_C;
+      this.data.cc.pressure = cc.pressure;
+      this.data.cc.wind_speed = cc.windspeedKmph;
+      this.data.cc.wind_direction = cc.winddir16Point;
+      let dt = cc.localObsDateTime.split(/\-|\s/);
+      this.data.cc.obstime = new Date(dt.slice(0,3).join('/')+' '+dt[3]).toLocaleFormat("%H:%M %Z");
+      this.data.cc.weathertext = cc.weatherDesc[0].value;
+      this.data.cc.icon = this._mapicon(cc.weatherCode, cc.weatherIconUrl[0].value);
+      this.data.cc.visibility = cc.visibility;
+      
+      let locdata = json.data.nearest_area[0];
+      this.data.city = locdata.areaName[0].value;
+      this.data.country = locdata.country[0].value;
+      this.data.region = locdata.region[0].value;
+      // we don't reliably get weatherURL in the response :(
+      if (typeof locdata.weatherUrl != 'undefined') {
+        this.linkURL = locdata.weatherUrl[0].value;
+      } else {
+        this.linkURL = 'http://www.worldweatheronline.com/v2/weather.aspx?q=' + encodeURIComponent(this.stationID);
+      }
+      
+      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-      return;
-    }    
-   
-    let json = JSON.parse(data);
-    
-    if (typeof json.data !== 'undefined' && typeof json.data.error !== 'undefined') {
-      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-      this.data.status.lasterror = json.data.error[0].msg;
-      global.logWarning("Error from World Weather Online: " + json.data.error[0].msg);
-      return;
-    }    
-    let locdata = json.search_api.result[0];
-
-    this.data.city = locdata.areaName[0].value;
-    this.data.country = locdata.country[0].value;
-    this.data.region = locdata.region[0].value;
-    this.linkURL = locdata.weatherUrl[0].value;
-    this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-    this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
+    }      
   },
   
   _mapicon: function(iconcode, recommendedIcon) {
