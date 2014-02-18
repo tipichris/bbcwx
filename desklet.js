@@ -85,7 +85,6 @@ MyDesklet.prototype = {
     this.fwicons=[];this.labels=[];this.max=[];this.min=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
     this.cc=[];this.days=[];
     this.metadata = metadata;
-    this.proces=false;
     this.oldno=0; // test for a change in this.no
     this.oldwebservice='';
     this.oldshifttemp='';
@@ -114,20 +113,18 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"apikey","apikey",this.changeApiKey,null);
       // this change requires the main loop to be restarted, but no other updates
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"refreshtime","refreshtime",this.changeRefresh,null);
-      // these changes potentially need a redraw of the window, so call initForecast:
+      // these changes potentially need a redraw of the window, but not a refetch of data
       // layout because the position of the current temperature may change
-      // webservice because different capabilities mean different parameters need to be shown
       // userno because of change to number of days in table, and possibly position of current temperature
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.initForecast,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.redraw,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.redraw,null);
+      // a change to webservice requires data to be fetched and the window redrawn
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.initForecast,null);
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
       this._menu.addAction(_("Help"), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
-         
-      this.proces=true;
       
       this.initForecast();
       
@@ -142,75 +139,56 @@ MyDesklet.prototype = {
   // Set everything up initially
   initForecast: function() {
     if (this.service) delete this.service;
-    if (this.proces) {
-      // select the the driver we need for this service
-      switch(this.webservice) {
-        case 'bbc':
-          this.service = new wxDriverBBC(this.stationID);
-          break;
-        case 'mock':
-          this.service = new wxDriverMock(this.stationID);
-          break;
-        case 'yahoo':
-          this.service = new wxDriverYahoo(this.stationID);
-          break;
-        case 'owm':
-          this.service = new wxDriverOWM(this.stationID, this.apikey);
-          break;
-        case 'wunderground':
-          this.service = new wxDriverWU(this.stationID, this.apikey);
-          break;
-        case 'wwo':
-          this.service = new wxDriverWWO(this.stationID, this.apikey);
-          break;
-        default:
-          this.service = new wxDriverBBC(this.stationID);
-      }
-      // set the number of days of forecast to display; maximum of the number
-      // selected by the user and the maximum supported by the driver
-      if (this.userno > this.service.maxDays) {
-        this.no = this.service.maxDays;
-      } else {
-        this.no = this.userno;
-      }
-      
-      // set the refresh period; minimum of the number
-      // selected by the user and the minimum supported by the driver
-      this.refreshSec = this.refreshtime * 60;
-      if (this.refreshSec < this.service.minTTL) {
-        this.refreshSec = this.service.minTTL;
-      }    
-      
-      // if more than four days we'll shift the position of the current temperature,
-      // but only in horizontal layout
-      this.shifttemp = false;
-      if (this.no > 4 && this.layout == 0) {
-        this.shifttemp = true;
-      }
-      
-      // in these circumstances we need to redraw the window from scratch as the layout has changed
-      if((this.no != this.oldno) || (this.oldwebservice != this.webservice) || this.shiftemp != this.oldshifttemp) {       
-        // get rid of the signal to bannersig before we recreate a window
-        try {
-          if (this.bannersig) this.banner.disconnect(this.bannersig);
-          this.bannersig = null;
-        } catch(e) { }        
-        this.createwindow(); 
-        this.oldno=this.no;
-        this.oldwebservice = this.webservice;
-        this.oldshifttemp = this.shifttemp;
-        this.setContent(this.window);
-      }
-      this._update_style();
-      this._refreshweathers();    
+    // select the the driver we need for this service
+    switch(this.webservice) {
+      case 'bbc':
+        this.service = new wxDriverBBC(this.stationID);
+        break;
+      case 'mock':
+        this.service = new wxDriverMock(this.stationID);
+        break;
+      case 'yahoo':
+        this.service = new wxDriverYahoo(this.stationID);
+        break;
+      case 'owm':
+        this.service = new wxDriverOWM(this.stationID, this.apikey);
+        break;
+      case 'wunderground':
+        this.service = new wxDriverWU(this.stationID, this.apikey);
+        break;
+      case 'wwo':
+        this.service = new wxDriverWWO(this.stationID, this.apikey);
+        break;
+      default:
+        this.service = new wxDriverBBC(this.stationID);
     }
+    
+    this._setDerivedValues();
+    this._createWindow(); 
+    this._update_style();
+    this._refreshweathers();    
   },
   
   ////////////////////////////////////////////////////////////////////////////
   // Create the layout of our desklet. Certain settings changes require this
   // to be called again (eg change service, as capabilities change, change number 
   // days of forecast to display
-  createwindow: function(){
+  _createWindow: function(){
+    // in these circumstances we do not need to redraw the window from scratch as the elements haven't changed
+    if((this.no == this.oldno) && (this.oldwebservice == this.webservice) && (this.shifttemp == this.oldshifttemp)) {       
+      return;
+    }      
+ 
+    this.oldno=this.no;
+    this.oldwebservice = this.webservice;
+    this.oldshifttemp = this.shifttemp;
+    
+    // get rid of the signal to bannersig before we recreate a window
+    try {
+      if (this.bannersig) this.banner.disconnect(this.bannersig);
+      this.bannersig = null;
+    } catch(e) { }  
+    
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
     
     // container for link and refresh icon
@@ -231,7 +209,7 @@ MyDesklet.prototype = {
     
     this._separatorArea = new St.DrawingArea({ style_class: BBCWX_STYLE_POPUP_SEPARATOR_MENU_ITEM });
     
-    let ccap = this.service.capabilities.cc;
+    let ccap = this.show.cc;
     
     // current weather values
     if(ccap.humidity) this.humidity=new St.Label();
@@ -289,7 +267,7 @@ MyDesklet.prototype = {
     this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
     this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
     
-    let fcap = this.service.capabilities.forecast;
+    let fcap = this.show.forecast;
     let row = 2;
     
     if(fcap.maximum_temperature) {this.fwtable.add(this.maxlabel,{row:row,col:0}); row++}
@@ -338,6 +316,37 @@ MyDesklet.prototype = {
     this.window.add_actor(this.cweather);
     this.window.add_actor(this.container);
     
+    this.setContent(this.window);
+    
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Set some internal values derived from user choices
+  _setDerivedValues: function() {
+      // set the number of days of forecast to display; maximum of the number
+      // selected by the user and the maximum supported by the driver
+      if (this.userno > this.service.maxDays) {
+        this.no = this.service.maxDays;
+      } else {
+        this.no = this.userno;
+      }
+      
+      // set the refresh period; minimum of the number
+      // selected by the user and the minimum supported by the driver
+      this.refreshSec = this.refreshtime * 60;
+      if (this.refreshSec < this.service.minTTL) {
+        this.refreshSec = this.service.minTTL;
+      }    
+      
+      // if more than four days we'll shift the position of the current temperature,
+      // but only in horizontal layout
+      this.shifttemp = false;
+      if (this.no > 4 && this.layout == 0) {
+        this.shifttemp = true;
+      }
+      
+      // for later - we'll && capabilities with user prefs
+      this.show = this.service.capabilities;
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -354,7 +363,6 @@ MyDesklet.prototype = {
   // Does the bulk of the work of updating style
   _update_style: function() {
     //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
-    let fcap = this.service.capabilities.forecast;
     this.window.vertical = (this.layout==1) ? true : false;
     this.cwicon.height=BBCWX_CC_ICON_HEIGHT*this.zoom;this.cwicon.width=BBCWX_CC_ICON_WIDTH*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
@@ -377,7 +385,7 @@ MyDesklet.prototype = {
       this.labels[f].style='text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
       this.fwicons[f].height=BBCWX_ICON_HEIGHT*this.zoom;this.fwicons[f].width= BBCWX_ICON_WIDTH*this.zoom;
       if(this.max[f]) this.max[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
-      if( this.min[f]) this.min[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+      if(this.min[f]) this.min[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
       if(this.winds[f]) this.winds[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
       if(this.windd[f]) this.windd[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     }
@@ -426,13 +434,19 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Change the refresh period and restart the loop
   changeRefresh: function() {
-      // set the refresh period; minimum of the number
-      // selected by the user and the minimum supported by the driver
-      this.refreshSec = this.refreshtime * 60;
-      if (this.refreshSec < this.service.minTTL) {
-        this.refreshSec = this.service.minTTL;
-      } 
+      this._setDerivedValues();
       this._doLoop();
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // redraw the window, but without refetching data from the service provider
+  redraw: function() {
+    this._setDerivedValues();
+    this._createWindow(); 
+    this._update_style();
+    this.displayCurrent();
+    this.displayForecast();
+    this.displayMeta();
   },
       
   ////////////////////////////////////////////////////////////////////////////
