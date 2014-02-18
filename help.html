@@ -48,7 +48,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     their descriptions, whilst the credit link at the 
     bottom of the desklet will take you to a more detailed forecast for your area.  
     </p>
-    <h2>Configuration</h2>
+    <h2 id="config">Configuration</h2>
     <p>Right click on the desklet and select 'Configure...' to enter the 
     configuration screen.</p>
     <p>Select the sevice you wish to use to provide weather data. Note that 
@@ -56,7 +56,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     <p>The Location must be specified as a code and these codes are specific
     to the service that you are using. Below are notes on each of the services 
     supported.</p>
-    <h3>BBC</h3>
+    <h3 id="bbc">BBC</h3>
     <p>
     To find your location code visit 
     <a href="http://www.bbc.co.uk/weather/">the BBC Weather site</a> and 
@@ -67,7 +67,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     <p>
     The Location code is therefore <code class="loccode">2643743</code>.
     </p>
-    <h3>Open Weather Map</h3>
+    <h3 id="owm">Open Weather Map</h3>
     <p>Visit <a href="http://openweathermap.org/">the Open Weather Map</a> and search
     for your city. The code you need is the numeric part at
     the end of URL for the city's weather. For example, a search for Chicago 
@@ -80,7 +80,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     that you use one. To obtain an API Key for Open Weather Map
     <a href="http://openweathermap.org/login">register on the Open Weather 
     Map website</a>.</p>
-    <h3>Yahoo</h3>
+    <h3 id="yahoo">Yahoo</h3>
     <p>Visit <a href="http://weather.yahoo.com/">Yahoo! Weather</a> and search
     for your city. The code you need is the numeric part at
     the end of URL for the city's weather. For example, a search for Berlin 
@@ -89,7 +89,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     <p>
     The Location code is therefore <code class="loccode">638242</code>.
     </p>    
-    <h3>Weather Underground</h3>
+    <h3 id="wu">Weather Underground</h3>
     <p><strong>Weather Underground requires an API key</strong>. You can 
     <a href="http://www.wunderground.com/weather/api/">obtain a free developer API key here</a>. 
     Weather Desklet uses the 10 day forecast data, so you will need to get at least 
@@ -113,7 +113,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     <p>you can convert this to a zmw code by taking the station number (03541 in this case)
     and prefixing it with zmw:00000.1. to give
     <code class="loccode">zmw:00000.1.03541</code>
-    <h3>World Weather Online</h3>
+    <h3 id="wwo">World Weather Online</h3>
     <p><strong>World Weather Online requires an API key</strong>. You can 
     <a href="http://developer.worldweatheronline.com/member/register">register for a free API key here</a>.</p>
     <p>
@@ -121,7 +121,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     Latitude and longitude should be given as decimals, separated by a comma, with positive being north or east. For example, for 
     central London, 51.51N, 0.13W, use <code class="loccode">51.51,-0.13</code>.
     </p>
-    <h3>Refresh time</h3>
+    <h3 id="refreshtime">Refresh time</h3>
     <p>
     Select the period between refreshing forecasts. The default of 30 minutes should be adequate
     for most purposes. Please consider the impact of lower refresh times on the service provider's
@@ -129,7 +129,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     In order to comply with the terms of use of some providers Weather Desklet will override
     low settings in some cases and enforce a minimum.
     </p>
-    <h3>Other settings</h3>
+    <h3 id="othersettings">Other settings</h3>
     <p>Most of the other settings should be obvious - just experiment. Please note, however, 
     that the settings for the number of days may be overridden
     by the data service you select as some services only support a limited number of days.</p>
