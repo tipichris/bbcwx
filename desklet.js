@@ -808,7 +808,7 @@ wxDriver.prototype = {
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
       if( message.status_code == 200) {
-        callback.call(here,message.response_body.data.toString()); 
+        try {callback.call(here,message.response_body.data.toString());} catch(e) {global.logError(e)}
       } else {
         global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
         here.data.status.lasterror = message.status_code;
