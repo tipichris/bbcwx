@@ -89,14 +89,86 @@
     "description" : "Refresh forecast every",
     "tooltip" : "Period between refreshing forecasts. Note that not all services support lower refresh times"
   },
-  
-  "displaysep" : {
+   
+  "sep1" : {
     "type" : "separator"
   },
 
   "display" : {
     "type" : "header",
-    "description" : "Desklet display"
+    "description" : "Optional items to display (not all options are supported by all services)"
+  },
+
+  "display__meta__country" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Country",
+    "tooltip": "Check to display the country"
+  },
+  
+  "display__cc__pressure" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Current pressure",
+    "tooltip": "Check to display the current pressure"
+  },
+
+  "display__cc__humidity" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Current humidity",
+    "tooltip": "Check to display the current humidity"
+  },
+
+  "display__cc__wind_speed" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Current wind",
+    "tooltip": "Check to display the current wind"
+  },
+  
+  "display__cc__feelslike" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Current 'feels like'",
+    "tooltip": "Check to display the current apparent temperature"
+  },
+
+  "display__forecast__maximum_temperature" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Forecast maximum",
+    "tooltip": "Check to display the forecast maximum temperature"
+  },
+
+  "display__forecast__minimum_temperature" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Forecast minimum",
+    "tooltip": "Check to display the forecast minimum temperature"
+  },
+
+  "display__forecast__wind_speed" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Forecast wind speed",
+    "tooltip": "Check to display the forecast wind speed"
+  },
+
+  "display__forecast__wind_direction" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Forecast wind direction",
+    "tooltip": "Check to display the forecast wind direction"
+  },
+  
+  "sep2" : {
+    "type" : "separator"
+  },
+
+  "styling" : {
+    "type" : "header",
+    "description" : "Desklet style"
   },
 
   "zoom" : {
@@ -157,6 +229,7 @@
     "description" : "Border colour",
     "indent": true,
     "dependency" : "border",
+    "indent": true,
     "tooltip" : "Select the colour for the border. This field is unavailable unless the checkbox above is enabled"
   },
 

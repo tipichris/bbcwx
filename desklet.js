@@ -90,9 +90,10 @@ MyDesklet.prototype = {
     this.oldno=0; // test for a change in this.no
     this.oldwebservice='';
     this.oldshifttemp='';
+    this.redrawNeeded=false;
         
     //################################
-
+    
     try {
       Desklet.Desklet.prototype._init.call(this, metadata);
       //#########################binding configuration file################
@@ -120,6 +121,19 @@ MyDesklet.prototype = {
       // userno because of change to number of days in table, and possibly position of current temperature
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.redraw,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.redraw,null);
+      
+      // these need a redraw. displayOptsChange sets a flag to say a redraw is needed before calling redraw
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__pressure","display__cc__pressure",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__humidity","display__cc__humidity",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__feelslike","display__cc__feelslike",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__wind_speed","display__cc__wind_speed",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__wind_speed","display__forecast__wind_speed",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__wind_direction","display__forecast__wind_direction",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__maximum_temperature","display__forecast__maximum_temperature",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__minimum_temperature","display__forecast__minimum_temperature",this.displayOptsChange,null);
+      
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__meta__country","display__meta__country",this.updateStyle,null);
+      
       // a change to webservice requires data to be fetched and the window redrawn
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
 
@@ -177,13 +191,14 @@ MyDesklet.prototype = {
   // days of forecast to display
   _createWindow: function(){
     // in these circumstances we do not need to redraw the window from scratch as the elements haven't changed
-    if((this.no == this.oldno) && (this.oldwebservice == this.webservice) && (this.shifttemp == this.oldshifttemp)) {       
+    if((this.no == this.oldno) && (this.oldwebservice == this.webservice) && (this.shifttemp == this.oldshifttemp) && !this.redrawNeeded) {       
       return;
     }      
  
     this.oldno=this.no;
     this.oldwebservice = this.webservice;
     this.oldshifttemp = this.shifttemp;
+    this.redrawNeeded = false;
     
     // get rid of the signal to bannersig before we recreate a window
     try {
@@ -325,33 +340,43 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Set some internal values derived from user choices
   _setDerivedValues: function() {
-      // set the number of days of forecast to display; maximum of the number
-      // selected by the user and the maximum supported by the driver
-      if (this.userno > this.service.maxDays) {
-        this.no = this.service.maxDays;
-      } else {
-        this.no = this.userno;
-      }
-      
-      // set the refresh period; minimum of the number
-      // selected by the user and the minimum supported by the driver
-      this.refreshSec = this.refreshtime * 60;
-      if (this.refreshSec < this.service.minTTL) {
-        this.refreshSec = this.service.minTTL;
-      }    
-      
-      // if more than four days we'll shift the position of the current temperature,
-      // but only in horizontal layout
-      this.shifttemp = false;
-      if (this.no > 4 && this.layout == 0) {
-        this.shifttemp = true;
-      }
-      
-      // set this.iconprops
-      this._initIcons();
-      
-      // for later - we'll && capabilities with user prefs
-      this.show = this.service.capabilities;
+    // set the number of days of forecast to display; maximum of the number
+    // selected by the user and the maximum supported by the driver
+    if (this.userno > this.service.maxDays) {
+      this.no = this.service.maxDays;
+    } else {
+      this.no = this.userno;
+    }
+    
+    // set the refresh period; minimum of the number
+    // selected by the user and the minimum supported by the driver
+    this.refreshSec = this.refreshtime * 60;
+    if (this.refreshSec < this.service.minTTL) {
+      this.refreshSec = this.service.minTTL;
+    }    
+    
+    // if more than four days we'll shift the position of the current temperature,
+    // but only in horizontal layout
+    this.shifttemp = false;
+    if (this.no > 4 && this.layout == 0) {
+      this.shifttemp = true;
+    }
+    
+    // set this.iconprops
+    this._initIcons();
+    
+    // clone this.service.capabilities, then && it with display preferences
+    this.show =  JSON.parse(JSON.stringify(this.service.capabilities));
+    let displayopts =['display__cc__pressure', 'display__cc__wind_speed', 
+      'display__cc__humidity', 'display__cc__feelslike',
+      'display__forecast__wind_speed', 'display__forecast__wind_direction', 
+      'display__forecast__maximum_temperature', 'display__forecast__minimum_temperature',
+      'display__meta__country'
+    ];
+    for (let i=0; i<displayopts.length; i++) {
+      parts=displayopts[i].split('__');
+      this.show[parts[1]][parts[2]] = this.show[parts[1]][parts[2]] && this[displayopts[i]];
+    }
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -369,7 +394,7 @@ MyDesklet.prototype = {
     
     if (typeof ARMap[this.iconstyle] !== 'undefined') this.iconprops.aspect = ARMap[this.iconstyle];
     if (typeof ExtMap[this.iconstyle] !== 'undefined') this.iconprops.ext = ExtMap[this.iconstyle];
-    global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' using ' + this.iconstyle);
+    //global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' using ' + this.iconstyle);
   },
   
   
@@ -377,7 +402,7 @@ MyDesklet.prototype = {
   // Called when some change requires the styling of the desklet to be updated    
   updateStyle: function() {
     // set values for this.iconprops
-    this._initIcons();
+    this._setDerivedValues();
     // update style
     this._update_style();
     // also need to run these to update icon style and size
@@ -461,8 +486,15 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Change the refresh period and restart the loop
   changeRefresh: function() {
-      this._setDerivedValues();
-      this._doLoop();
+    this._setDerivedValues();
+    this._doLoop();
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Called when there is a change to user config for parameters to display
+  displayOptsChange: function() {
+    this.redrawNeeded = true;
+    this.redraw();
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -545,7 +577,11 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Update the display of the meta data, eg city name
   displayMeta: function() {
-    this.cityname.text=this.service.data.city;
+    let city=this.service.data.city;
+    if (this.show.meta.country) {
+      city = city + ', ' + this.service.data.country;
+    }
+    this.cityname.text=city;
     if (this.service.linkIcon) {
       this.banner.label = '';
       let bannericonimage = this._getIconImage(this.service.linkIcon.file);
