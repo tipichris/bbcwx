@@ -233,7 +233,7 @@ MyDesklet.prototype = {
     // container for left (horizontal) or upper (vertical) part of window
     this.cweather = new St.BoxLayout({vertical: true, x_align: 2}); //definire coloana stangz
     // current weather icon container
-    this.cwicon = new St.Bin({height: (BBCWX_CC_ICON_HEIGHT*this.zoom), width: (BBCWX_CC_ICON_WIDTH*this.zoom)}); //icoana mare cu starea vremii
+    this.cwicon = new St.Bin({height: (BBCWX_CC_ICON_HEIGHT*this.zoom), width: (BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom)}); //icoana mare cu starea vremii
     // current weather text
     this.weathertext=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
     
@@ -276,7 +276,7 @@ MyDesklet.prototype = {
     if(fcap.wind_direction) {this.fwtable.add(this.winddlabel,{row:row,col:0}); row++}
     for(let f=0;f<this.no;f++) {
       this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px" });
-      this.fwicons[f]=new St.Button({height:BBCWX_ICON_HEIGHT*this.zoom, width: BBCWX_ICON_WIDTH*this.zoom});
+      this.fwicons[f]=new St.Button({height:BBCWX_ICON_HEIGHT*this.zoom, width: BBCWX_ICON_HEIGHT*this.iconprops.aspect*this.zoom});
       if(fcap.maximum_temperature) this.max[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
       if(fcap.minimum_temperature) this.min[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
       if(fcap.wind_speed) this.winds[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
@@ -345,13 +345,38 @@ MyDesklet.prototype = {
         this.shifttemp = true;
       }
       
+      // set this.iconprops
+      this._initIcons();
+      
       // for later - we'll && capabilities with user prefs
       this.show = this.service.capabilities;
   },
   
   ////////////////////////////////////////////////////////////////////////////
+  // Set internal values for icons
+  _initIcons: function() {
+    this.iconprops = new Object();
+    this.iconprops.aspect = 1;
+    this.iconprops.ext = 'png';
+    
+    let ARMap = {
+      'vclouds': 1.458
+    };
+    
+    let ExtMap = {};
+    
+    if (typeof ARMap[this.iconstyle] !== 'undefined') this.iconprops.aspect = ARMap[this.iconstyle];
+    if (typeof ExtMap[this.iconstyle] !== 'undefined') this.iconprops.ext = ExtMap[this.iconstyle];
+    global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' using ' + this.iconstyle);
+  },
+  
+  
+  ////////////////////////////////////////////////////////////////////////////
   // Called when some change requires the styling of the desklet to be updated    
   updateStyle: function() {
+    // set values for this.iconprops
+    this._initIcons();
+    // update style
     this._update_style();
     // also need to run these to update icon style and size
     this.displayForecast();
@@ -364,7 +389,7 @@ MyDesklet.prototype = {
   _update_style: function() {
     //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
     this.window.vertical = (this.layout==1) ? true : false;
-    this.cwicon.height=BBCWX_CC_ICON_HEIGHT*this.zoom;this.cwicon.width=BBCWX_CC_ICON_WIDTH*this.zoom;
+    this.cwicon.height=BBCWX_CC_ICON_HEIGHT*this.zoom;this.cwicon.width=BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom;
     this.weathertext.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
     if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
     if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + BBCWX_TEMP_PADDING *this.zoom + 'px'
@@ -383,7 +408,7 @@ MyDesklet.prototype = {
 
     for(let f=0;f<this.no;f++) {
       this.labels[f].style='text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
-      this.fwicons[f].height=BBCWX_ICON_HEIGHT*this.zoom;this.fwicons[f].width= BBCWX_ICON_WIDTH*this.zoom;
+      this.fwicons[f].height=BBCWX_ICON_HEIGHT*this.zoom;this.fwicons[f].width= BBCWX_ICON_HEIGHT*this.iconprops.aspect*this.zoom;
       if(this.max[f]) this.max[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
       if(this.min[f]) this.min[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
       if(this.winds[f]) this.winds[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
@@ -482,7 +507,7 @@ MyDesklet.prototype = {
       let day = this.service.data.days[f];
       this.labels[f].label=((this.daynames[day.day]) ? this.daynames[day.day] : '');
       let fwiconimage = this._getIconImage(day.icon);
-      fwiconimage.set_size(BBCWX_ICON_WIDTH*this.zoom, BBCWX_ICON_HEIGHT*this.zoom);
+      fwiconimage.set_size(BBCWX_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_ICON_HEIGHT*this.zoom);
       this.fwicons[f].set_child(fwiconimage);      
       this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
       if(this.max[f]) this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
@@ -497,7 +522,7 @@ MyDesklet.prototype = {
   displayCurrent: function(){
     let cc = this.service.data.cc;
     let cwimage=this._getIconImage(this.service.data.cc.icon);
-    cwimage.set_size(BBCWX_CC_ICON_WIDTH*this.zoom, BBCWX_CC_ICON_HEIGHT*this.zoom);
+    cwimage.set_size(BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_CC_ICON_HEIGHT*this.zoom);
     this.cwicon.set_child(cwimage);
     if (this.shifttemp) {
       this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '');
@@ -544,7 +569,7 @@ MyDesklet.prototype = {
   // Get an icon
   _getIconImage: function(iconcode) {
     let icon_name = 'na';
-    let icon_ext = '.png';
+    let icon_ext = '.' + this.iconprops.ext;
     if (iconcode) {
       icon_name = iconcode;
     }
