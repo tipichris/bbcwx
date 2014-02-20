@@ -1031,8 +1031,8 @@ wxDriverBBC.prototype = {
         for (let b=0; b<parts.length; b++) {
           k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
           v = parts[b].slice(parts[b].indexOf(':')+1).trim();
-          if (v.toLowerCase() == 'null') v = '';
-          if (k == "wind_direction") {
+          if (v.substr(0,4).toLowerCase() == 'null') v = '';
+          if (k == "wind_direction" && v != '') {
             let vparts = v.split(" ");
             v = '';
             for (let c=0; c<vparts.length; c++) {
@@ -1084,15 +1084,15 @@ wxDriverBBC.prototype = {
         let k, v;
         k = parts[b].slice(0, parts[b].indexOf(':')).trim().replace(' ', '_').toLowerCase();
         v = parts[b].slice(parts[b].indexOf(':')+1).trim();
-        if (v.toLowerCase() == 'null') v = '';
-        if (k == "wind_direction") {
+        if (v.substr(0,4).toLowerCase() == 'null') v = '';
+        if (k == 'wind_direction' && v != '') {
           let vparts = v.split(" ");
           v = '';
           for (let c=0; c<vparts.length; c++) {
             v += vparts[c].charAt(0).toUpperCase();
           }
         }
-        if (k == "pressure") {
+        if (k == 'pressure' && v != '') {
           let pparts=v.split('|');
           v = pparts[0].trim();
           this.data.cc.pressure_direction = pparts[1].trim();
