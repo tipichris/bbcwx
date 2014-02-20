@@ -734,7 +734,7 @@ MyDesklet.prototype = {
     };
     let unitstring = {
       'mph': _('mi'),
-      'knots': _('NM'),
+      'knots': _('nmi'),
       'kph': _('km'),
       'mps': _('km')
     }
