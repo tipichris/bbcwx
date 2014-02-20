@@ -211,7 +211,9 @@
       "Flat colourful": "flat_colourful",
       "Flat black": "flat_black",
       "Flat white": "flat_white",
-      "VClouds" : "vclouds"
+      "VClouds" : "vclouds",
+      "Novacon" : "novacon",
+      "Weezle" : "weezle"
     },
     "tooltip": "Select the style for the weather icons"
   },
