@@ -127,6 +127,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__humidity","display__cc__humidity",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__feelslike","display__cc__feelslike",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__wind_speed","display__cc__wind_speed",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__visibility","display__cc__visibility",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__wind_speed","display__forecast__wind_speed",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__wind_direction","display__forecast__wind_direction",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__maximum_temperature","display__forecast__maximum_temperature",this.displayOptsChange,null);
@@ -233,6 +234,7 @@ MyDesklet.prototype = {
     if(ccap.pressure) this.pressure=new St.Label();
     if(ccap.wind_speed) this.windspeed=new St.Label();
     if(ccap.feelslike) this.feelslike=new St.Label();
+    if(ccap.visibility) this.visibility=new St.Label();    
     
     // container for current weather values
     this.ctemp_values = new St.BoxLayout({vertical: true, y_align: 2, style : 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
@@ -268,11 +270,13 @@ MyDesklet.prototype = {
     if(ccap.pressure) this.ctemp_captions.add_actor(new St.Label({text: _('Pressure: ')}));
     if(ccap.wind_speed) this.ctemp_captions.add_actor(new St.Label({text: _('Wind: ')}));
     if(ccap.feelslike) this.ctemp_captions.add_actor(new St.Label({text: _('Feels like: ')}));
+    if(ccap.visibility) this.ctemp_captions.add_actor(new St.Label({text: _('Visibility: ')}));
     
     if(this.humidity) this.ctemp_values.add_actor(this.humidity);
     if(this.pressure) this.ctemp_values.add_actor(this.pressure);
     if(this.windspeed) this.ctemp_values.add_actor(this.windspeed);
     if(this.feelslike) this.ctemp_values.add_actor(this.feelslike);
+    if(this.visibility) this.ctemp_values.add_actor(this.visibility);
     
     this.ctemp.add_actor(this.ctemp_captions); //-adauga coloana din stanga la informatii
     this.ctemp.add_actor(this.ctemp_values);  //adauga coloana din dreapta la informatii     
@@ -368,14 +372,14 @@ MyDesklet.prototype = {
     // clone this.service.capabilities, then && it with display preferences
     this.show =  JSON.parse(JSON.stringify(this.service.capabilities));
     let displayopts =['display__cc__pressure', 'display__cc__wind_speed', 
-      'display__cc__humidity', 'display__cc__feelslike',
+      'display__cc__humidity', 'display__cc__feelslike', 'display__cc__visibility',
       'display__forecast__wind_speed', 'display__forecast__wind_direction', 
       'display__forecast__maximum_temperature', 'display__forecast__minimum_temperature',
       'display__meta__country'
     ];
     let ccShowCount=0;
     for (let i=0; i<displayopts.length; i++) {
-      parts=displayopts[i].split('__');
+      let parts=displayopts[i].split('__');
       this.show[parts[1]][parts[2]] = this.show[parts[1]][parts[2]] && this[displayopts[i]];
       if (parts[1] == 'cc' && this.show[parts[1]][parts[2]]) ccShowCount++;
     }
@@ -574,7 +578,8 @@ MyDesklet.prototype = {
     if (this.humidity) this.humidity.text= this._formatHumidity(cc.humidity);
     if (this.pressure) this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
     if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
-    if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true) ;
+    if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true);
+    if (this.visibility) this.visibility.text=this._formatVisibility(cc.visibility, true);
     if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK) {
       this.weathertext.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
     }
@@ -710,6 +715,36 @@ MyDesklet.prototype = {
   _formatHumidity: function(humidity) {
     if (!humidity.toString().length) return '';
     return 1*humidity + '%';
+  },
+
+  ////////////////////////////////////////////////////////////////////////////
+  // take a visibility and converts to the required format. Strings are returned
+  // as such, numbers (assumed km) are converted. Append unit string if units is true
+  _formatVisibility: function(vis, units) {
+    units = typeof units !== 'undefined' ? units : false;
+    if (typeof vis === 'undefined') return '';
+    if (!vis.toString().length) return '';
+    if (isNaN(vis)) return _(vis);
+    // we infer the desired units from windspeed units
+    let conversion = {
+      'mph': 0.621,
+      'knots': 0.54,
+      'kph': 1,
+      'mps': 1
+    };
+    let unitstring = {
+      'mph': _('mi'),
+      'knots': _('NM'),
+      'kph': _('km'),
+      'mps': _('km')
+    }
+    let km = 1*vis;
+    let out = km * conversion[this.wunits];
+    out = out.toFixed(0);
+    if (units) {
+      out += unitstring[this.wunits];
+    }
+    return out;
   },
   
   ////////////////////////////////////////////////////////////////////////////

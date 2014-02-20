@@ -134,6 +134,13 @@
     "tooltip": "Check to display the current apparent temperature"
   },
 
+  "display__cc__visibility" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Current visibility",
+    "tooltip": "Check to display the current visibility"
+  },
+  
   "display__forecast__maximum_temperature" : {
     "type" : "checkbox",
     "default" : true,
