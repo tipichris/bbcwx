@@ -235,11 +235,11 @@ MyDesklet.prototype = {
     if(ccap.feelslike) this.feelslike=new St.Label();
     
     // container for current weather values
-    this.ctemp_values = new St.BoxLayout({vertical: true, style : 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
+    this.ctemp_values = new St.BoxLayout({vertical: true, y_align: 2, style : 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
     // container for current weather labels
-    this.ctemp_captions = new St.BoxLayout({vertical: true,style : 'text-align : right'});
+    this.ctemp_captions = new St.BoxLayout({vertical: true, y_align: 2, style : 'text-align : right'});
     // container for current weather
-    this.ctemp = new St.BoxLayout({vertical: false,x_align: 2});
+    this.ctemp = new St.BoxLayout({vertical: false, x_align: 2, y_align: 2});
     
     // city and city container
     this.cityname=new St.Label({style: "text-align: center;font-size: "+BBCWX_TEXT_SIZE*this.zoom+"px" });
@@ -373,10 +373,16 @@ MyDesklet.prototype = {
       'display__forecast__maximum_temperature', 'display__forecast__minimum_temperature',
       'display__meta__country'
     ];
+    let ccShowCount=0;
     for (let i=0; i<displayopts.length; i++) {
       parts=displayopts[i].split('__');
       this.show[parts[1]][parts[2]] = this.show[parts[1]][parts[2]] && this[displayopts[i]];
+      if (parts[1] == 'cc' && this.show[parts[1]][parts[2]]) ccShowCount++;
     }
+    
+    // don't shift the current temp display position if less than 
+    // 2 current conditions to display
+    if (ccShowCount < 1) this.shifttemp = false;
   },
   
   ////////////////////////////////////////////////////////////////////////////
