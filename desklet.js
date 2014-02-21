@@ -132,6 +132,8 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__wind_direction","display__forecast__wind_direction",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__maximum_temperature","display__forecast__maximum_temperature",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__minimum_temperature","display__forecast__minimum_temperature",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__pressure","display__forecast__pressure",this.displayOptsChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__humidity","display__forecast__humidity",this.displayOptsChange,null);
       
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__meta__country","display__meta__country",this.updateStyle,null);
       
@@ -220,7 +222,8 @@ MyDesklet.prototype = {
     this.but=new St.Button(); // container for refresh icon
     
     // these will hold the data for the three day forecast
-    this.labels=[]; this.fwicons=[];this.max=[]; this.min=[]; this.windd=[]; this.winds=[]; this.eachday=[];
+    this.labels=[]; this.fwicons=[];this.max=[]; this.min=[]; this.windd=[]; this.winds=[]; 
+    this.fhumidity=[]; this.fpressure=[]; this.eachday=[];
     
     // some labels need resetting incase we are redrawing after a change of service
     this.humidity=null; this.pressure=null; this.windspeed=null; this.feelslike=null;
@@ -287,6 +290,8 @@ MyDesklet.prototype = {
     this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
     this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
     this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.fpressurelabel = new St.Label({text: _('Pressure:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.fhumiditylabel = new St.Label({text: _('Humidity:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
     
     let fcap = this.show.forecast;
     let row = 2;
@@ -294,7 +299,8 @@ MyDesklet.prototype = {
     if(fcap.maximum_temperature) {this.fwtable.add(this.maxlabel,{row:row,col:0}); row++}
     if(fcap.minimum_temperature) {this.fwtable.add(this.minlabel,{row:row,col:0}); row++}
     if(fcap.wind_speed) {this.fwtable.add(this.windlabel,{row:row,col:0}); row++}
-    if(fcap.wind_direction) {this.fwtable.add(this.winddlabel,{row:row,col:0}); row++}
+    if(fcap.pressure) {this.fwtable.add(this.fpressurelabel,{row:row,col:0}); row++}
+    if(fcap.humidity) {this.fwtable.add(this.fhumiditylabel,{row:row,col:0}); row++}
     for(let f=0;f<this.no;f++) {
       this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px" });
       this.fwicons[f]=new St.Button({height:BBCWX_ICON_HEIGHT*this.zoom, width: BBCWX_ICON_HEIGHT*this.iconprops.aspect*this.zoom});
@@ -302,6 +308,8 @@ MyDesklet.prototype = {
       if(fcap.minimum_temperature) this.min[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
       if(fcap.wind_speed) this.winds[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
       if(fcap.wind_direction) this.windd[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
+      if(fcap.pressure) this.fpressure[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
+      if(fcap.humidity) this.fhumidity[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
       this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
       
       this.fwtable.add(this.labels[f],{row:0,col:f+1});
@@ -310,7 +318,8 @@ MyDesklet.prototype = {
       if(this.max[f]) {this.fwtable.add(this.max[f],{row:row,col:f+1}); row++}
       if(this.min[f]) {this.fwtable.add(this.min[f],{row:row,col:f+1}); row++}
       if(this.winds[f]) {this.fwtable.add(this.winds[f],{row:row,col:f+1}); row++}
-      if(this.windd[f]) {this.fwtable.add(this.windd[f],{row:row,col:f+1}); row++}
+      if(this.fpressure[f]) {this.fwtable.add(this.fpressure[f],{row:row,col:f+1}); row++}
+      if(this.fhumidity[f]) {this.fwtable.add(this.fhumidity[f],{row:row,col:f+1}); row++}
     }
     
     this.but.set_child(this.iconbutton);
@@ -375,6 +384,7 @@ MyDesklet.prototype = {
       'display__cc__humidity', 'display__cc__feelslike', 'display__cc__visibility',
       'display__forecast__wind_speed', 'display__forecast__wind_direction', 
       'display__forecast__maximum_temperature', 'display__forecast__minimum_temperature',
+      'display__forecast__humidity', 'display__forecast__pressure',
       'display__meta__country'
     ];
     let ccShowCount=0;
@@ -450,6 +460,8 @@ MyDesklet.prototype = {
       if(this.min[f]) this.min[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
       if(this.winds[f]) this.winds[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
       if(this.windd[f]) this.windd[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+      if(this.fpressure[f]) this.fpressure[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+      if(this.fhumidity[f]) this.fhumidity[f].style= 'text-align : center; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     }
     
     this.buttons.style="padding-top:"+BBCWX_BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BBCWX_BUTTON_PADDING*this.zoom+"px";
@@ -557,7 +569,9 @@ MyDesklet.prototype = {
       if(this.max[f]) this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
       if(this.min[f]) this.min[f].text=this._formatTemperature(day.minimum_temperature, true);
       if(this.winds[f]) this.winds[f].text=this._formatWindspeed(day.wind_speed, true);
-      if(this.windd[f]) this.windd[f].text= ((day.wind_direction) ? _(day.wind_direction) : '');     
+      if(this.windd[f]) this.windd[f].text= ((day.wind_direction) ? _(day.wind_direction) : '');   
+      if(this.fpressure[f]) this.fpressure[f].text=this._formatPressure(day.pressure, '', true);
+      if(this.fhumidity[f]) this.fhumidity[f].text=this._formatHumidity(day.humidity, true);
     }
   },
   
@@ -1827,6 +1841,7 @@ wxDriverWWO.prototype = {
     this.capabilities.cc.feelslike = false;
     this.capabilities.forecast.visibility = false;
     this.capabilities.forecast.uv_risk = false;
+    this.capabilities.forecast.humidity = false;
   },
   
   refreshData: function(deskletObj) {

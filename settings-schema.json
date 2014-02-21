@@ -169,6 +169,20 @@
     "tooltip": "Check to display the forecast wind direction"
   },
   
+  "display__forecast__pressure" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Forecast pressure",
+    "tooltip": "Check to display the forecast pressure"
+  },
+  
+  "display__forecast__humidity" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Forecast humidity",
+    "tooltip": "Check to display the forecast humidity"
+  },
+  
   "sep2" : {
     "type" : "separator"
   },
