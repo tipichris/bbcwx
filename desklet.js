@@ -67,7 +67,7 @@ const BBCWX_CC_ICON_HEIGHT =170;
 const BBCWX_CC_ICON_WIDTH =170;
 const BBCWX_BUTTON_PADDING=3;
 const BBCWX_TEMP_PADDING=12;
-const BBCWX_STYLE_POPUP_SEPARATOR_MENU_ITEM = 'popup-separator-menu-item';
+const BBCWX_SEPARATOR_STYLE = 'bbcwx-separator';
 const BBCWX_SERVICE_STATUS_ERROR = 0;
 const BBCWX_SERVICE_STATUS_INIT = 1;
 const BBCWX_SERVICE_STATUS_OK = 2;
@@ -225,7 +225,7 @@ MyDesklet.prototype = {
     // some labels need resetting incase we are redrawing after a change of service
     this.humidity=null; this.pressure=null; this.windspeed=null; this.feelslike=null;
     
-    this._separatorArea = new St.DrawingArea({ style_class: BBCWX_STYLE_POPUP_SEPARATOR_MENU_ITEM });
+    this._separatorArea = new St.DrawingArea({ style_class: BBCWX_SEPARATOR_STYLE });
     
     let ccap = this.show.cc;
     
