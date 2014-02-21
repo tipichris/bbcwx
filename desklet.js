@@ -203,10 +203,12 @@ MyDesklet.prototype = {
     this.oldshifttemp = this.shifttemp;
     this.redrawNeeded = false;
     
-    // get rid of the signal to bannersig before we recreate a window
+    // get rid of the signal to banner and main icon before we recreate a window
     try {
       if (this.bannersig) this.banner.disconnect(this.bannersig);
+      if (this.cwiconsig) this.cwicon.disconnect(this.cwiconsig);
       this.bannersig = null;
+      this.cwiconsig = null;
     } catch(e) { }  
     
     this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
@@ -255,7 +257,7 @@ MyDesklet.prototype = {
     // container for left (horizontal) or upper (vertical) part of window
     this.cweather = new St.BoxLayout({vertical: true, x_align: 2}); //definire coloana stangz
     // current weather icon container
-    this.cwicon = new St.Bin({height: (BBCWX_CC_ICON_HEIGHT*this.zoom), width: (BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom)}); //icoana mare cu starea vremii
+    this.cwicon = new St.Button({height: (BBCWX_CC_ICON_HEIGHT*this.zoom), width: (BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom)}); //icoana mare cu starea vremii
     // current weather text
     this.weathertext=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
     
@@ -334,6 +336,7 @@ MyDesklet.prototype = {
       track_hover: true,
       style_class: 'bbcwx-link'});
     this.bannertooltip = new Tooltips.Tooltip(this.banner);
+    this.cwicontooltip = new Tooltips.Tooltip(this.cwicon);
     this.refreshtooltip = new Tooltips.Tooltip(this.but, _('Refresh'));
     this.buttons.add_actor(this.bannerpre);
     this.buttons.add_actor(this.banner);
@@ -618,11 +621,17 @@ MyDesklet.prototype = {
       this.banner.label = this.service.linkText;
     }
     this.bannertooltip.set_text(this.service.linkTooltip);
+    this.cwicontooltip.set_text(this.service.linkTooltip);
     try {
       if (this.bannersig) this.banner.disconnect(this.bannersig);
+      if (this.cwiconsig) this.cwicon.disconnect(this.cwiconsig);
       this.bannersig = null;
+      this.cwiconsig = null;
     } catch(e) { global.logWarning("Failed to disconnect signal from link banner") }  
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
+        Util.spawnCommandLine("xdg-open " + this.service.linkURL );
+    }));
+    this.cwiconsig = this.cwicon.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
     if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
