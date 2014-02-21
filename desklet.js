@@ -6,7 +6,8 @@
  * code Copyright 2013 loganj. 
  * 
  * Includes the marknote library, Copyright 2011 jbulb.org. 
- * Icons Copyright 2010 Merlin the Red and 2010 VClouds.
+ * Icons Copyright 2010 Merlin the Red, 2010 VClouds, 2010
+ * d3stroy and 2004 digitalchet.
  * See help.html for further credits and license information.
  * 
  * This program is free software: you can redistribute it and/or modify
