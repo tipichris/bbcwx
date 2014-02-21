@@ -299,6 +299,7 @@ MyDesklet.prototype = {
     if(fcap.maximum_temperature) {this.fwtable.add(this.maxlabel,{row:row,col:0}); row++}
     if(fcap.minimum_temperature) {this.fwtable.add(this.minlabel,{row:row,col:0}); row++}
     if(fcap.wind_speed) {this.fwtable.add(this.windlabel,{row:row,col:0}); row++}
+    if(fcap.wind_direction) {this.fwtable.add(this.winddlabel,{row:row,col:0}); row++}
     if(fcap.pressure) {this.fwtable.add(this.fpressurelabel,{row:row,col:0}); row++}
     if(fcap.humidity) {this.fwtable.add(this.fhumiditylabel,{row:row,col:0}); row++}
     for(let f=0;f<this.no;f++) {
@@ -318,6 +319,7 @@ MyDesklet.prototype = {
       if(this.max[f]) {this.fwtable.add(this.max[f],{row:row,col:f+1}); row++}
       if(this.min[f]) {this.fwtable.add(this.min[f],{row:row,col:f+1}); row++}
       if(this.winds[f]) {this.fwtable.add(this.winds[f],{row:row,col:f+1}); row++}
+      if(this.windd[f]) {this.fwtable.add(this.windd[f],{row:row,col:f+1}); row++}
       if(this.fpressure[f]) {this.fwtable.add(this.fpressure[f],{row:row,col:f+1}); row++}
       if(this.fhumidity[f]) {this.fwtable.add(this.fhumidity[f],{row:row,col:f+1}); row++}
     }
