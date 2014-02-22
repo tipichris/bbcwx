@@ -768,7 +768,7 @@ MyDesklet.prototype = {
     }
     let km = 1*vis;
     let out = km * conversion[this.wunits];
-    let decpl = (out < 3) ? 1 : 0;
+    let decpl = (out < 4) ? 1 : 0;
     out = out.toFixed(decpl);
     if (units) {
       out += unitstring[this.wunits];
