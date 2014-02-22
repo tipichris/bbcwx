@@ -253,7 +253,20 @@
     "indent": true,
     "dependency" : "border",
     "indent": true,
-    "tooltip" : "Select the colour for the border. This field is unavailable unless the checkbox above is enabled"
+    "tooltip" : "Select the colour for the border. Only available if the 'Border' checkbox is enabled"
+  },
+  
+  "borderwidth" : {
+    "type" : "spinbutton",
+    "default" : 2,
+    "min" : 1,
+    "max" : 20,
+    "step" : 1,
+    "units" : "px",
+    "description" : "Border width",
+    "indent": true,
+    "dependency": "border",
+    "tooltip" : "Select the width of the border. Only available if the 'Border' checkbox is enabled"
   },
 
   "transparency" : {
