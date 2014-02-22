@@ -3,5 +3,6 @@
     "last-edited": "1391160776", 
     "name": "Weather Desklet", 
     "uuid": "bbcwx@oak-wood.co.uk",
-    "max-instances": "10"
+    "max-instances": "10",
+    "prevent-decorations": true
 }
