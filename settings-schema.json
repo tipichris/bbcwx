@@ -105,6 +105,13 @@
     "description": "Country",
     "tooltip": "Check to display the country"
   },
+
+  "display__cc__weather" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Current weather and icon",
+    "tooltip": "Check to display the current weather and large icon"
+  },  
   
   "display__cc__pressure" : {
     "type" : "checkbox",

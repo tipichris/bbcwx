@@ -121,7 +121,7 @@ MyDesklet.prototype = {
       // these changes potentially need a redraw of the window, but not a refetch of data
       // layout because the position of the current temperature may change
       // userno because of change to number of days in table, and possibly position of current temperature
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.redraw,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"layout","layout",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"userno","userno",this.redraw,null);
       
       // these need a redraw. displayOptsChange sets a flag to say a redraw is needed before calling redraw
@@ -136,8 +136,10 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__minimum_temperature","display__forecast__minimum_temperature",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__pressure","display__forecast__pressure",this.displayOptsChange,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__forecast__humidity","display__forecast__humidity",this.displayOptsChange,null);
-      
+
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__meta__country","display__meta__country",this.updateStyle,null);
+      
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"display__cc__weather","display__cc__weather",this.displayOptsChange,null);
       
       // a change to webservice requires data to be fetched and the window redrawn
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
@@ -208,13 +210,13 @@ MyDesklet.prototype = {
     // get rid of the signal to banner and main icon before we recreate a window
     try {
       if (this.bannersig) this.banner.disconnect(this.bannersig);
-      if (this.cwiconsig) this.cwicon.disconnect(this.cwiconsig);
+      if (this.cwiconsig && this.cwicon) this.cwicon.disconnect(this.cwiconsig);
       this.bannersig = null;
       this.cwiconsig = null;
     } catch(e) { }  
     
-    this.window=new St.BoxLayout({vertical: ((this.layout==1) ? true : false)});
-    
+    this.window=new St.BoxLayout({vertical: ((this.vertical==1) ? true : false)});
+    this.cwicon = null;
     // container for link and refresh icon
     this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+BBCWX_BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BBCWX_BUTTON_PADDING*this.zoom+"px",x_align:2, y_align:2 });
     // refresh icon
@@ -259,9 +261,9 @@ MyDesklet.prototype = {
     // container for left (horizontal) or upper (vertical) part of window
     this.cweather = new St.BoxLayout({vertical: true, x_align: 2}); //definire coloana stangz
     // current weather icon container
-    this.cwicon = new St.Button({height: (BBCWX_CC_ICON_HEIGHT*this.zoom), width: (BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom)}); //icoana mare cu starea vremii
+    if (ccap.weather) this.cwicon = new St.Button({height: (BBCWX_CC_ICON_HEIGHT*this.zoom), width: (BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom)}); //icoana mare cu starea vremii
     // current weather text
-    this.weathertext=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
+    if (ccap.weather) this.weathertext=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
     
     // current temp on wide layouts
     if (this.shifttemp) {
@@ -338,7 +340,7 @@ MyDesklet.prototype = {
       track_hover: true,
       style_class: 'bbcwx-link'});
     this.bannertooltip = new Tooltips.Tooltip(this.banner);
-    this.cwicontooltip = new Tooltips.Tooltip(this.cwicon);
+    if (this.cwicon) this.cwicontooltip = new Tooltips.Tooltip(this.cwicon);
     this.refreshtooltip = new Tooltips.Tooltip(this.but, _('Refresh'));
     this.buttons.add_actor(this.bannerpre);
     this.buttons.add_actor(this.banner);
@@ -347,8 +349,8 @@ MyDesklet.prototype = {
     this.container.add_actor(this._separatorArea);
     this.container.add_actor(this.fwtable); 
     this.cweather.add_actor(this.city);
-    this.cweather.add_actor(this.cwicon);
-    this.cweather.add_actor(this.weathertext);
+    if (this.cwicon) this.cweather.add_actor(this.cwicon);
+    if (this.weathertext) this.cweather.add_actor(this.weathertext);
     this.container.add_actor(this.buttons);
     this.window.add_actor(this.cweather);
     this.window.add_actor(this.container);
@@ -360,6 +362,9 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Set some internal values derived from user choices
   _setDerivedValues: function() {
+    
+    this.vertical = this.layout;
+    
     // set the number of days of forecast to display; maximum of the number
     // selected by the user and the maximum supported by the driver
     if (this.userno > this.service.maxDays) {
@@ -377,8 +382,9 @@ MyDesklet.prototype = {
     
     // if more than four days we'll shift the position of the current temperature,
     // but only in horizontal layout
+    // false: concatenate with weather text; true: shift to alongside current conditions;
     this.shifttemp = false;
-    if (this.no > 4 && this.layout == 0) {
+    if (this.no > 4 && this.vertical == 0) {
       this.shifttemp = true;
     }
     
@@ -404,6 +410,17 @@ MyDesklet.prototype = {
     // don't shift the current temp display position if less than 
     // 2 current conditions to display
     if (ccShowCount < 1) this.shifttemp = false;
+    
+    // if not showing current weather text and icon, force
+    // to vertical and shift current temperature
+    this.currenttempsize = BBCWX_CC_TEXT_SIZE;
+    
+    this.show.cc.weather = this.display__cc__weather;
+    if (!this.display__cc__weather) {
+      this.shifttemp = true
+      this.currenttempsize = this.currenttempsize*1.7;
+      this.vertical = 1;
+    }     
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -442,10 +459,13 @@ MyDesklet.prototype = {
   // Does the bulk of the work of updating style
   _update_style: function() {
     //global.log("bbcwx (instance " + this.desklet_id + "): entering _update_style");
-    this.window.vertical = (this.layout==1) ? true : false;
-    this.cwicon.height=BBCWX_CC_ICON_HEIGHT*this.zoom;this.cwicon.width=BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom;
-    this.weathertext.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
-    if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
+    this.window.vertical = (this.vertical==1) ? true : false;
+    if (this.cwicon) {
+      this.cwicon.height=BBCWX_CC_ICON_HEIGHT*this.zoom;
+      this.cwicon.width=BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom;
+    }
+    if (this.weathertext) this.weathertext.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
+    if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+this.currenttempsize*this.zoom+'px';
     if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + BBCWX_TEMP_PADDING *this.zoom + 'px'
     this.fwtable.style="spacing-rows: "+BBCWX_TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+BBCWX_TABLE_COL_SPACING*this.zoom+"px;padding: "+BBCWX_TABLE_PADDING*this.zoom+"px;";
     this.cityname.style="text-align: center;font-size: "+BBCWX_TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
@@ -484,7 +504,7 @@ MyDesklet.prototype = {
     }
     
     this.cweather.style='padding: ' + BBCWX_CONTAINER_PADDING*this.zoom+'px';
-    if (this.layout==1) {
+    if (this.vertical==1) {
       // loose the top padding on container in vertical mode (too much space)
       this.container.style='padding: 0 ' + BBCWX_CONTAINER_PADDING*this.zoom+'px ' + BBCWX_CONTAINER_PADDING*this.zoom+'px ' + BBCWX_CONTAINER_PADDING*this.zoom+'px ' ;
     } else {
@@ -587,14 +607,16 @@ MyDesklet.prototype = {
   // Update the display of the current observations
   displayCurrent: function(){
     let cc = this.service.data.cc;
-    let cwimage=this._getIconImage(this.service.data.cc.icon);
-    cwimage.set_size(BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_CC_ICON_HEIGHT*this.zoom);
-    this.cwicon.set_child(cwimage);
+    if (this.cwicon) {
+      let cwimage=this._getIconImage(this.service.data.cc.icon);
+      cwimage.set_size(BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_CC_ICON_HEIGHT*this.zoom);
+      this.cwicon.set_child(cwimage);
+    }
     if (this.shifttemp) {
-      this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '');
+      if (this.weathertext) this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '');
       this.currenttemp.text = this._formatTemperature(cc.temperature, true) ;  
     } else {
-      this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature && cc.weathertext) ? ', ' : '' )+ this._formatTemperature(cc.temperature, true) ;
+      if (this.weathertext) this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature && cc.weathertext) ? ', ' : '' )+ this._formatTemperature(cc.temperature, true) ;
     }
     
     if (this.humidity) this.humidity.text= this._formatHumidity(cc.humidity);
@@ -624,19 +646,21 @@ MyDesklet.prototype = {
       this.banner.label = this.service.linkText;
     }
     this.bannertooltip.set_text(this.service.linkTooltip);
-    this.cwicontooltip.set_text(this.service.linkTooltip);
+    if (this.cwicontooltip) this.cwicontooltip.set_text(this.service.linkTooltip);
     try {
       if (this.bannersig) this.banner.disconnect(this.bannersig);
-      if (this.cwiconsig) this.cwicon.disconnect(this.cwiconsig);
+      if (this.cwiconsig && this.cwicon) this.cwicon.disconnect(this.cwiconsig);
       this.bannersig = null;
       this.cwiconsig = null;
     } catch(e) { global.logWarning("Failed to disconnect signal from link banner") }  
     this.bannersig = this.banner.connect('clicked', Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.service.linkURL );
     }));
-    this.cwiconsig = this.cwicon.connect('clicked', Lang.bind(this, function() {
-        Util.spawnCommandLine("xdg-open " + this.service.linkURL );
-    }));
+    if (this.cwicon) { 
+        this.cwiconsig = this.cwicon.connect('clicked', Lang.bind(this, function() {
+          Util.spawnCommandLine("xdg-open " + this.service.linkURL );
+      }));
+    }
     if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
       this.cityname.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
     }
