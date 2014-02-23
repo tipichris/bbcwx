@@ -365,6 +365,7 @@ MyDesklet.prototype = {
     
     this.vertical = this.layout;
     this.currenttempadding = BBCWX_TEMP_PADDING;
+    this.currenttempsize = BBCWX_CC_TEXT_SIZE;
     
     // set the number of days of forecast to display; maximum of the number
     // selected by the user and the maximum supported by the driver
@@ -408,19 +409,18 @@ MyDesklet.prototype = {
       if (parts[1] == 'cc' && this.show[parts[1]][parts[2]]) ccShowCount++;
     }
     
-    // don't shift the current temp display position if less than 
-    // 2 current conditions to display
+    // don't shift the current temp display position if 
+    // no current conditions to display
     if (ccShowCount < 1) this.shifttemp = false;
     
     // if not showing current weather text and icon, force
-    // to vertical and shift current temperature
-    this.currenttempsize = BBCWX_CC_TEXT_SIZE;
-    
+    // to vertical and shift current temperature   
     this.show.cc.weather = this.display__cc__weather;
     if (!this.display__cc__weather) {
       this.shifttemp = true
       this.currenttempsize = this.currenttempsize*1.7;
       this.vertical = 1;
+      // don't right pad the temperature if there's nothing to its right
       if (ccShowCount < 1) this.currenttempadding = 0;
     }     
   },
@@ -432,10 +432,12 @@ MyDesklet.prototype = {
     this.iconprops.aspect = 1;
     this.iconprops.ext = 'png';
     
+    // Aspect ratios (w/h). Assume 1 if not in here
     let ARMap = {
       'vclouds': 1.458
     };
     
+    // File extensions. Assume png if not in here
     let ExtMap = {};
     
     if (typeof ARMap[this.iconstyle] !== 'undefined') this.iconprops.aspect = ARMap[this.iconstyle];
