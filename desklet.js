@@ -267,7 +267,7 @@ MyDesklet.prototype = {
     
     // current temp on wide layouts
     if (this.shifttemp) {
-      this.ctemp_bigtemp = new St.BoxLayout({vertical: false, x_align: 3, y_align: 2, style : 'text-align : left; padding-right: ' + BBCWX_TEMP_PADDING *this.zoom + 'px'});
+      this.ctemp_bigtemp = new St.BoxLayout({vertical: false, x_align: 3, y_align: 2, style : 'text-align : left; padding-right: ' + this.currenttempadding *this.zoom + 'px'});
       this.currenttemp=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'});
       this.ctemp_bigtemp.add_actor(this.currenttemp);
       this.ctemp.add_actor(this.ctemp_bigtemp);
@@ -364,6 +364,7 @@ MyDesklet.prototype = {
   _setDerivedValues: function() {
     
     this.vertical = this.layout;
+    this.currenttempadding = BBCWX_TEMP_PADDING;
     
     // set the number of days of forecast to display; maximum of the number
     // selected by the user and the maximum supported by the driver
@@ -420,6 +421,7 @@ MyDesklet.prototype = {
       this.shifttemp = true
       this.currenttempsize = this.currenttempsize*1.7;
       this.vertical = 1;
+      if (ccShowCount < 1) this.currenttempadding = 0;
     }     
   },
   
@@ -466,7 +468,7 @@ MyDesklet.prototype = {
     }
     if (this.weathertext) this.weathertext.style= 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px';
     if (this.currenttemp) this.currenttemp.style= 'text-align : center; font-size:'+this.currenttempsize*this.zoom+'px';
-    if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + BBCWX_TEMP_PADDING *this.zoom + 'px'
+    if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + this.currenttempadding *this.zoom + 'px'
     this.fwtable.style="spacing-rows: "+BBCWX_TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+BBCWX_TABLE_COL_SPACING*this.zoom+"px;padding: "+BBCWX_TABLE_PADDING*this.zoom+"px;";
     this.cityname.style="text-align: center;font-size: "+BBCWX_TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
     this.ctemp_captions.style = 'text-align : right;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
