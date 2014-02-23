@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<style type="text/css">
+html, body, div, span, h1, h2, h3, p, a, em, pre, code { margin: 0;padding: 0; border: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline;}
+body {line-height: 1.5; margin: 1.4em 4em;}
+html { font-size:100.01%; }
+body {font-size: 11pt;color: #222;background: #fff;font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;}
+h1,h2,h3 { font-weight: normal; color: #111; }
+h1 { font-size: 20.2pt; line-height: 1; margin-bottom: 0.5em; }
+h2 { font-size: 15pt;  margin-bottom: 0.75em; }
+h3 { font-size: 13pt; font-weight: bold; font-style: normal; line-height: 1; margin-bottom: 0.2em; }
+p { margin: 0 0 1.5em; }
+pre { margin: 1.5em 0; white-space: pre; }
+pre,code { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
+a:focus, a:hover{ color: #000; }
+a {color: #009; text-decoration: underline; }
+strong { font-weight: bold; }
+img.iconsample {height: 60px; width: auto}
+img.wunderground {width: 80px; height: auto}
+table {border-collapse:collapse; border: none; margin: 15px auto;}
+td {padding: 10px 15px;}
+td.light {background-color: #666; color: #fff}
+.code { width: 90%; margin: 0 auto 1em auto; background-color: #dde; border: 1px #736C62 dotted; color: #000; display: block; padding: 7px; font-size: 1.1em;}
+code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B5; } 
+</style>
+  <title>Weather Desklet Icons</title>
+  </head>
+  <body bgcolor="#ffffff" text="#000000">
+  <h1>Weather Desklet Icons</h1>
+<script type="text/javascript">
+<!--
+var icons = {
+  '00':'Tornado',
+  '01':'Strong wind / rain',
+  '02':'Strong wind / rain',
+  '03':'Severe thunderstorms',
+  '04':'Thunderstorms',
+  '05':'Mixed rain and snow',
+  '06':'Mixed rain and sleet',
+  '07':'Mixed snow and sleet',
+  '08':'Freezing drizzle',
+  '09':'Drizzle',
+  '10':'Freezing rain',
+  '11':'Light rain',
+  '12':'Heavy rain',
+  '13':'Light snow',
+  '14':'Medium snow',
+  '15':'Blowing snow / blizzard',
+  '16':'Heavy snow',
+  '18':'Hail / sleet',
+  '19':'Dust',
+  '20':'Fog',
+  '21':'Hazy, night',
+  '22':'Hazy, day',
+  '23':'Blustery',
+  '24':'Windy',
+  '25':'Cold',
+  '26':'White cloud',
+  '26d':'Dark cloud',
+  '27':'Mostly cloudy (night)',
+  '28':'Mostly cloudy (day)',
+  '29':'Partly cloudy (night)',
+  '30':'Partly cloudy (day)',
+  '31':'Clear (night)',
+  '32':'Sunny',
+  '33':'Few clouds (night)',
+  '34':'Few clouds (day)',
+  '36':'Hot',
+  '37':'Thundery showers (day)',
+  '38':'Scattered thunderstorms',
+  '39':'Showers (day)',
+  '41':'Snow showers (day)',
+  '45':'Showers (night)',
+  '46':'Snow showers (night)',
+  '47':'Thundery showers (night)',
+  'na':'Unknown'
+};
+
+
+var iconsets = {
+  'colourful' : 'Colourful', 
+  'dark' : 'Dark', 
+  'light' : 'Light', 
+  'flat_colourful' : 'Flat colourful', 
+  'flat_black' : 'Flat black', 
+  'flat_white' : 'Flat white', 
+  'vclouds' : 'VClouds', 
+  'novacon' : 'Novacon', 
+  'weezle' : 'Weezle'
+}
+
+function keys(obj)
+{
+  var keys = [];
+  for(var key in obj)
+  {
+    if(obj.hasOwnProperty(key))
+    {
+        keys.push(key);
+    }
+  }
+  return keys;
+}
+
+var iconcodes = keys(icons).sort();
+var sets = keys(iconsets);
+
+document.write('<table style="background-color: rgba(147,184,74,0.6)"><thead>');
+document.write('<tr><th style="text-align: left">Code<\/th><th style="text-align: left">Description<\/th>');
+for(s=0; s<sets.length; s++) {
+  document.write('<th>' + iconsets[sets[s]] + '<\/th>');
+}
+document.write('<\/tr><\/thead><tbody>');
+for(i=0; i<iconcodes.length; i++) {
+  index=iconcodes[i];
+  document.write( '<tr><td>' + index + '<\/td><td>' + icons[index] + '<\/td>');
+  for(s=0; s<sets.length; s++) {
+    document.write('<td><img src="icons/' + sets[s] + '/' + index + '.png" alt="" class="iconsample" ><\/td>');
+  }
+  document.write('<\/tr>');
+}
+document.write('<tr><td>wunderground<\/td><td>wunderground.com<sup>&reg;<\/sup> logo<\/td>');
+for(s=0; s<sets.length; s++) {
+  document.write('<td><img src="icons/' + sets[s] + '/wunderground.png" alt="" class="wunderground" ><\/td>');
+}
+document.write('<\/tr><\/tbody><\/table>');
+// -->
+</script>
+</body>
+</html>
