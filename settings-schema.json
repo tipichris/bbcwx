@@ -62,8 +62,9 @@
     "description" : "Pressure measurement unit",
     "options" : {
         "mb" : "mb",
-        "in" : "in",
-        "mm": "mm"
+        "in (Hg)" : "in",
+        "mm (Hg)": "mm",
+        "kPa": "kpa"
     },
     "tooltip" : "Measurement units used to display atmospheric pressure"
   },

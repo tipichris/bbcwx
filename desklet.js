@@ -743,17 +743,20 @@ MyDesklet.prototype = {
     let conversion = {
       'mb': 1,
       'in': 0.02953,
-      'mm': 0.75
+      'mm': 0.75,
+      'kpa': 0.1
     };
     let unitstring = {
       'mb': _('mb'),
       'in': _('in'),
-      'mm': _('mm')
+      'mm': _('mm'),
+      'kpa': _('kPa')
     };
     let precission = {
       'mb': 0,
       'in': 2,
-      'mm': 0
+      'mm': 0,
+      'kpa' : 1
     };
     let mb = 1*pressure;
     let out = mb * conversion[this.punits];
