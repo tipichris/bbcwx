@@ -13,7 +13,8 @@
         "Yahoo" : "yahoo",
         "Open Weather Map": "owm",
         "Wunderground (requires API key)": "wunderground",
-        "World Weather Online (requires API key)": "wwo"
+        "World Weather Online (requires API key)": "wwo",
+        "Forecast.io (requires API key)" : "forecast"
     },
     "tooltip" : "Select the data service you wish to use"
   },

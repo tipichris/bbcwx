@@ -182,6 +182,9 @@ MyDesklet.prototype = {
       case 'wwo':
         this.service = new wxDriverWWO(this.stationID, this.apikey);
         break;
+      case 'forecast':
+        this.service = new wxDriverForecastIo(this.stationID, this.apikey);
+        break;
       default:
         this.service = new wxDriverBBC(this.stationID);
     }
@@ -2053,6 +2056,139 @@ wxDriverWWO.prototype = {
     if ((recommendedIcon.indexOf('night') > -1) && (typeof nightmap[icon_name] !== "undefined")) {
       icon_name = nightmap[icon_name];
     } 
+    return icon_name;
+  }, 
+
+};  
+
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for Forecast.io
+function wxDriverForecastIo(stationID, apikey) {
+  this._fioinit(stationID, apikey);
+};
+
+wxDriverForecastIo.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'forecast.io',
+  maxDays: 7, 
+  linkText: 'Forecast.io',
+  
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'http://forecast.io',
+  linkTooltip: 'Visit the Forecast.io website',
+  
+  _baseURL: 'https://api.forecast.io/forecast/',
+  
+  // initialise the driver
+  _fioinit: function(stationID, apikey) {
+    this._init(stationID, apikey);
+    this.capabilities.forecast.pressure_direction =  false;
+    this.capabilities.cc.pressure_direction =  false;
+    this.capabilities.cc.obstime = false;
+    this.capabilities.meta.country = false;
+  },
+  
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkTooltip = 'Visit the Forecast.io website';
+    this.linkURL = 'http://forecast.io';
+    
+    // process the forecast
+    let a = this._getWeather(this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=ca&exclude=minutely,hourly,alerts,flags', function(weather) {
+      if (weather) {
+        this._load_forecast(weather);
+      }
+      // get the main object to update the display
+      deskletObj.displayForecast();
+      deskletObj.displayCurrent();   
+      deskletObj.displayMeta(); 
+    });
+    
+  },
+  
+  // process the data for a multi day forecast and populate this.data
+  _load_forecast: function (data) {
+    if (!data) {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+   
+    let json = JSON.parse(data);
+    
+    
+    try {
+      let days = json.daily.data;
+
+      for (i=0; i<days.length; i++) {
+        let day = new Object();
+        day.day = new Date(days[i].time * 1000).toLocaleFormat("%a");
+        day.minimum_temperature = days[i].temperatureMin;
+        day.maximum_temperature = days[i].temperatureMax;
+        day.minimum_feelslike = days[i].apparentTemperatureMin;
+        day.maximum_feelslike = days[i].apparentTemperatureMax;
+        day.pressure = days[i].pressure;
+        day.humidity = days[i].humidity*100;
+        day.wind_speed = days[i].windSpeed;
+        day.wind_direction = this.compassDirection(days[i].windBearing);
+        day.weathertext = days[i].summary;
+        day.icon = this._mapicon(days[i].icon);
+        day.visibility = days[i].visibility;
+
+        this.data.days[i] = day;
+
+      }
+      let cc = cc = json.currently;
+
+      this.data.cc.humidity = cc.humidity*100;
+      this.data.cc.temperature = cc.temperature;
+      this.data.cc.pressure = cc.pressure;
+      this.data.cc.wind_speed = cc.windSpeed;
+      this.data.cc.wind_direction = this.compassDirection(cc.windBearing);
+      this.data.cc.weathertext = cc.summary;
+      this.data.cc.icon = this._mapicon(cc.icon);
+      this.data.cc.visibility = cc.visibility;
+      this.data.cc.feelslike = cc.apparentTemperature;
+      
+      this.data.city = json.latitude + ', ' + json.longitude;
+      this.linkURL = 'http://forecast.io/#/f/' + json.latitude + ',' + json.longitude;
+      
+      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
+    }      
+  },
+  
+  _mapicon: function(iconcode) {
+    // http://www.worldweatheronline.com/feed/wwoConditionCodes.txt
+    let icon_name = 'na';
+    let iconmap = {
+      'clear-day' : '32',
+      'clear-night' : '31',
+      'rain' : '12',
+      'snow' : '14',
+      'sleet' : '18',
+      'wind' : '24',
+      'fog' : '20',
+      'cloudy' : '26',
+      'partly-cloudy-day' : '30',
+      'partly-cloudy-night' : '29'
+    };
+    
+    if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
+      icon_name = iconmap[iconcode];
+    }
+
     return icon_name;
   }, 
 
