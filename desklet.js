@@ -776,7 +776,9 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   _formatHumidity: function(humidity) {
     if (!humidity.toString().length) return '';
-    return 1*humidity + '%';
+    out = 1*humidity
+    out = out.toFixed(0)
+    return out + '%';
   },
 
   ////////////////////////////////////////////////////////////////////////////
@@ -2087,7 +2089,7 @@ wxDriverForecastIo.prototype = {
     this.capabilities.forecast.pressure_direction =  false;
     this.capabilities.cc.pressure_direction =  false;
     this.capabilities.cc.obstime = false;
-    this.capabilities.meta.country = false;
+    //this.capabilities.meta.country = false;
   },
   
   refreshData: function(deskletObj) {
@@ -2104,8 +2106,23 @@ wxDriverForecastIo.prototype = {
       // get the main object to update the display
       deskletObj.displayForecast();
       deskletObj.displayCurrent();   
-      deskletObj.displayMeta(); 
+      //deskletObj.displayMeta(); 
     });
+    
+    // get geo data
+    let latlon = this.stationID.split(',')
+    if (latlon.length == 2) {
+      let b = this._getWeather('http://api.geonames.org/findNearbyPlaceNameJSON?lat=' + latlon[0] + '&lng=' + latlon[1] + '&username=bbcwx', function(geo) {
+        if (geo) {
+          this._load_geo(geo);
+        }
+        // get the main object to update the display  
+        deskletObj.displayMeta(); 
+      });
+    } else {
+      this.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.status.lasterror = "Invalid station ID";
+    }
     
   },
   
@@ -2114,7 +2131,7 @@ wxDriverForecastIo.prototype = {
     if (!data) {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
-      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       return;
     }    
    
@@ -2154,19 +2171,40 @@ wxDriverForecastIo.prototype = {
       this.data.cc.visibility = cc.visibility;
       this.data.cc.feelslike = cc.apparentTemperature;
       
-      this.data.city = json.latitude + ', ' + json.longitude;
-      this.linkURL = 'http://forecast.io/#/f/' + json.latitude + ',' + json.longitude;
+      //this.data.city = json.latitude + ', ' + json.longitude;
+      //this.linkURL = 'http://forecast.io/#/f/' + json.latitude + ',' + json.longitude;
       
-      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
+      //this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
       this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
       this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
     } catch(e) {
       global.logError(e);
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
-      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
     }      
+  },
+  
+  _load_geo: function(data) {
+    if (!data) {
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+   
+    let json = JSON.parse(data);
+    
+    try {
+      let geo = json.geonames[0];
+      this.data.city = geo.name;
+      this.data.country = geo.countryName;
+      this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
+      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+    }
   },
   
   _mapicon: function(iconcode) {
