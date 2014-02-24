@@ -2120,8 +2120,9 @@ wxDriverForecastIo.prototype = {
         deskletObj.displayMeta(); 
       });
     } else {
-      this.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-      this.status.lasterror = "Invalid station ID";
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.lasterror = "Invalid station ID";
+      deskletObj.displayMeta(); 
     }
     
   },
