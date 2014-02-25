@@ -2090,6 +2090,7 @@ wxDriverForecastIo.prototype = {
     this.capabilities.cc.pressure_direction =  false;
     this.capabilities.cc.obstime = false;
     //this.capabilities.meta.country = false;
+    this._geocache = new Object();
   },
   
   refreshData: function(deskletObj) {
@@ -2098,31 +2099,48 @@ wxDriverForecastIo.prototype = {
     this.linkTooltip = 'Visit the Forecast.io website';
     this.linkURL = 'http://forecast.io';
     
-    // process the forecast
-    let a = this._getWeather(this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=ca&exclude=minutely,hourly,alerts,flags', function(weather) {
-      if (weather) {
-        this._load_forecast(weather);
-      }
-      // get the main object to update the display
-      deskletObj.displayForecast();
-      deskletObj.displayCurrent();   
-      //deskletObj.displayMeta(); 
-    });
-    
-    // get geo data
-    let latlon = this.stationID.split(',')
-    if (latlon.length == 2) {
-      let b = this._getWeather('http://api.geonames.org/findNearbyPlaceNameJSON?lat=' + latlon[0] + '&lng=' + latlon[1] + '&username=bbcwx', function(geo) {
-        if (geo) {
-          this._load_geo(geo);
+    // check the stationID looks valid before going further
+    if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
+      // process the forecast
+      let a = this._getWeather(this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=ca&exclude=minutely,hourly,alerts,flags', function(weather) {
+        if (weather) {
+          this._load_forecast(weather);
         }
-        // get the main object to update the display  
-        deskletObj.displayMeta(); 
+        // get the main object to update the display
+        deskletObj.displayForecast();
+        deskletObj.displayCurrent();   
+        //deskletObj.displayMeta(); 
       });
+      
+      // get geo data
+      if (typeof this._geocache[this.stationID] === 'object') {
+        global.log ("bbcwx: geocache hit for " + this.stationID + ": " + this._geocache[this.stationID].city);
+        this.data.city = this._geocache[this.stationID].city;
+        this.data.country = this._geocache[this.stationID].city;
+        this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
+        this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+        this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+        deskletObj.displayMeta();
+      } else {
+        global.log ("bbcwx: Looking up city for " + this.stationID);
+        let latlon = this.stationID.split(',')
+        let b = this._getWeather('http://api.geonames.org/findNearbyPlaceNameJSON?lat=' + latlon[0] + '&lng=' + latlon[1] + '&username=bbcwx', function(geo) {
+          if (geo) {
+            this._load_geo(geo);
+          }
+          // get the main object to update the display  
+          deskletObj.displayMeta(); 
+        });
+
+      }
     } else {
       this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-      this.data.status.lasterror = "Invalid station ID";
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.lasterror = "Invalid location";
       deskletObj.displayMeta(); 
+      deskletObj.displayForecast();
+      deskletObj.displayCurrent();
     }
     
   },
@@ -2137,7 +2155,6 @@ wxDriverForecastIo.prototype = {
     }    
    
     let json = JSON.parse(data);
-    
     
     try {
       let days = json.daily.data;
@@ -2158,9 +2175,8 @@ wxDriverForecastIo.prototype = {
         day.visibility = days[i].visibility;
 
         this.data.days[i] = day;
-
       }
-      let cc = cc = json.currently;
+      let cc = json.currently;
 
       this.data.cc.humidity = cc.humidity*100;
       this.data.cc.temperature = cc.temperature;
@@ -2194,16 +2210,20 @@ wxDriverForecastIo.prototype = {
     }    
    
     let json = JSON.parse(data);
+    this._geocache[this.stationID] = new Object();
     
     try {
       let geo = json.geonames[0];
       this.data.city = geo.name;
       this.data.country = geo.countryName;
+      this._geocache[this.stationID].city = geo.name;
+      this._geocache[this.stationID].country = geo.countryName;
       this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
       this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
     } catch(e) {
       global.logError(e);
+      delete this._geocache[this.stationID]
       this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
     }
   },
