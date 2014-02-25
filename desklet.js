@@ -2234,7 +2234,7 @@ wxDriverForecastIo.prototype = {
     let iconmap = {
       'clear-day' : '32',
       'clear-night' : '31',
-      'rain' : '12',
+      'rain' : '11',
       'snow' : '14',
       'sleet' : '18',
       'wind' : '24',
