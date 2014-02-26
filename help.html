@@ -38,15 +38,17 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     <a href="http://www.bbc.co.uk/weather">BBC</a>,
     <a href="http://weather.yahoo.com/">Yahoo! Weather</a>,
     <a href="http://openweathermap.org/">Open Weather Map</a>,
-    <a href="http://wunderground.com/?apiref=415600fd47df8d55">Weather Underground</a> and
-    <a href="http://www.worldweatheronline.com">World Weather Online</a>.
+    <a href="http://wunderground.com/?apiref=415600fd47df8d55">Weather Underground</a>,
+    <a href="http://www.worldweatheronline.com">World Weather Online</a> and
+    <a href="http://forecast.io/">forecast.io</a>.
     </p>
     <p>
     By default the forecast will be refreshed approximately every thirty minutes.
     You can always force a refresh by clicking the refresh button at the 
     bottom right. Hovering over the icons in the forecast area will show
-    their descriptions, whilst clicking on the current weather icon or the credit link at the 
-    bottom of the desklet will take you to a more detailed forecast for your area.  
+    a brief descriptions of the forecast, whilst clicking on the current weather icon 
+    or the credit link at the bottom of the desklet will take you to a more detailed 
+    forecast for your area.  
     </p>
     <h2 id="config">Configuration</h2>
     <p>Right click on the desklet and select 'Configure...' to enter the 
@@ -118,6 +120,14 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     <a href="http://developer.worldweatheronline.com/member/register">register for a free API key here</a>.</p>
     <p>
     Locations can be specified as a US zipcode, a UK or Canadian post code, or as a latitude and longitude.  
+    Latitude and longitude should be given as decimals, separated by a comma, with positive being north or east. For example, for 
+    central London, 51.51N, 0.13W, use <code class="loccode">51.51,-0.13</code>.
+    </p>
+    <h3 id="forecast">Forecast.io</h3>
+    <p><strong>Forecast.io requires an API key</strong>. You can 
+    <a href="https://developer.forecast.io/register">register for a free API key here</a>.</p>
+    <p>
+    Locations must be specified as a latitude and longitude.  
     Latitude and longitude should be given as decimals, separated by a comma, with positive being north or east. For example, for 
     central London, 51.51N, 0.13W, use <code class="loccode">51.51,-0.13</code>.
     </p>
@@ -198,6 +208,9 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     copyright &copy; 2004 <a href="http://digitalchet.deviantart.com/">digitalchet</a> and are licensed under 
     the <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">
     Creative Commons Attribution-NonCommercial-ShareAlike license</a></p>
+    
+    <p>City name lookups when using the forecast.io data service are provide by 
+    <a href="http://www.geonames.org/">Geonames</a>.</p>
 
   </body>
 </html>

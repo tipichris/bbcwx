@@ -631,7 +631,7 @@ MyDesklet.prototype = {
     if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true);
     if (this.visibility) this.visibility.text=this._formatVisibility(cc.visibility, true);
-    if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK) {
+    if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK && this.weathertext) {
       this.weathertext.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
     }
   },
@@ -1477,9 +1477,25 @@ wxDriverOWM.prototype = {
     this._emptyData();
     this.linkTooltip = 'Visit the Open Weather Map website';
     this.linkURL = 'http://openweathermap.org';
+
+    if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
+      var latlon = this.stationID.split(',');
+    } else if (this.stationID.search(/^\d+$/) !=0) {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.lasterror = "Invalid location format";
+      deskletObj.displayForecast();
+      deskletObj.displayMeta();     
+      deskletObj.displayCurrent();
+      return
+    }
     
     // process the 7 day forecast
-    let apiforecasturl = this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + encodeURIComponent(this.stationID);
+    let apiforecasturl = (typeof latlon != 'undefined')
+      ? this._baseURL + 'forecast/daily?units=metric&cnt=7&lat=' + latlon[0] +  '&lon=' + latlon[1]
+      : this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + encodeURIComponent(this.stationID)
+
     if (this.apikey) apiforecasturl = apiforecasturl + '&APPID=' + this.apikey;
     let a = this._getWeather(apiforecasturl, function(weather) {
       if (weather) {
@@ -1491,7 +1507,9 @@ wxDriverOWM.prototype = {
     });
 
     // process current observations
-    let apiccurl = this._baseURL + 'weather?units=metric&id=' + this.stationID;
+    let apiccurl = (typeof latlon != 'undefined')  
+    ? this._baseURL + 'weather?units=metric&lat=' + latlon[0] +  '&lon=' + latlon[1]
+    : this._baseURL + 'weather?units=metric&id=' + encodeURIComponent(this.stationID);
     if (this.apikey) apiccurl = apiccurl + '&APPID=' + this.apikey;
     let b = this._getWeather(apiccurl, function(weather) {
       if (weather) {
@@ -2124,7 +2142,9 @@ wxDriverForecastIo.prototype = {
       } else {
         global.log ("bbcwx: Looking up city for " + this.stationID);
         let latlon = this.stationID.split(',')
-        let b = this._getWeather('http://api.geonames.org/findNearbyPlaceNameJSON?lat=' + latlon[0] + '&lng=' + latlon[1] + '&username=bbcwx', function(geo) {
+        //let geourl = 'http://api.geonames.org/findNearbyPlaceNameJSON?lat=' + latlon[0] + '&lng=' + latlon[1] + '&username=foo';
+        let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + latlon[0] + '%2C' + latlon[1] +'%22%20and%20gflags%3D%22R%22&format=json&callback=';
+        let b = this._getWeather(geourl, function(geo) {
           if (geo) {
             this._load_geo(geo);
           }
@@ -2213,11 +2233,11 @@ wxDriverForecastIo.prototype = {
     this._geocache[this.stationID] = new Object();
     
     try {
-      let geo = json.geonames[0];
-      this.data.city = geo.name;
-      this.data.country = geo.countryName;
-      this._geocache[this.stationID].city = geo.name;
-      this._geocache[this.stationID].country = geo.countryName;
+      let geo = json.query.results.Result;
+      this.data.city = geo.city;
+      this.data.country = geo.country;
+      this._geocache[this.stationID].city = geo.city;
+      this._geocache[this.stationID].country = geo.country;
       this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
       this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
