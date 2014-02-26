@@ -1282,6 +1282,7 @@ wxDriverYahoo.prototype = {
     this.linkTooltip = 'Visit the Yahoo! Weather website';
     this.linkURL = 'http://weather.yahoo.com/';
     
+    // lat,lon location
     if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
       if (typeof this._woeidcache[this.stationID] === 'object') {
         global.log ("bbcwx: woeidcache hit for " + this.stationID + ": " + this._woeidcache[this.stationID].woeid);
@@ -1305,6 +1306,7 @@ wxDriverYahoo.prototype = {
           }
         });   
       }
+    // unrecognised - not a numeric woeid
     } else if (this.stationID.search(/^\d+$/) !=0) {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
@@ -1314,6 +1316,7 @@ wxDriverYahoo.prototype = {
       deskletObj.displayMeta();     
       deskletObj.displayCurrent();
       return
+    // looks like a woeid
     } else {
       this._woeid = this.stationID;
       this._refreshData(deskletObj);
