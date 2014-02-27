@@ -1276,6 +1276,8 @@ wxDriverYahoo.prototype = {
     this._woeidcache = new Object();
   },
   
+  // for the yahoo driver, this is a wrapper around _refreshData. This is needed in order
+  // to get the yahoo WOEID if this.stationID has been provided as lat,lon
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
@@ -1285,28 +1287,36 @@ wxDriverYahoo.prototype = {
     // lat,lon location
     if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
       if (typeof this._woeidcache[this.stationID] === 'object') {
-        global.log ("bbcwx: woeidcache hit for " + this.stationID + ": " + this._woeidcache[this.stationID].woeid);
+        //global.log ("bbcwx: woeidcache hit for " + this.stationID + ": " + this._woeidcache[this.stationID].woeid);
         this._woeid = this._woeidcache[this.stationID].woeid;
         this._refreshData(deskletObj);
       } else {
+        // look up the WOEID from geo.placefinder YQL table. Async lookup with _refreshData
+        // in call back to ensure WOEID is available before it is called
         let latlon = this.stationID.split(',')
         let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + latlon[0] + '%2C' + latlon[1] +'%22%20and%20gflags%3D%22R%22&format=json&callback=';
         let a = this._getWeather(geourl, function(geo) {
           if (geo) {
             let ok = this._load_woeid(geo);
-            if (ok) this._refreshData(deskletObj);
+            if (ok) { 
+              this._refreshData(deskletObj);
+            } else {
+              deskletObj.displayCurrent();  
+              deskletObj.displayMeta();
+              deskletObj.displayForecast();             
+            }
           } else {
-          this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
-          this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-          this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
-          this.data.status.lasterror = "Could not resolve location";
-          deskletObj.displayCurrent();  
-          deskletObj.displayMeta();
-          deskletObj.displayForecast();
+            this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+            this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+            this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+            this.data.status.lasterror = "Could not resolve location";
+            deskletObj.displayCurrent();  
+            deskletObj.displayMeta();
+            deskletObj.displayForecast();
           }
         });   
       }
-    // unrecognised - not a numeric woeid
+    // unrecognised - not a numeric WOEID
     } else if (this.stationID.search(/^\d+$/) !=0) {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
@@ -1315,8 +1325,8 @@ wxDriverYahoo.prototype = {
       deskletObj.displayForecast();
       deskletObj.displayMeta();     
       deskletObj.displayCurrent();
-      return
-    // looks like a woeid
+      return;
+    // looks like a WOEID
     } else {
       this._woeid = this.stationID;
       this._refreshData(deskletObj);
@@ -1325,7 +1335,7 @@ wxDriverYahoo.prototype = {
   },
   
   _refreshData: function(deskletObj) {
-    // process the three day forecast
+    // get the forecast
     let a = this._getWeather(this._baseURL + encodeURIComponent(this._woeid), function(weather) {
       if (weather) {
         this._load_forecast(weather);
@@ -1351,9 +1361,18 @@ wxDriverYahoo.prototype = {
     
     try {
       let geo = json.query.results.Result;
-      this._woeid = geo.woeid;
-      this._woeidcache[this.stationID].woeid = geo.woeid;
-      return true;
+      if (geo.woeid) {
+        this._woeid = geo.woeid;
+        this._woeidcache[this.stationID].woeid = geo.woeid;
+        return true;
+      } else {
+        this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.lasterror = "Could not resolve location";
+        return false;        
+      }
     } catch(e) {
       global.logError(e);
       delete this._woeidcache[this.stationID]
@@ -2204,7 +2223,7 @@ wxDriverForecastIo.prototype = {
       
       // get geo data
       if (typeof this._geocache[this.stationID] === 'object') {
-        global.log ("bbcwx: geocache hit for " + this.stationID + ": " + this._geocache[this.stationID].city);
+        //global.log ("bbcwx: geocache hit for " + this.stationID + ": " + this._geocache[this.stationID].city);
         this.data.city = this._geocache[this.stationID].city;
         this.data.country = this._geocache[this.stationID].city;
         this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
@@ -2212,7 +2231,7 @@ wxDriverForecastIo.prototype = {
         this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
         deskletObj.displayMeta();
       } else {
-        global.log ("bbcwx: Looking up city for " + this.stationID);
+        //global.log ("bbcwx: Looking up city for " + this.stationID);
         let latlon = this.stationID.split(',')
         //let geourl = 'http://api.geonames.org/findNearbyPlaceNameJSON?lat=' + latlon[0] + '&lng=' + latlon[1] + '&username=foo';
         let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + latlon[0] + '%2C' + latlon[1] +'%22%20and%20gflags%3D%22R%22&format=json&callback=';
