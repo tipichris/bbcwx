@@ -903,6 +903,14 @@ wxDriver.prototype = {
   
   ////////////////////////////////////////////////////////////////////////////
   // create an empty data structure to be filled in by child drivers
+  // data returned should be values without units appended. The following units
+  // should be used
+  // Distance: km
+  // Speed: km/h
+  // Temperature: C
+  // Pressure: mb / HPa
+  // Visibility may be expressed either as a number of km or a descriptive string
+  // Wind direction should be a 16 point compass bearing, eg SSW
   _emptyData: function() {
     this.data.city = '';
     this.data.country = '';
