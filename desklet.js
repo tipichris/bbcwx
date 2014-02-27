@@ -903,7 +903,7 @@ wxDriver.prototype = {
   
   ////////////////////////////////////////////////////////////////////////////
   // create an empty data structure to be filled in by child drivers
-  // data returned should be values without units appended. The following units
+  // numeric data returned should be values without units appended. The following units
   // should be used
   // Distance: km
   // Speed: km/h
