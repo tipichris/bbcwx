@@ -185,6 +185,9 @@ MyDesklet.prototype = {
       case 'forecast':
         this.service = new wxDriverForecastIo(this.stationID, this.apikey);
         break;
+      case 'twc':
+        this.service = new wxDriverTWC(this.stationID);
+        break;
       default:
         this.service = new wxDriverBBC(this.stationID);
     }
@@ -2379,6 +2382,213 @@ wxDriverForecastIo.prototype = {
   }, 
 
 };  
+
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for TWC Weather
+function wxDriverTWC(stationID) {
+  this._twcinit(stationID);
+};
+
+wxDriverTWC.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'twc',
+  maxDays: 7, 
+  linkText: 'weather.com',
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'http://www.weather.com',
+  linkTooltip: 'Visit the weather.com website',
+  
+  _baseURL: 'http://wxdata.weather.com/wxdata/weather/local/',
+  
+  // initialise the driver
+  _twcinit: function(stationID) {
+    this._init(stationID);
+    this.capabilities.forecast.pressure =  false;
+    this.capabilities.forecast.pressure_direction =  false;
+    this.capabilities.forecast.visibility = false;
+    this._woeidcache = new Object();
+  },
+  
+  // for the yahoo driver, this is a wrapper around _refreshData. This is needed in order
+  // to get the yahoo WOEID if this.stationID has been provided as lat,lon
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkTooltip = 'Visit the weather.com website';
+    this.linkURL = 'http://www.weather.com';
+    
+    // process the forecast
+    let a = this._getWeather(this._baseURL + encodeURIComponent(this.stationID) + '?cc=*&dayf=10&unit=m', function(weather) {
+      if (weather) {
+        this._load_forecast(weather);
+      }
+      // get the main object to update the display
+      deskletObj.displayForecast();
+      deskletObj.displayCurrent();   
+      deskletObj.displayMeta(); 
+    });
+  },
+  
+  // process the xml and populate this.data
+  _load_forecast: function (xml) {
+    if (!xml) {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+    let days = [];
+    
+    let parser = new marknote.Parser();
+    let doc = parser.parse(xml);
+    if (!doc) {
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }
+    try {
+
+      let rootElem = doc.getRootElement();
+      if (rootElem.getName() == 'error') {
+        this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+        this.data.status.lasterror = rootElem.getChildElement('err').getText();
+        return;
+      }
+      
+      this.data.cc = new Object();
+      this.data.days = [];
+
+
+      let geo = rootElem.getChildElement("loc");
+
+      let cc = rootElem.getChildElement('cc');
+      let dayf = rootElem.getChildElement('dayf');
+
+
+      let locparts = geo.getChildElement('dnam').getText().split(',');
+      this.data.city = locparts[0].trim();
+      //### TODO this returns state for US - somehow detect that and add US
+      this.data.country = locparts[locparts.length-1].trim();
+      this.linkURL = 'http://www.weather.com/weather/today/' + geo.getAttributeValue('id').trim();
+      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
+
+      // data.region
+
+      this.data.cc.temperature = cc.getChildElement('tmp').getText();
+      this.data.cc.feelslike = cc.getChildElement('flik').getText();
+      this.data.cc.obstime = new Date(cc.getChildElement('lsup').getText()).toLocaleFormat( "%H:%M %Z" );
+      this.data.cc.weathertext = cc.getChildElement('t').getText();
+      if(this.data.cc.weathertext == 'N/A') this.data.cc.weathertext = '';
+      this.data.cc.icon = this._mapicon(cc.getChildElement('icon').getText());
+      let wind = cc.getChildElement('wind');
+      this.data.cc.wind_speed = wind.getChildElement('s').getText();
+      this.data.cc.wind_direction = wind.getChildElement('t').getText();
+      this.data.cc.humidity = cc.getChildElement('hmid').getText();
+      this.data.cc.visibility = cc.getChildElement('vis').getText();
+      let bar = cc.getChildElement('bar');
+      this.data.cc.pressure = bar.getChildElement('r').getText();
+      this.data.cc.pressure_direction = bar.getChildElement('d').getText().ucwords();
+
+      let forecasts = dayf.getChildElements("day");
+
+      for (i=0; i<forecasts.length; i++) {
+        let day = new Object();
+        day.day = forecasts[i].getAttributeValue('t').substring(0,3);
+        day.maximum_temperature = forecasts[i].getChildElement('hi').getText();
+        day.minimum_temperature = forecasts[i].getChildElement('low').getText();
+        var dayparts = forecasts[i].getChildElements("part");
+        var p = 0;
+        if (dayparts[0].getChildElement('icon').getText() == '') p = 1;
+        day.weathertext = dayparts[p].getChildElement('t').getText();
+        day.icon = this._mapicon(dayparts[p].getChildElement('icon').getText());
+        day.humidity = dayparts[p].getChildElement('hmid').getText();
+        var windf = dayparts[p].getChildElement('wind');
+        day.wind_speed = windf.getChildElement('s').getText();
+        day.wind_direction = windf.getChildElement('t').getText();
+        this.data.days[i] = day;
+      }
+        
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+    }
+  },
+  
+  _mapicon: function(code) {
+    // http://developer.yahoo.com/weather/#codes
+    let icon_name = 'na';
+    let iconmap = {
+      '0' : '00',
+      '1' : '01',
+      '2' : '02',
+      '3' : '03',
+      '4' : '04',
+      '5' : '05',
+      '6' : '06',
+      '7' : '07',
+      '8' : '08',
+      '9' : '09',
+      '10' : '10',
+      '11' : '39',
+      '12' : '39',
+      '13' : '13',
+      '14' : '41',
+      '15' : '15',
+      '16' : '16',
+      '17' : '18',
+      '18' : '18',
+      '19' : '19',
+      '20' : '20',
+      '21' : '22',
+      '22' : '22',
+      '23' : '23',
+      '24' : '24',
+      '25' : '25',
+      '26' : '26',
+      '27' : '27',
+      '28' : '28',
+      '29' : '29',
+      '30' : '30',
+      '31' : '31',
+      '32' : '32',
+      '33' : '33',
+      '34' : '34',
+      '35' : '06',
+      '36' : '36',
+      '37' : '37',
+      '38' : '38',
+      '39' : '38',
+      '40' : '39',
+      '41' : '16',
+      '42' : '41',
+      '43' : '16',
+      '44' : '30',
+      '45' : '47',
+      '46' : '46',
+      '47' : '47',
+      '3200' : 'na'
+    }
+    if (code && (typeof iconmap[code] !== "undefined")) {
+      icon_name = iconmap[code];
+    }
+    // ### TODO consider some text based overides, eg
+    // /light rain/i    11
+    
+    return icon_name;
+  },
+  
+};  
+
 
 ////////////////////////////////////////////////////////////////////////////
 // ### END DRIVERS ###

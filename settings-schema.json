@@ -14,7 +14,8 @@
         "Open Weather Map": "owm",
         "Wunderground (requires API key)": "wunderground",
         "World Weather Online (requires API key)": "wwo",
-        "Forecast.io (requires API key)" : "forecast"
+        "Forecast.io (requires API key)" : "forecast",
+        "weather.com (deprecated)" : "twc"
     },
     "tooltip" : "Select the data service you wish to use"
   },
