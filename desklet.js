@@ -911,6 +911,7 @@ wxDriver.prototype = {
   // Pressure: mb / HPa
   // Visibility may be expressed either as a number of km or a descriptive string
   // Wind direction should be a 16 point compass bearing, eg SSW
+  // Day names should be English three letter abbreviations, eg Mon, Tue
   _emptyData: function() {
     this.data.city = '';
     this.data.country = '';
