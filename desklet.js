@@ -916,6 +916,7 @@ wxDriver.prototype = {
     this.data.country = '';
     this.data.days=[];
     
+    // the status of the service request
     delete this.data.status;
     this.data.status = new Object();
     // 1: waiting; 2: success; 0; failed/error
@@ -924,6 +925,7 @@ wxDriver.prototype = {
     this.data.status.meta = BBCWX_SERVICE_STATUS_INIT;
     this.data.status.lasterror = false;
     
+    // current conditions
     delete this.data.cc;
     this.data.cc = new Object();
     this.data.cc.wind_direction = '';
@@ -937,6 +939,8 @@ wxDriver.prototype = {
     this.data.cc.weathertext = '';
     this.data.cc.icon = '';
     this.data.cc.feelslike = '';
+    
+    // forecast
     for(let i=0; i<this.maxDays; i++) {
       let day = new Object();
       day.day = '';
@@ -1536,6 +1540,9 @@ wxDriverYahoo.prototype = {
     if (code && (typeof iconmap[code] !== "undefined")) {
       icon_name = iconmap[code];
     }
+    // ### TODO consider some text based overides, eg
+    // /light rain/i    11
+    
     return icon_name;
   },
   
@@ -1620,7 +1627,7 @@ wxDriverOWM.prototype = {
     
   },
   
-  // process the rss for a 3dayforecast and populate this.data
+  // process the data for a forecast and populate this.data
   _load_forecast: function (data) {
     if (!data) {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
@@ -1666,7 +1673,7 @@ wxDriverOWM.prototype = {
     }
   },
 
-  // take an rss feed of current observations and extract data into this.data
+  // take the current observations and extract data into this.data
   _load_observations: function (data) {
     if (!data) {
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
