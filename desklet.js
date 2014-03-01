@@ -1527,7 +1527,7 @@ wxDriverYahoo.prototype = {
       '36' : '36',
       '37' : '37',
       '38' : '38',
-      '39' : '38',
+      '39' : '39', // this actually seems to map to showers, see  http://developer.yahoo.com/forum/YDN-Documentation/Yahoo-Weather-API-Wrong-Condition-Code/1290534174000-1122fc3d-da6d-34a2-9fb9-d0863e6c5bc6
       '40' : '39',
       '41' : '16',
       '42' : '41',
