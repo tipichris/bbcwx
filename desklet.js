@@ -2356,7 +2356,7 @@ wxDriverForecastIo.prototype = {
   },
   
   _mapicon: function(iconcode) {
-    // http://www.worldweatheronline.com/feed/wwoConditionCodes.txt
+    // https://developer.forecast.io/docs/v2
     let icon_name = 'na';
     let iconmap = {
       'clear-day' : '32',
