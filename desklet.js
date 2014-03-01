@@ -2525,6 +2525,7 @@ wxDriverTWC.prototype = {
   },
   
   _mapicon: function(code) {
+    // Use codes as listed by Yahoo! as weather.com supplies their data
     // http://developer.yahoo.com/weather/#codes
     let icon_name = 'na';
     let iconmap = {
