@@ -88,7 +88,8 @@ var iconsets = {
   'flat_white' : 'Flat white', 
   'novacon' : 'Novacon', 
   'weezle' : 'Weezle',
-  'vclouds' : 'VClouds'
+  'vclouds' : 'VClouds',
+  'user' : 'User defined'
 }
 
 function keys(obj)
@@ -104,8 +105,84 @@ function keys(obj)
   return keys;
 }
 
+function fetchMeta(iconset) {
+  xmlhttp=new XMLHttpRequest();
+  xmlhttp.open("GET","icons/" + iconset + "/iconmeta.json",false);
+  try {
+    xmlhttp.send();
+    response=xmlhttp.responseText; 
+    if (response) {
+      return JSON.parse(response);
+    } else {
+      var defmeta = new Object();
+      defmeta.aspect = 1;
+      defmeta.ext = 'png';
+      defmeta.map = new Object();
+      return defmeta;
+    }
+  } catch(e) {
+      var defmeta = new Object();
+      defmeta.aspect = 1;
+      defmeta.ext = 'png';
+      defmeta.map = new Object();
+      return defmeta;
+  }
+}
+
+function print_r (obj, t) {
+
+    // define tab spacing
+    var tab = t || '';
+
+    // check if it's array
+    var isArr = Object.prototype.toString.call(obj) === '[object Array]';
+    
+    // use {} for object, [] for array
+    var str = isArr ? ('Array\n' + tab + '[\n') : ('Object\n' + tab + '{\n');
+
+    // walk through it's properties
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            var val1 = obj[prop];
+            var val2 = '';
+            var type = Object.prototype.toString.call(val1);
+            switch (type) {
+                
+                // recursive if object/array
+                case '[object Array]':
+                case '[object Object]':
+                    val2 = print_r(val1, (tab + '\t'));
+                    break;
+                    
+                case '[object String]':
+                    val2 = '\'' + val1 + '\'';
+                    break;
+                    
+                default:
+                    val2 = val1;
+            }
+            str += tab + '\t' + prop + ' => ' + val2 + ',\n';
+        }
+    }
+    
+    // remove extra comma for last property
+    str = str.substring(0, str.length - 2) + '\n' + tab;
+    
+    return isArr ? (str + ']') : (str + '}');
+};
+
+
 var iconcodes = keys(icons).sort();
 var sets = keys(iconsets);
+
+var meta = new Object();
+var img;
+
+for(s=0; s<sets.length; s++) {
+  meta[sets[s]] = fetchMeta(sets[s]);
+}
+
+// document.write('<pre>' + print_r(meta) + '</pre>');
 
 document.write('<table style="background-color: rgba(147,184,74,0.6)"><thead>');
 document.write('<tr><th style="text-align: left">Code<\/th><th style="text-align: left">Description<\/th>');
@@ -117,15 +194,16 @@ for(i=0; i<iconcodes.length; i++) {
   index=iconcodes[i];
   document.write( '<tr><td>' + index + '<\/td><td>' + icons[index] + '<\/td>');
   for(s=0; s<sets.length; s++) {
-    document.write('<td><img src="icons/' + sets[s] + '/' + index + '.png" alt="" class="iconsample" ><\/td>');
+    if (typeof meta[sets[s]].map[index] != 'undefined') {
+      img = 'icons/' + sets[s] + '/' + meta[sets[s]].map[index] + '.' + meta[sets[s]].ext;
+    } else {
+      img = 'icons/' + sets[s] + '/' + index + '.' + meta[sets[s]].ext;
+    }
+    document.write('<td><img src="' + img + '" alt="" class="iconsample" ><\/td>');
   }
   document.write('<\/tr>');
 }
-document.write('<tr><td>wunderground<\/td><td>wunderground.com<sup>&reg;<\/sup> logo<\/td>');
-for(s=0; s<sets.length; s++) {
-  document.write('<td><img src="icons/' + sets[s] + '/wunderground.png" alt="" class="wunderground" ><\/td>');
-}
-document.write('<\/tr><\/tbody><\/table>');
+document.write('<\/tbody><\/table>');
 // -->
 </script>
 <p><a href="help.html#credits">Credits</a></p>

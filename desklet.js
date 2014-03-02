@@ -72,6 +72,8 @@ const BBCWX_SEPARATOR_STYLE = 'bbcwx-separator';
 const BBCWX_SERVICE_STATUS_ERROR = 0;
 const BBCWX_SERVICE_STATUS_INIT = 1;
 const BBCWX_SERVICE_STATUS_OK = 2;
+const BBCWX_DEFAULT_ICONSET = 'colourful';
+const BBCWX_DEFAULT_ICON_EXT = 'png';
 
 function MyDesklet(metadata,desklet_id){
   this._init(metadata,desklet_id);
@@ -434,37 +436,34 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Set internal values for icons
   _initIcons: function() {
-    this.iconprops = new Object();
-    this.iconprops.aspect = 1;
-    this.iconprops.ext = 'png';
-    
-    // Aspect ratios (w/h). Assume 1 if not in here
-    let ARMap = {
-      'vclouds': 1.458
-    };
-    
-    // File extensions. Assume png if not in here
-    let ExtMap = {};
-    
-    if (this.iconstyle == 'user') {
-      let file = Gio.file_new_for_path(DESKLET_DIR + '/icons/user/iconmeta.json');
-      try {
-        let raw_file = Cinnamon.get_file_contents_utf8_sync(file.get_path());
-        this.iconprops = JSON.parse(raw_file);    
-      } catch(e) {
-        global.logError("Failed to parse iconmeta.json for user defined icons. Using default iconset");
-        // set to default values
-        this.iconstyle = 'colourful';
-        this.iconprops.aspect = 1;
-        this.iconprops.ext = 'png';
-      }
-    } else {
-      if (typeof ARMap[this.iconstyle] !== 'undefined') this.iconprops.aspect = ARMap[this.iconstyle];
-      if (typeof ExtMap[this.iconstyle] !== 'undefined') this.iconprops.ext = ExtMap[this.iconstyle];
-    }
+    this.iconprops = this._getIconMeta(this.iconstyle);
+    this.defaulticonprops = this._getIconMeta(BBCWX_DEFAULT_ICONSET);
+
     global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' using ' + this.iconstyle);
   },
-  
+
+  ////////////////////////////////////////////////////////////////////////////
+  // Fetch the icon set meta data
+  _getIconMeta: function(iconset) {
+    let iconprops = new Object();
+    iconprops.aspect = 1;
+    iconprops.ext = 'png';
+    iconprops.map = new Object();
+    
+    let file = Gio.file_new_for_path(DESKLET_DIR + '/icons/' + iconset + '/iconmeta.json');
+    try {
+      let raw_file = Cinnamon.get_file_contents_utf8_sync(file.get_path());
+      iconprops = JSON.parse(raw_file);    
+    } catch(e) {
+      global.logError("Failed to parse iconmeta.json for iconset " + this.iconstyle);
+      // set to default values
+      iconprops.aspect = 1;
+      iconprops.ext = 'png';
+      iconprops.map = new Object();
+    } 
+    
+    return iconprops;
+  },
   
   ////////////////////////////////////////////////////////////////////////////
   // Called when some change requires the styling of the desklet to be updated    
@@ -696,11 +695,16 @@ MyDesklet.prototype = {
     let icon_name = 'na';
     let icon_ext = '.' + this.iconprops.ext;
     if (iconcode) {
-      icon_name = iconcode;
+      icon_name = (typeof this.iconprops.map[iconcode] != 'undefined') ? this.iconprops.map[iconcode] : iconcode;
     }
-      
+ 
     let icon_file = DESKLET_DIR + '/icons/' + this.iconstyle +'/' + icon_name + icon_ext;
     let file = Gio.file_new_for_path(icon_file);
+    if (!file.query_exists(null)) {
+      icon_name = (typeof this.defaulticonprops.map[iconcode] != 'undefined') ? this.defaulticonprops.map[iconcode] : iconcode;
+      icon_file = DESKLET_DIR + '/icons/' + BBCWX_DEFAULT_ICONSET + '/' + icon_name + '.' + this.defaulticonprops.ext;
+      file = Gio.file_new_for_path(icon_file);
+    }
     let icon_uri = file.get_uri();
     
     return St.TextureCache.get_default().load_uri_async(icon_uri, 200*this.zoom, 200*this.zoom);
