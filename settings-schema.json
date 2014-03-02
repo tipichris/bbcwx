@@ -237,7 +237,8 @@
       "Flat white": "flat_white",
       "VClouds" : "vclouds",
       "Novacon" : "novacon",
-      "Weezle" : "weezle"
+      "Weezle" : "weezle",
+      "User defined" : "user"
     },
     "tooltip": "Select the style for the weather icons"
   },

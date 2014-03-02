@@ -446,9 +446,23 @@ MyDesklet.prototype = {
     // File extensions. Assume png if not in here
     let ExtMap = {};
     
-    if (typeof ARMap[this.iconstyle] !== 'undefined') this.iconprops.aspect = ARMap[this.iconstyle];
-    if (typeof ExtMap[this.iconstyle] !== 'undefined') this.iconprops.ext = ExtMap[this.iconstyle];
-    //global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' using ' + this.iconstyle);
+    if (this.iconstyle == 'user') {
+      let file = Gio.file_new_for_path(DESKLET_DIR + '/icons/user/iconmeta.json');
+      try {
+        let raw_file = Cinnamon.get_file_contents_utf8_sync(file.get_path());
+        this.iconprops = JSON.parse(raw_file);    
+      } catch(e) {
+        global.logError("Failed to parse iconmeta.json for user defined icons. Using default iconset");
+        // set to default values
+        this.iconstyle = 'colourful';
+        this.iconprops.aspect = 1;
+        this.iconprops.ext = 'png';
+      }
+    } else {
+      if (typeof ARMap[this.iconstyle] !== 'undefined') this.iconprops.aspect = ARMap[this.iconstyle];
+      if (typeof ExtMap[this.iconstyle] !== 'undefined') this.iconprops.ext = ExtMap[this.iconstyle];
+    }
+    global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' using ' + this.iconstyle);
   },
   
   
@@ -779,7 +793,7 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   _formatHumidity: function(humidity) {
     if (!humidity.toString().length) return '';
-    out = 1*humidity
+    let out = 1*humidity
     out = out.toFixed(0)
     return out + '%';
   },
@@ -2496,7 +2510,7 @@ wxDriverTWC.prototype = {
 
       let forecasts = dayf.getChildElements("day");
 
-      for (i=0; i<forecasts.length; i++) {
+      for (let i=0; i<forecasts.length; i++) {
         let day = new Object();
         day.day = forecasts[i].getAttributeValue('t').substring(0,3);
         day.maximum_temperature = forecasts[i].getChildElement('hi').getText();
