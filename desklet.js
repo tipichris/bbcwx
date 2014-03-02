@@ -613,8 +613,8 @@ MyDesklet.prototype = {
     {
       let day = this.service.data.days[f];
       this.labels[f].label=((this.daynames[day.day]) ? this.daynames[day.day] : '');
-      let fwiconimage = this._getIconImage(day.icon);
-      fwiconimage.set_size(BBCWX_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_ICON_HEIGHT*this.zoom);
+      let fwiconimage = this._getIconImage(day.icon, BBCWX_ICON_HEIGHT*this.zoom);
+      //fwiconimage.set_size(BBCWX_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_ICON_HEIGHT*this.zoom);
       this.fwicons[f].set_child(fwiconimage);      
       this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
       if(this.max[f]) this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
@@ -631,8 +631,8 @@ MyDesklet.prototype = {
   displayCurrent: function(){
     let cc = this.service.data.cc;
     if (this.cwicon) {
-      let cwimage=this._getIconImage(this.service.data.cc.icon);
-      cwimage.set_size(BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_CC_ICON_HEIGHT*this.zoom);
+      let cwimage=this._getIconImage(this.service.data.cc.icon, BBCWX_CC_ICON_HEIGHT*this.zoom);
+      //cwimage.set_size(BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_CC_ICON_HEIGHT*this.zoom);
       this.cwicon.set_child(cwimage);
     }
     if (this.shifttemp) {
@@ -662,8 +662,8 @@ MyDesklet.prototype = {
     this.cityname.text=city;
     if (this.service.linkIcon) {
       this.banner.label = '';
-      let bannericonimage = this._getIconImage(this.service.linkIcon.file);
-      bannericonimage.set_size(this.service.linkIcon.width*this.zoom, this.service.linkIcon.height*this.zoom);
+      let bannericonimage = this._getIconImage(this.service.linkIcon.file, this.service.linkIcon.height*this.zoom, this.service.linkIcon.width*this.zoom);
+      //bannericonimage.set_size(this.service.linkIcon.width*this.zoom, this.service.linkIcon.height*this.zoom);
       this.banner.set_child(bannericonimage); 
     } else {
       this.banner.label = this.service.linkText;
@@ -691,23 +691,28 @@ MyDesklet.prototype = {
   
   ////////////////////////////////////////////////////////////////////////////
   // Get an icon
-  _getIconImage: function(iconcode) {
+  _getIconImage: function(iconcode, h, w) {
+    if (typeof h === 'undefined') h = BBCWX_ICON_HEIGHT;
+    if (typeof w === 'undefined') w = false;
     let icon_name = 'na';
     let icon_ext = '.' + this.iconprops.ext;
     if (iconcode) {
       icon_name = (typeof this.iconprops.map[iconcode] != 'undefined') ? this.iconprops.map[iconcode] : iconcode;
     }
- 
+    width = w ? w : h * this.iconprops.aspect;
     let icon_file = DESKLET_DIR + '/icons/' + this.iconstyle +'/' + icon_name + icon_ext;
     let file = Gio.file_new_for_path(icon_file);
     if (!file.query_exists(null)) {
       icon_name = (typeof this.defaulticonprops.map[iconcode] != 'undefined') ? this.defaulticonprops.map[iconcode] : iconcode;
       icon_file = DESKLET_DIR + '/icons/' + BBCWX_DEFAULT_ICONSET + '/' + icon_name + '.' + this.defaulticonprops.ext;
+      width = w ? w : h * this.defaulticonprops.aspect;
       file = Gio.file_new_for_path(icon_file);
     }
     let icon_uri = file.get_uri();
     
-    return St.TextureCache.get_default().load_uri_async(icon_uri, 200*this.zoom, 200*this.zoom);
+    let iconimg = St.TextureCache.get_default().load_uri_async(icon_uri, 200*this.zoom, 200*this.zoom);
+    iconimg.set_size(width, h);
+    return iconimg;
   },
   
   ////////////////////////////////////////////////////////////////////////////
