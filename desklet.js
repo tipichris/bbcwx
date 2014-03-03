@@ -694,7 +694,8 @@ MyDesklet.prototype = {
     if (iconcode) {
       icon_name = (typeof this.iconprops.map[iconcode] != 'undefined') ? this.iconprops.map[iconcode] : iconcode;
     }
-    width = w ? w : h * this.iconprops.aspect;
+    let height = h;
+    let width = w ? w : h * this.iconprops.aspect;
     let icon_file = DESKLET_DIR + '/icons/' + this.iconstyle +'/' + icon_name + icon_ext;
     let file = Gio.file_new_for_path(icon_file);
     if (!file.query_exists(null)) {
@@ -706,7 +707,7 @@ MyDesklet.prototype = {
     let icon_uri = file.get_uri();
     
     let iconimg = St.TextureCache.get_default().load_uri_async(icon_uri, 200*this.zoom, 200*this.zoom);
-    iconimg.set_size(width, h);
+    iconimg.set_size(width, height);
     return iconimg;
   },
   
