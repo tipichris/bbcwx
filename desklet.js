@@ -167,9 +167,6 @@ MyDesklet.prototype = {
       case 'bbc':
         this.service = new wxDriverBBC(this.stationID);
         break;
-      case 'mock':
-        this.service = new wxDriverMock(this.stationID);
-        break;
       case 'yahoo':
         this.service = new wxDriverYahoo(this.stationID);
         break;
