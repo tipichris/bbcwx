@@ -434,16 +434,22 @@ MyDesklet.prototype = {
     this.iconprops = this._getIconMeta(this.iconstyle);
     this.defaulticonprops = this._getIconMeta(BBCWX_DEFAULT_ICONSET);
 
-    global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' using ' + this.iconstyle);
+    global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' ; ' + this.iconprops.adjust + ' using ' + this.iconstyle);
   },
 
   ////////////////////////////////////////////////////////////////////////////
   // Fetch the icon set meta data
   _getIconMeta: function(iconset) {
     let iconprops = new Object();
-    iconprops.aspect = 1;
-    iconprops.ext = 'png';
-    iconprops.map = new Object();
+    //iconprops.aspect = 1;
+    //iconprops.ext = 'png';
+    //iconprops.map = new Object();
+    let deficonprops = {
+      aspect: 1,
+      adjust: 1,
+      ext: 'png',
+      map : {}
+    }
     
     let file = Gio.file_new_for_path(DESKLET_DIR + '/icons/' + iconset + '/iconmeta.json');
     try {
@@ -451,12 +457,13 @@ MyDesklet.prototype = {
       iconprops = JSON.parse(raw_file);    
     } catch(e) {
       global.logError("Failed to parse iconmeta.json for iconset " + this.iconstyle);
-      // set to default values
-      iconprops.aspect = 1;
-      iconprops.ext = 'png';
-      iconprops.map = new Object();
     } 
-    
+    // set anything missing to default values
+    for (prop in deficonprops) {
+      if (typeof iconprops[prop] === 'undefined') {
+        iconprops[prop] = deficonprops[prop];
+      }
+    }
     return iconprops;
   },
   
@@ -657,7 +664,7 @@ MyDesklet.prototype = {
     this.cityname.text=city;
     if (this.service.linkIcon) {
       this.banner.label = '';
-      let bannericonimage = this._getIconImage(this.service.linkIcon.file, this.service.linkIcon.height*this.zoom, this.service.linkIcon.width*this.zoom);
+      let bannericonimage = this._getIconImage(this.service.linkIcon.file, this.service.linkIcon.height*this.zoom, this.service.linkIcon.width*this.zoom, false);
       //bannericonimage.set_size(this.service.linkIcon.width*this.zoom, this.service.linkIcon.height*this.zoom);
       this.banner.set_child(bannericonimage); 
     } else {
@@ -686,9 +693,16 @@ MyDesklet.prototype = {
   
   ////////////////////////////////////////////////////////////////////////////
   // Get an icon
-  _getIconImage: function(iconcode, h, w) {
+  // -> iconcode: the code of the icon
+  // -> h: the base height of the icon
+  // -> w: the base width of the icon. If not specified this is calculated from
+  //       the iconsets 'aspect' property and h
+  // -> adjust: boolean, whether to adjust h and w by the value of the iconsets 
+  //            adjust property
+  _getIconImage: function(iconcode, h, w, adjust) {
     if (typeof h === 'undefined') h = BBCWX_ICON_HEIGHT;
     if (typeof w === 'undefined') w = false;
+    if (typeof adjust === 'undefined') adjust = true;
     let icon_name = 'na';
     let icon_ext = '.' + this.iconprops.ext;
     if (iconcode) {
@@ -696,17 +710,26 @@ MyDesklet.prototype = {
     }
     let height = h;
     let width = w ? w : h * this.iconprops.aspect;
+    if (adjust) {
+      height = height*this.iconprops.adjust;
+      width = width*this.iconprops.adjust;
+    }
     let icon_file = DESKLET_DIR + '/icons/' + this.iconstyle +'/' + icon_name + icon_ext;
     let file = Gio.file_new_for_path(icon_file);
     if (!file.query_exists(null)) {
       icon_name = (typeof this.defaulticonprops.map[iconcode] != 'undefined') ? this.defaulticonprops.map[iconcode] : iconcode;
       icon_file = DESKLET_DIR + '/icons/' + BBCWX_DEFAULT_ICONSET + '/' + icon_name + '.' + this.defaulticonprops.ext;
       width = w ? w : h * this.defaulticonprops.aspect;
+      height = h;
+      if (adjust) {
+        height = height*this.defaulticonprops.adjust;
+        width = width*this.defaulticonprops.adjust;
+      }      
       file = Gio.file_new_for_path(icon_file);
     }
     let icon_uri = file.get_uri();
     
-    let iconimg = St.TextureCache.get_default().load_uri_async(icon_uri, 200*this.zoom, 200*this.zoom);
+    let iconimg = St.TextureCache.get_default().load_uri_async(icon_uri, width, height);
     iconimg.set_size(width, height);
     return iconimg;
   },
