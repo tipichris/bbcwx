@@ -8,6 +8,10 @@ you don't use the desklet at large zooms you could reduce this somewhat
 (the large current conditions icon is displayed at 170px high at normal
 zoom).
 
+Changes to the icons in `icons/user` take effect at the next refresh. 
+Changes to `iconmeta.json` (see below) take effect when there is change 
+to the Weather Desklet's configuration that affects styling. 
+
 The file iconmeta.json contains information about the icon set that the
 desklet needs. You will probably need to edit this - it must be valid
 JSON so pay careful attention to the commas! Defaults will be applied if
@@ -37,23 +41,24 @@ this will be 1.4167. The default is 1 (ie square icons).
 adjust:
 A value to adjust the size of the icon by. The value represents the 
 proportion of the container size that the icon should be scaled to. It is
-useful in cases of icon sets that have no inbuilt padding - the design 
+useful in cases of icon sets that have no inbuilt padding, ie the design 
 comes right to the edge of the image file. By setting this value to, for
 example, 0.88 then the icon will be made slightly smaller than its 
 container, and displayed in the centre of the container. The size of 
 the large current conditions icon container at 1.0x zoom is 170px. With
 a value of adjust of 0.88 the icon will be scaled to about 150px, leaving
 10px of space all around it. The default value is 1 (ie do not adjust).
+Note that values of greater than 1 will have no effect.
 
 map:
 map is a javascript object that maps the codes used by the Weather 
 Desklet to icon file names (without the extension). The default is empty, 
 which means no mapping, file names are expected to match Weather Desklet 
 codes. See below for more details on how icons are selected. The map 
-object is useful for avoiding have multiple copies of the same icon, each
-with a different name. It can also be used to allow you keep descriptive 
-filenames, rather than codes. For example, rather than name an icon for 
-fog 20.png, name it fog.png and include
+object is useful for avoiding having to have multiple copies of the same 
+icon, each with a different name. It can also be used to allow you to keep 
+descriptive filenames, rather than codes. For example, rather than name 
+an icon for fog 20.png, name it fog.png and include
 
   "map" : {
     "20" : "fog"
@@ -83,8 +88,8 @@ For code 01 the desklet displays 03.png, because 01 maps to 03.
 
 For code 39 there is no map, so the Weather Desklet displays 39.png. 
 
-For code 02 the map says display 03.png, so this is what happens. The 
-presence of a file named 02.png is ignored. 
+Code 02 maps to 03, so 03.png is displayed. The presence of a file 
+named 02.png is ignored. 
 
 For code 47 the desklet attempts to display 47.png, but can not find 
 it, so displays 47.png from the default icon set.
