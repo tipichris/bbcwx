@@ -11,11 +11,13 @@ zoom).
 The file iconmeta.json contains information about the icon set that the
 desklet needs. You will probably need to edit this - it must be valid
 JSON so pay careful attention to the commas! Defaults will be applied if
-the file is missing or can not be parsed. The format is:
+the file is missing or can not be parsed, or if any values are missing. 
+The format is:
 
 {
     "ext": "png", 
     "aspect": 1,
+    "adjust": 0.9,
     "map" : {
       "01" : "03",
       "02" : "03",
@@ -30,17 +32,29 @@ svg are known to work. The default if the file is missing is "png".
 aspect:
 The aspect ratio of the icons, ie the width divided by the height. For 
 square icons this will be 1. For icons that are 170px wide and 120px high
-this will be 1.4167. The default if the file is missing is 1.
+this will be 1.4167. The default is 1 (ie square icons).
+
+adjust:
+A value to adjust the size of the icon by. The value represents the 
+proportion of the container size that the icon should be scaled to. It is
+useful in cases of icon sets that have no inbuilt padding - the design 
+comes right to the edge of the image file. By setting this value to, for
+example, 0.88 then the icon will be made slightly smaller than its 
+container, and displayed in the centre of the container. The size of 
+the large current conditions icon container at 1.0x zoom is 170px. With
+a value of adjust of 0.88 the icon will be scaled to about 150px, leaving
+10px of space all around it. The default value is 1 (ie do not adjust).
 
 map:
 map is a javascript object that maps the codes used by the Weather 
-Desklet to icon file names (without the extension). The default if the file
-is missing is empty, which means no mapping, file names are expected to
-match Weather Desklet codes. See below for more details on how icons are 
-selected. The map object is useful for avoiding have multiple copies of the
-same icon, each with a different name. It can also be used to allow you 
-keep descriptive filenames, rather than codes. For example, rather than
-name an icon for fog 20.png, name it fog.png and include
+Desklet to icon file names (without the extension). The default is empty, 
+which means no mapping, file names are expected to match Weather Desklet 
+codes. See below for more details on how icons are selected. The map 
+object is useful for avoiding have multiple copies of the same icon, each
+with a different name. It can also be used to allow you keep descriptive 
+filenames, rather than codes. For example, rather than name an icon for 
+fog 20.png, name it fog.png and include
+
   "map" : {
     "20" : "fog"
   }

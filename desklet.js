@@ -434,16 +434,13 @@ MyDesklet.prototype = {
     this.iconprops = this._getIconMeta(this.iconstyle);
     this.defaulticonprops = this._getIconMeta(BBCWX_DEFAULT_ICONSET);
 
-    global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' ; ' + this.iconprops.adjust + ' using ' + this.iconstyle);
+    //global.log('_initIcons set values ' + this.iconprops.aspect + ' ; ' + this.iconprops.ext + ' ; ' + this.iconprops.adjust + ' using ' + this.iconstyle);
   },
 
   ////////////////////////////////////////////////////////////////////////////
   // Fetch the icon set meta data
   _getIconMeta: function(iconset) {
     let iconprops = new Object();
-    //iconprops.aspect = 1;
-    //iconprops.ext = 'png';
-    //iconprops.map = new Object();
     let deficonprops = {
       aspect: 1,
       adjust: 1,
