@@ -86,6 +86,8 @@ var iconsets = {
   'novacon' : 'Novacon', 
   'weezle' : 'Weezle',
   'vclouds' : 'VClouds',
+  'meteo_outline' : 'Meteoicons 1',
+  'meteo_filled' : 'Meteoicons 2',
   'user' : 'User defined'
 }
 
@@ -196,7 +198,7 @@ for(i=0; i<iconcodes.length; i++) {
     } else {
       img = 'icons/' + sets[s] + '/' + index + '.' + meta[sets[s]].ext;
     }
-    document.write('<td><img src="' + img + '" alt="" class="iconsample" ><\/td>');
+    document.write('<td><a href="' + img + '" title="View icon"><img src="' + img + '" alt="" class="iconsample" ></a><\/td>');
   }
   document.write('<\/tr>');
 }
