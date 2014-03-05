@@ -2328,7 +2328,7 @@ wxDriverForecastIo.prototype = {
     try {
       let days = json.daily.data;
 
-      for (i=0; i<days.length; i++) {
+      for (let i=0; i<days.length; i++) {
         let day = new Object();
         day.day = new Date(days[i].time * 1000).toLocaleFormat("%a");
         day.minimum_temperature = days[i].temperatureMin;
