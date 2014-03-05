@@ -1,6 +1,8 @@
 USER DEFINED ICONS
 ==================
 
+Introduction
+~~~~~~~~~~~~
 To customise the Weather Desklet even further, you can place your own 
 set of icons in this directory. Icons can be PNG or SVG format, and 
 possibly others too. A good choice of size is about 256px, though if 
@@ -11,6 +13,15 @@ zoom).
 Changes to the icons in `icons/user` take effect at the next refresh. 
 Changes to `iconmeta.json` (see below) take effect when there is change 
 to the Weather Desklet's configuration that affects styling. 
+
+iconmeta.json
+~~~~~~~~~~~~~
+The file `iconmeta.json` contains information about the icon set that the
+Weather Desklet needs. You will probably need to create and edit this - it must
+be valid JSON so pay careful attention to the commas! The file
+`iconmeta.json.dist` provides a template that you can copy to `iconmeta.json`.
+Default values will be applied if the file is missing or can not be parsed, or
+if any values are missing. 
 
 The file iconmeta.json contains information about the icon set that the
 desklet needs. You will probably need to edit this - it must be valid
