@@ -8,3 +8,6 @@ do not scale well. They come in three sizes and you should experiment
 to see which size works best for you. If you have the large current
 conditions icon turned off the 64px will likely be best. Otherwise 
 128px may be preferable.
+
+This file is also suitable for many icon sets designed for use with
+Yahoo! and The Weather Channel (weather.com)
