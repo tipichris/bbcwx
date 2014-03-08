@@ -17,9 +17,9 @@ pre,code { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.
 a:focus, a:hover{ color: #000; }
 a {color: #009; text-decoration: underline; }
 strong { font-weight: bold; }
-img.iconsample {height: 60px; width: auto}
+img.iconsample {height: 50px; width: auto}
 table {border-collapse:collapse; border: none; margin: 15px auto;}
-td, th {padding: 10px 10px;}
+td, th {padding: 10px 10px; font-size: 10pt}
 td.light {background-color: #666; color: #fff}
 </style>
   <title>Weather Desklet Icons</title>
@@ -84,6 +84,7 @@ var iconsets = {
   'flat_colourful' : 'Flat colourful', 
   'flat_black' : 'Flat black', 
   'flat_white' : 'Flat white', 
+  'sketchy' : 'Sketchy',
   'novacon' : 'Novacon', 
   'weezle' : 'Weezle',
   'vclouds' : 'VClouds',
@@ -183,24 +184,24 @@ for(s=0; s<sets.length; s++) {
 
 // document.write('<pre>' + print_r(meta) + '</pre>');
 
-document.write('<table style="background-color: rgba(147,184,74,0.6)"><thead>');
+document.write('<table style="background-color: rgba(147,184,74,0.6)"><thead>' + "\n");
 document.write('<tr><th style="text-align: left">Code<\/th><th style="text-align: left">Description<\/th>');
 for(s=0; s<sets.length; s++) {
   document.write('<th>' + iconsets[sets[s]] + '<\/th>');
 }
-document.write('<\/tr><\/thead><tbody>');
+document.write("<\/tr><\/thead>\n<tbody>\n");
 for(i=0; i<iconcodes.length; i++) {
   index=iconcodes[i];
-  document.write( '<tr><td>' + index + '<\/td><td>' + icons[index] + '<\/td>');
+  document.write( "<tr>\n  <td>" + index + "<\/td>\n  <td>" + icons[index] + "<\/td>\n  ");
   for(s=0; s<sets.length; s++) {
     if (typeof meta[sets[s]].map[index] != 'undefined') {
       img = 'icons/' + sets[s] + '/' + meta[sets[s]].map[index] + '.' + meta[sets[s]].ext;
     } else {
       img = 'icons/' + sets[s] + '/' + index + '.' + meta[sets[s]].ext;
     }
-    document.write('<td><a href="' + img + '" title="View icon"><img src="' + img + '" alt="" class="iconsample" ></a><\/td>');
+    document.write('<td><a href="' + img + '" title="View icon"><img src="' + img + '" alt="" class="iconsample" ></a><\/td>'  + "\n  ");
   }
-  document.write('<\/tr>');
+  document.write("<\/tr>\n");
 }
 document.write('<\/tbody><\/table>');
 // -->
