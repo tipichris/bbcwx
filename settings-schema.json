@@ -240,6 +240,7 @@
       "Weezle" : "weezle",
       "Meteocons 1" : "meteo_outline",
       "Meteocons 2" : "meteo_filled",
+      "Sketchy" : "sketchy",
       "User defined" : "user"
     },
     "tooltip": "Select the style for the weather icons"

@@ -17,9 +17,9 @@ pre,code { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.
 a:focus, a:hover{ color: #000; }
 a {color: #009; text-decoration: underline; }
 strong { font-weight: bold; }
-img.iconsample {height: 60px; width: auto}
+img.iconsample {height: 50px; width: auto}
 table {border-collapse:collapse; border: none; margin: 15px auto;}
-td, th {padding: 10px 10px;}
+td, th {padding: 10px 10px; font-size: 10pt}
 td.light {background-color: #666; color: #fff}
 </style>
   <title>Weather Desklet Icons</title>
@@ -77,18 +77,19 @@ var icons = {
 
 
 var iconsets = {
+  'user' : 'User defined',
   'colourful' : 'Colourful', 
   'dark' : 'Dark', 
   'light' : 'Light', 
   'flat_colourful' : 'Flat colourful', 
   'flat_black' : 'Flat black', 
   'flat_white' : 'Flat white', 
+  'sketchy' : 'Sketchy',
   'novacon' : 'Novacon', 
   'weezle' : 'Weezle',
   'vclouds' : 'VClouds',
   'meteo_outline' : 'Meteocons 1',
-  'meteo_filled' : 'Meteocons 2',
-  'user' : 'User defined'
+  'meteo_filled' : 'Meteocons 2'
 }
 
 function keys(obj)
@@ -128,49 +129,6 @@ function fetchMeta(iconset) {
   }
 }
 
-function print_r (obj, t) {
-
-    // define tab spacing
-    var tab = t || '';
-
-    // check if it's array
-    var isArr = Object.prototype.toString.call(obj) === '[object Array]';
-    
-    // use {} for object, [] for array
-    var str = isArr ? ('Array\n' + tab + '[\n') : ('Object\n' + tab + '{\n');
-
-    // walk through it's properties
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
-            var val1 = obj[prop];
-            var val2 = '';
-            var type = Object.prototype.toString.call(val1);
-            switch (type) {
-                
-                // recursive if object/array
-                case '[object Array]':
-                case '[object Object]':
-                    val2 = print_r(val1, (tab + '\t'));
-                    break;
-                    
-                case '[object String]':
-                    val2 = '\'' + val1 + '\'';
-                    break;
-                    
-                default:
-                    val2 = val1;
-            }
-            str += tab + '\t' + prop + ' => ' + val2 + ',\n';
-        }
-    }
-    
-    // remove extra comma for last property
-    str = str.substring(0, str.length - 2) + '\n' + tab;
-    
-    return isArr ? (str + ']') : (str + '}');
-};
-
-
 var iconcodes = keys(icons).sort();
 var sets = keys(iconsets);
 
@@ -181,28 +139,27 @@ for(s=0; s<sets.length; s++) {
   meta[sets[s]] = fetchMeta(sets[s]);
 }
 
-// document.write('<pre>' + print_r(meta) + '</pre>');
 
-document.write('<table style="background-color: rgba(147,184,74,0.6)"><thead>');
-document.write('<tr><th style="text-align: left">Code<\/th><th style="text-align: left">Description<\/th>');
+document.write("\n" + '<table style="background-color: rgba(147,184,74,0.6)">' + "\n<thead>\n");
+document.write("<tr>\n  " + '<th style="text-align: left">Code<\/th>' + "\n  " + '<th style="text-align: left">Description<\/th>' + "\n");
 for(s=0; s<sets.length; s++) {
-  document.write('<th>' + iconsets[sets[s]] + '<\/th>');
+  document.write('  <th>' + iconsets[sets[s]] + "<\/th>\n");
 }
-document.write('<\/tr><\/thead><tbody>');
+document.write("<\/tr>\n<\/thead>\n<tbody>\n");
 for(i=0; i<iconcodes.length; i++) {
   index=iconcodes[i];
-  document.write( '<tr><td>' + index + '<\/td><td>' + icons[index] + '<\/td>');
+  document.write( "<tr>\n  <td>" + index + "<\/td>\n  <td>" + icons[index] + "<\/td>\n  ");
   for(s=0; s<sets.length; s++) {
     if (typeof meta[sets[s]].map[index] != 'undefined') {
       img = 'icons/' + sets[s] + '/' + meta[sets[s]].map[index] + '.' + meta[sets[s]].ext;
     } else {
       img = 'icons/' + sets[s] + '/' + index + '.' + meta[sets[s]].ext;
     }
-    document.write('<td><a href="' + img + '" title="View icon"><img src="' + img + '" alt="" class="iconsample" ></a><\/td>');
+    document.write('<td><a href="' + img + '" title="View icon"><img src="' + img + '" alt="" class="iconsample" ><\/a><\/td>'  + "\n  ");
   }
-  document.write('<\/tr>');
+  document.write("<\/tr>\n");
 }
-document.write('<\/tbody><\/table>');
+document.write("<\/tbody>\n<\/table>");
 // -->
 </script>
 <p><a href="help.html#credits">Credits</a></p>
