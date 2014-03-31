@@ -325,18 +325,19 @@
   
   "gravity" : {
     "type": "combobox",
-    "default": 8,
+    "default": 0,
     "dependency": "experimental_enabled",
     "description" : "Anchor desklet by",
     "options" : {
+      "Default": 0,
       "Top left": 8,
-      "Left": 7,
+      "Left centre": 7,
       "Bottom left": 6,
-      "Bottom": 5,
+      "Bottom centre": 5,
       "Bottom right": 4,
-      "Right": 3,
+      "Right centre": 3,
       "Top right" : 2,
-      "Top" : 1
+      "Top centre" : 1
     },
     "tooltip": "Select the point on the desklet to which it is anchored. This point will remain static as the desklet grows and shrinks"
   }

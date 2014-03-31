@@ -156,6 +156,7 @@ MyDesklet.prototype = {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
       
+      //global.log("Gravity: " + this.actor.get_anchor_point_gravity());
       this.initForecast();
       
       
@@ -746,7 +747,7 @@ MyDesklet.prototype = {
     if (this.experimental_enabled) {
       this.actor.move_anchor_point_from_gravity(this.gravity);
     } else {
-      this.actor.move_anchor_point_from_gravity(8);
+      this.actor.move_anchor_point_from_gravity(0);
     }
   },
   
