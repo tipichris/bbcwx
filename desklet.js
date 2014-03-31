@@ -156,9 +156,7 @@ MyDesklet.prototype = {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
       
-      //global.log("Gravity: " + this.actor.get_anchor_point_gravity());
-      this.initForecast();
-      
+      this.initForecast(); 
       
     }
     catch (e) {
