@@ -305,5 +305,41 @@
     "default" : "rgb(0,0,0)",
     "description" : "Background colour",
     "tooltip" : "Click the button to select a new background color"
+  },
+  
+  "sep3" : {
+    "type" : "separator"
+  },
+
+  "experimental" : {
+    "type" : "header",
+    "description" : "Experimental and buggy features (read documentation!!)"
+  },
+  
+  "experimental_enabled" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Enable experimental features",
+    "tooltip": "Check this to enable experimental and buggy features"
+  },
+  
+  "gravity" : {
+    "type": "combobox",
+    "default": 0,
+    "dependency": "experimental_enabled",
+    "description" : "Anchor desklet by",
+    "options" : {
+      "Default": 0,
+      "Top left": 8,
+      "Left centre": 7,
+      "Bottom left": 6,
+      "Bottom centre": 5,
+      "Bottom right": 4,
+      "Right centre": 3,
+      "Top right" : 2,
+      "Top centre" : 1
+    },
+    "tooltip": "Select the point on the desklet to which it is anchored. This point will remain static as the desklet grows and shrinks"
   }
+  
 }

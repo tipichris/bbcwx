@@ -40,6 +40,8 @@ const PopupMenu = imports.ui.popupMenu;
 const Cinnamon = imports.gi.Cinnamon;
 const Settings = imports.ui.settings;
 
+const DeskletManager = imports.ui.deskletManager;
+
 const Soup = imports.gi.Soup;
 // const JSON = imports.JSON;
 
@@ -92,6 +94,8 @@ MyDesklet.prototype = {
     this.oldwebservice='';
     this.oldshifttemp='';
     this.redrawNeeded=false;
+    
+    
         
     //################################
     
@@ -143,13 +147,16 @@ MyDesklet.prototype = {
       
       // a change to webservice requires data to be fetched and the window redrawn
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
+      
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"experimental_enabled","experimental_enabled",this.doExperimental,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"gravity","gravity",this.setGravity,null);
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
       this._menu.addAction(_("Help"), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
       
-      this.initForecast();
+      this.initForecast(); 
       
     }
     catch (e) {
@@ -157,6 +164,7 @@ MyDesklet.prototype = {
     }
     return true;
   },
+
 
   ////////////////////////////////////////////////////////////////////////////
   // Set everything up initially
@@ -191,6 +199,7 @@ MyDesklet.prototype = {
     
     this._setDerivedValues();
     this._createWindow(); 
+    this.setGravity();
     this._update_style();
     this._refreshweathers();    
   },
@@ -204,7 +213,7 @@ MyDesklet.prototype = {
     if((this.no == this.oldno) && (this.oldwebservice == this.webservice) && (this.shifttemp == this.oldshifttemp) && !this.redrawNeeded) {       
       return;
     }      
- 
+    
     this.oldno=this.no;
     this.oldwebservice = this.webservice;
     this.oldshifttemp = this.shifttemp;
@@ -219,6 +228,7 @@ MyDesklet.prototype = {
     } catch(e) { }  
     
     this.window=new St.BoxLayout({vertical: ((this.vertical==1) ? true : false)});
+    
     this.cwicon = null;
     // container for link and refresh icon
     this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+BBCWX_BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BBCWX_BUTTON_PADDING*this.zoom+"px",x_align:2, y_align:2 });
@@ -729,6 +739,18 @@ MyDesklet.prototype = {
     let iconimg = St.TextureCache.get_default().load_uri_async(icon_uri, width, height);
     iconimg.set_size(width, height);
     return iconimg;
+  },
+  
+  setGravity: function() {
+    if (this.experimental_enabled) {
+      this.actor.move_anchor_point_from_gravity(this.gravity);
+    } else {
+      this.actor.move_anchor_point_from_gravity(0);
+    }
+  },
+  
+  doExperimental: function() {
+    this.setGravity();
   },
   
   ////////////////////////////////////////////////////////////////////////////
