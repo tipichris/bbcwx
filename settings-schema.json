@@ -253,8 +253,48 @@
     "tooltip": "Check to display the city name in bold"
   },
   
+  
+  "overrideTheme": {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Override desktop theme (enables the settings below)",
+    "tooltip": "Check this to override the desktop theme and configure the appearance manually"
+  },
+  
+  "transparency" : {
+    "type" : "scale",
+    "indent": true,
+    "dependency": "overrideTheme",
+    "default" : 0.5,
+    "min" : 0.0,
+    "max" : 1.0,
+    "step" : 0.05,
+    "description" : "Transparency",
+    "tooltip" : "Set the transparency of the desklet"
+  },
+  
+  "textcolor" : {
+    "type": "colorchooser",
+    "indent": true,
+    "dependency": "overrideTheme",
+    "default" : "rgb(255,255,255)",
+    "description" : "Text colour",
+    "tooltip" : "Click the button to select a new text color"
+  },
+  
+  "bgcolor" : {
+    "type": "colorchooser",
+    "indent": true,
+    "dependency": "overrideTheme",
+    "default" : "rgb(0,0,0)",
+    "description" : "Background colour",
+    "tooltip" : "Click the button to select a new background color"
+  },
+  
   "border" : {
     "type" : "checkbox",
+    "indent": true,
+    "dependency": "overrideTheme",
     "default" : false,
     "description": "Show border",
     "tooltip": "Check this to turn border on/off"
@@ -266,7 +306,6 @@
     "description" : "Border colour",
     "indent": true,
     "dependency" : "border",
-    "indent": true,
     "tooltip" : "Select the colour for the border. Only available if the 'Border' checkbox is enabled"
   },
   
@@ -283,29 +322,6 @@
     "tooltip" : "Select the width of the border. Only available if the 'Border' checkbox is enabled"
   },
 
-  "transparency" : {
-    "type" : "scale",
-    "default" : 0.5,
-    "min" : 0.0,
-    "max" : 1.0,
-    "step" : 0.05,
-    "description" : "Transparency",
-    "tooltip" : "Set the transparency of the desklet"
-  },
-  
-  "textcolor" : {
-    "type": "colorchooser",
-    "default" : "rgb(255,255,255)",
-    "description" : "Text colour",
-    "tooltip" : "Click the button to select a new text color"
-  },
-  
-  "bgcolor" : {
-    "type": "colorchooser",
-    "default" : "rgb(0,0,0)",
-    "description" : "Background colour",
-    "tooltip" : "Click the button to select a new background color"
-  },
   
   "sep3" : {
     "type" : "separator"

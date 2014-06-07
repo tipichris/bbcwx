@@ -107,6 +107,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"punits","punits",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"overrideTheme","overrideTheme",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"transparency","transparency",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"textcolor","textcolor",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bgcolor","bgcolor",this.updateStyle,null);
@@ -504,12 +505,23 @@ MyDesklet.prototype = {
     this.ctemp_captions.style = 'text-align : right;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     this.ctemp_values.style = 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     
-    if (this.border) {
-      let borderradius = (this.borderwidth > 12) ? this.borderwidth : 12;
-      this.window.style="border: " + this.borderwidth + "px solid "+this.bordercolor+"; border-radius: " + borderradius + "px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
-    }
-    else {
-      this.window.style="border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
+    if(this.overrideTheme) {
+      this.window.set_style_class_name('desklet');
+      if (this.border) {
+        let borderradius = (this.borderwidth > 12) ? this.borderwidth : 12;
+        this.window.style="border: " + this.borderwidth + "px solid "+this.bordercolor+"; border-radius: " + borderradius + "px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
+      }
+      else {
+        this.window.style="border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
+      }
+      this.banner.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
+      this.bannerpre.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
+      this.banner.set_style_class_name('bbcwx-link');
+    } else {
+      this.window.set_style('');
+      this.window.set_style_class_name('desklet-with-borders');
+      this.banner.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px;";
+      this.bannerpre.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px;"; 
     }
     this._separatorArea.height=5*this.zoom;
 
@@ -527,8 +539,6 @@ MyDesklet.prototype = {
     this.buttons.style="padding-top:"+BBCWX_BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BBCWX_BUTTON_PADDING*this.zoom+"px";
     
     this.iconbutton.icon_size=BBCWX_REFRESH_ICON_SIZE*this.zoom;
-    this.banner.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
-    this.bannerpre.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
     
     let forecastlabels = ['maxlabel', 'minlabel', 'windlabel', 'winddlabel'];
     for (let i = 0; i<forecastlabels.length; i++) {
