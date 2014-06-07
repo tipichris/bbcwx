@@ -291,6 +291,19 @@
     "tooltip" : "Click the button to select a new background color"
   },
   
+  "cornerradius" : {
+    "type" : "spinbutton",
+    "indent": true,
+    "dependency": "overrideTheme",
+    "default" : 12.0,
+    "min" : 0,
+    "max" : 50.0,
+    "step" : 1,
+    "units" : "px",
+    "description" : "Corner radius",
+    "tooltip" : "Radius for rounding the desklet's corners"
+  },
+  
   "border" : {
     "type" : "checkbox",
     "indent": true,

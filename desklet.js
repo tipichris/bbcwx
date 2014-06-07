@@ -111,6 +111,7 @@ MyDesklet.prototype = {
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"transparency","transparency",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"textcolor","textcolor",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bgcolor","bgcolor",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"cornerradius","cornerradius",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"zoom","zoom",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"border","border",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"bordercolor","bordercolor",this.updateStyle,null);
@@ -508,11 +509,11 @@ MyDesklet.prototype = {
     if(this.overrideTheme) {
       this.window.set_style_class_name('desklet');
       if (this.border) {
-        let borderradius = (this.borderwidth > 12) ? this.borderwidth : 12;
+        let borderradius = (this.borderwidth > this.cornerradius) ? this.borderwidth : this.cornerradius;
         this.window.style="border: " + this.borderwidth + "px solid "+this.bordercolor+"; border-radius: " + borderradius + "px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
       }
       else {
-        this.window.style="border-radius: 12px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
+        this.window.style="border-radius: " + this.cornerradius + "px; background-color: "+(this.bgcolor.replace(")",","+this.transparency+")")).replace('rgb','rgba')+"; color: "+this.textcolor;
       }
       this.banner.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor;
       this.bannerpre.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor; 
