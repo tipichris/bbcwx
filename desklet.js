@@ -152,6 +152,11 @@ MyDesklet.prototype = {
       
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"experimental_enabled","experimental_enabled",this.doExperimental,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"gravity","gravity",this.setGravity,null);
+      
+      // refresh style on change of global desklet setting for decorations
+      global.settings.connect('changed::desklet-decorations', Lang.bind(this, this.updateStyle));
+      
+      this.setHeader(_("Weather"));
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
       this._menu.addAction(_("Help"), Lang.bind(this, function() {
@@ -507,6 +512,7 @@ MyDesklet.prototype = {
     this.ctemp_values.style = 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     
     if(this.overrideTheme) {
+      this._header.hide();  
       this.window.set_style_class_name('desklet');
       if (this.border) {
         let borderradius = (this.borderwidth > this.cornerradius) ? this.borderwidth : this.cornerradius;
@@ -520,7 +526,22 @@ MyDesklet.prototype = {
       this.banner.set_style_class_name('bbcwx-link');
     } else {
       this.window.set_style('');
-      this.window.set_style_class_name('desklet-with-borders');
+      let dec = global.settings.get_int('desklet-decorations');
+      switch(dec){
+      case 0:
+          this._header.hide();    
+          this.window.set_style_class_name('desklet');        
+          break;
+      case 1:
+          this._header.hide();            
+          this.window.set_style_class_name('desklet-with-borders');
+          break;
+      case 2:
+          this._header.show();
+          this.window.set_style_class_name('desklet-with-borders-and-header');
+          break;
+      }
+      //this.window.set_style_class_name('desklet-with-borders');
       this.banner.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px;";
       this.bannerpre.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px;"; 
     }
