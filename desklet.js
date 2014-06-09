@@ -509,6 +509,7 @@ MyDesklet.prototype = {
     this.ctemp_values.style = 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     
     if(this.overrideTheme) {
+      // hide header and use a style with no border
       this._header.hide();  
       this.window.set_style_class_name('desklet');
       if (this.border) {
@@ -523,6 +524,8 @@ MyDesklet.prototype = {
       this.banner.set_style_class_name('bbcwx-link');
     } else {
       this.window.set_style('');
+      // set style_class and _header visibility according to 
+      // global desklet settings for theme
       let dec = global.settings.get_int('desklet-decorations');
       switch(dec){
       case 0:
@@ -538,7 +541,6 @@ MyDesklet.prototype = {
           this.window.set_style_class_name('desklet-with-borders-and-header');
           break;
       }
-      //this.window.set_style_class_name('desklet-with-borders');
       this.banner.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px;";
       this.bannerpre.style='font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px;"; 
     }
