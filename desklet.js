@@ -43,7 +43,6 @@ const Settings = imports.ui.settings;
 const DeskletManager = imports.ui.deskletManager;
 
 const Soup = imports.gi.Soup;
-// const JSON = imports.JSON;
 
 const UUID = "bbcwx@oak-wood.co.uk";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
@@ -156,6 +155,7 @@ MyDesklet.prototype = {
       // refresh style on change of global desklet setting for decorations
       global.settings.connect('changed::desklet-decorations', Lang.bind(this, this.updateStyle));
       
+      // set a header for those that don't override the theme
       this.setHeader(_("Weather"));
 
       this.helpFile = DESKLET_DIR + "/help.html"; 
@@ -238,12 +238,10 @@ MyDesklet.prototype = {
     
     this.cwicon = null;
     // container for link and refresh icon
-    this.buttons=new St.BoxLayout({vertical: false,style: "padding-top:"+BBCWX_BUTTON_PADDING*this.zoom+"px;padding-bottom:"+BBCWX_BUTTON_PADDING*this.zoom+"px",x_align:2, y_align:2 });
+    this.buttons=new St.BoxLayout({vertical: false,x_align:2, y_align:2 });
     // refresh icon
     this.iconbutton=new St.Icon({ icon_name: 'view-refresh-symbolic',
-      icon_size: BBCWX_REFRESH_ICON_SIZE*this.zoom+'',
-      icon_type: St.IconType.SYMBOLIC,
-      style: "padding: 0 0 0 3px;"
+      icon_type: St.IconType.SYMBOLIC
     });
     this.but=new St.Button(); // container for refresh icon
     
@@ -266,29 +264,29 @@ MyDesklet.prototype = {
     if(ccap.visibility) this.visibility=new St.Label();    
     
     // container for current weather values
-    this.ctemp_values = new St.BoxLayout({vertical: true, y_align: 2, style : 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
+    this.ctemp_values = new St.BoxLayout({vertical: true, y_align: 2});
     // container for current weather labels
-    this.ctemp_captions = new St.BoxLayout({vertical: true, y_align: 2, style : 'text-align : right'});
+    this.ctemp_captions = new St.BoxLayout({vertical: true, y_align: 2});
     // container for current weather
     this.ctemp = new St.BoxLayout({vertical: false, x_align: 2, y_align: 2});
     
     // city and city container
-    this.cityname=new St.Label({style: "text-align: center;font-size: "+BBCWX_TEXT_SIZE*this.zoom+"px" });
-    this.city=new St.BoxLayout({vertical:true,style: "align: center;"});
+    this.cityname=new St.Label();
+    this.city=new St.BoxLayout({vertical:true});
     
     // container for right (horizontal) or lower (vertical) part of window
-    this.container= new St.BoxLayout({vertical: true, x_align: 2});//definire coloana dreapta
+    this.container= new St.BoxLayout({vertical: true, x_align: 2});
     // container for left (horizontal) or upper (vertical) part of window
-    this.cweather = new St.BoxLayout({vertical: true, x_align: 2}); //definire coloana stangz
+    this.cweather = new St.BoxLayout({vertical: true, x_align: 2});
     // current weather icon container
-    if (ccap.weather) this.cwicon = new St.Button({height: (BBCWX_CC_ICON_HEIGHT*this.zoom), width: (BBCWX_CC_ICON_HEIGHT*this.iconprops.aspect*this.zoom)}); //icoana mare cu starea vremii
+    if (ccap.weather) this.cwicon = new St.Button(); 
     // current weather text
-    if (ccap.weather) this.weathertext=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'}); //-textul cu starea vremii de sub ditamai icoana :)
+    if (ccap.weather) this.weathertext=new St.Label();
     
     // current temp on wide layouts
     if (this.shifttemp) {
-      this.ctemp_bigtemp = new St.BoxLayout({vertical: false, x_align: 3, y_align: 2, style : 'text-align : left; padding-right: ' + this.currenttempadding *this.zoom + 'px'});
-      this.currenttemp=new St.Label({style: 'text-align : center; font-size:'+BBCWX_CC_TEXT_SIZE*this.zoom+'px'});
+      this.ctemp_bigtemp = new St.BoxLayout({vertical: false, x_align: 3, y_align: 2});
+      this.currenttemp=new St.Label();
       this.ctemp_bigtemp.add_actor(this.currenttemp);
       this.ctemp.add_actor(this.ctemp_bigtemp);
     }
@@ -307,17 +305,17 @@ MyDesklet.prototype = {
     if(this.feelslike) this.ctemp_values.add_actor(this.feelslike);
     if(this.visibility) this.ctemp_values.add_actor(this.visibility);
     
-    this.ctemp.add_actor(this.ctemp_captions); //-adauga coloana din stanga la informatii
-    this.ctemp.add_actor(this.ctemp_values);  //adauga coloana din dreapta la informatii     
+    this.ctemp.add_actor(this.ctemp_captions);
+    this.ctemp.add_actor(this.ctemp_values);
     
     // build table to hold three day forecast
-    this.fwtable =new St.Table({style: "spacing-rows: "+BBCWX_TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+BBCWX_TABLE_COL_SPACING*this.zoom+"px;padding: "+BBCWX_TABLE_PADDING*this.zoom+"px;"});
-    this.maxlabel = new St.Label({text: _('Max:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.minlabel = new St.Label({text: _('Min:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.windlabel = new St.Label({text: _('Wind:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.winddlabel = new St.Label({text: _('Dir:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.fpressurelabel = new St.Label({text: _('Pressure:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
-    this.fhumiditylabel = new St.Label({text: _('Humidity:'), style: 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px"});
+    this.fwtable =new St.Table();
+    this.maxlabel = new St.Label({text: _('Max:')});
+    this.minlabel = new St.Label({text: _('Min:')});
+    this.windlabel = new St.Label({text: _('Wind:')});
+    this.winddlabel = new St.Label({text: _('Dir:')});
+    this.fpressurelabel = new St.Label({text: _('Pressure:')});
+    this.fhumiditylabel = new St.Label({text: _('Humidity:')});
     
     let fcap = this.show.forecast;
     let row = 2;
@@ -329,14 +327,14 @@ MyDesklet.prototype = {
     if(fcap.pressure) {this.fwtable.add(this.fpressurelabel,{row:row,col:0}); row++}
     if(fcap.humidity) {this.fwtable.add(this.fhumiditylabel,{row:row,col:0}); row++}
     for(let f=0;f<this.no;f++) {
-      this.labels[f]=new St.Button({label: '', style: 'color: ' + this.textcolor + ';text-align: center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px" });
-      this.fwicons[f]=new St.Button({height:BBCWX_ICON_HEIGHT*this.zoom, width: BBCWX_ICON_HEIGHT*this.iconprops.aspect*this.zoom});
-      if(fcap.maximum_temperature) this.max[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
-      if(fcap.minimum_temperature) this.min[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
-      if(fcap.wind_speed) this.winds[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
-      if(fcap.wind_direction) this.windd[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
-      if(fcap.pressure) this.fpressure[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
-      if(fcap.humidity) this.fhumidity[f]=new St.Label({style: 'text-align : center;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px"});
+      this.labels[f]=new St.Button({label: ''});
+      this.fwicons[f]=new St.Button();
+      if(fcap.maximum_temperature) this.max[f]=new St.Label();
+      if(fcap.minimum_temperature) this.min[f]=new St.Label();
+      if(fcap.wind_speed) this.winds[f]=new St.Label();
+      if(fcap.wind_direction) this.windd[f]=new St.Label();
+      if(fcap.pressure) this.fpressure[f]=new St.Label();
+      if(fcap.humidity) this.fhumidity[f]=new St.Label();
       this.wxtooltip[f] = new Tooltips.Tooltip(this.fwicons[f]);
       
       this.fwtable.add(this.labels[f],{row:0,col:f+1});
@@ -353,9 +351,8 @@ MyDesklet.prototype = {
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.updateForecast));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
-    this.bannerpre=new St.Button({label: _('Data from '), style: 'font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";"});
+    this.bannerpre=new St.Button({label: _('Data from ')});
     this.banner=new St.Button({ 
-      style: 'font-size: '+BBCWX_LINK_TEXT_SIZE*this.zoom+"px; color: " + this.textcolor + ";",
       reactive: true,
       track_hover: true,
       style_class: 'bbcwx-link'});
