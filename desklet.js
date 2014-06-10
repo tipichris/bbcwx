@@ -688,7 +688,7 @@ MyDesklet.prototype = {
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true);
     if (this.visibility) this.visibility.text=this._formatVisibility(cc.visibility, true);
     if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK && this.weathertext) {
-      this.weathertext.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
+      this.weathertext.text = (this.service.data.status.lasterror) ? _("Error: %s").format(this.service.data.status.lasterror) : _('No data') ;
     }
   },
   
@@ -725,7 +725,7 @@ MyDesklet.prototype = {
       }));
     }
     if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
-      this.cityname.text = (this.service.data.status.lasterror) ? _('Error: ') + this.service.data.status.lasterror : _('No data') ;
+      this.cityname.text = (this.service.data.status.lasterror) ? _('Error: %s').format(this.service.data.status.lasterror) : _('No data') ;
     }
   },
   
@@ -858,6 +858,8 @@ MyDesklet.prototype = {
     };
     let mb = 1*pressure;
     let out = mb * conversion[this.punits];
+    
+    //### TODO prepare this for gettext 
     out = out.toFixed(precission[this.punits]);
     if (units) {
       out += unitstring[this.punits];;
@@ -1341,6 +1343,7 @@ wxDriverBBC.prototype = {
     let parts = pressure.split(', ');
     let number = parts[0].trim().replace('mb', '');
     let trajectory = parts[1].trim();
+    //### TODO prepare for gettext
     out = number;
     if (units) {
       out += _('mb');
