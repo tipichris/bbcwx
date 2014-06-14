@@ -561,7 +561,7 @@ MyDesklet.prototype = {
     
     this.iconbutton.icon_size=BBCWX_REFRESH_ICON_SIZE*this.zoom;
     
-    let forecastlabels = ['maxlabel', 'minlabel', 'windlabel', 'winddlabel'];
+    let forecastlabels = ['maxlabel', 'minlabel', 'windlabel', 'winddlabel', 'fpressurelabel', 'fhumiditylabel'];
     for (let i = 0; i<forecastlabels.length; i++) {
       if (this[forecastlabels[i]]) this[forecastlabels[i]].style = 'text-align : right;font-size: '+BBCWX_LABEL_TEXT_SIZE*this.zoom+"px";
     }
