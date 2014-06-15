@@ -1642,7 +1642,7 @@ marknote.Tokenizer.prototype.getMarkup = function () {
 marknote.Tokenizer.prototype.setMarkup = function (markup) {
     this.markup = markup ? markup : "";
 };
-marknote.Tokenizer.prototype.determineTokenType = function (c, isInTag) {
+marknote.Tokenizer.prototype.determineTokenType = function (c, isInTag, isInEndTag) {
     var ch = this.markup.charAt(c);
     var beforeCh = c > 0 ? this.markup.charAt(c - 1) : null;
     if (marknote.Util.hasWhitespace(ch)) {
@@ -1678,13 +1678,13 @@ marknote.Tokenizer.prototype.determineTokenType = function (c, isInTag) {
     if (ch == marknote.constants.TAG_OPEN) {
         return marknote.constants.TOKENTYPE_TAG_OPEN;
     }
-    if (ch == marknote.constants.TAG_CLOSE) {
+    if (ch == marknote.constants.TAG_CLOSE && (isInTag || isInEndTag)) {
         return marknote.constants.TOKENTYPE_TAG_CLOSE;
     }
     if (ch == marknote.constants.SQUOTE && isInTag) {
         return marknote.constants.TOKENTYPE_QUOTE;
     }
-    if (ch == marknote.constants.DQUOTE) {
+    if (ch == marknote.constants.DQUOTE && isInTag) {
         if (beforeCh !== null || beforeCh != "\\") {
             return marknote.constants.TOKENTYPE_QUOTE;
         }
@@ -1749,10 +1749,10 @@ marknote.Tokenizer.prototype.tokenize = function () {
     var tokens = new Array();
     this.tokens = tokens;
     var token = new marknote.Token();
-    var isInTag = false, isInDocType = false, isTagText = false;
+    var isInTag = false, isInDocType = false, isTagText = false, isInEndTag = false;
     var endMarker, start, ch, chars;
     for (var c = 0; c < this.markup.length; c++) {
-        var tokenType = this.determineTokenType(c, isInTag);
+        var tokenType = this.determineTokenType(c, isInTag, isInEndTag);
         switch (tokenType) {
           case marknote.constants.TOKENTYPE_DOCTYPE_START:
             isInDocType = true;
@@ -1857,6 +1857,7 @@ marknote.Tokenizer.prototype.tokenize = function () {
           case marknote.constants.TOKENTYPE_SELF_TERMINATING:
           case marknote.constants.TOKENTYPE_ENDTAG_OPEN:
             isInTag = false;
+            isInEndTag = true;
             if (token.hasValue()) {
                 tokens.push(token);
             }
@@ -1869,6 +1870,7 @@ marknote.Tokenizer.prototype.tokenize = function () {
             break;
           case marknote.constants.TOKENTYPE_TAG_CLOSE:
             isInTag = false;
+            isInEndTag = false;
             isInDocType = false;
             if (token.hasValue()) {
                 tokens.push(token);
