@@ -1687,6 +1687,27 @@ wxDriverOWM.prototype = {
   
   _baseURL: 'http://api.openweathermap.org/data/2.5/',
   
+  lang_map: {
+    'bg' : 'bg',
+    'zh' : 'zh',
+    'zh_cn' : 'zh_cn',
+    'zh_tw' : 'zh_tw',
+    'nl' : 'nl',
+    'en' : 'en',
+    'fi' : 'fi',
+    'fr' : 'fr',
+    'de' : 'de',
+    'it' : 'it',
+    'pl' : 'pl',
+    'pt' : 'pt',
+    'ro' : 'ro',
+    'ru' : 'ru',
+    'es' : 'es',
+    'sv' : 'sv',
+    'tr' : 'tr',
+    'uk' : 'uk'
+  },
+  
   // initialise the driver
   _owminit: function(stationID, apikey) {
     this._init(stationID, apikey);
@@ -1717,12 +1738,16 @@ wxDriverOWM.prototype = {
       return
     }
     
+    this.langcode = this.getLangCode();
+    
     // process the 7 day forecast
     let apiforecasturl = (typeof latlon != 'undefined')
       ? this._baseURL + 'forecast/daily?units=metric&cnt=7&lat=' + latlon[0] +  '&lon=' + latlon[1]
       : this._baseURL + 'forecast/daily?units=metric&cnt=7&id=' + encodeURIComponent(this.stationID)
 
     if (this.apikey) apiforecasturl = apiforecasturl + '&APPID=' + this.apikey;
+    if (this.langcode) apiforecasturl += '&lang=' + this.langcode;
+    
     let a = this._getWeather(apiforecasturl, function(weather) {
       if (weather) {
         this._load_forecast(weather);
@@ -1737,6 +1762,7 @@ wxDriverOWM.prototype = {
     ? this._baseURL + 'weather?units=metric&lat=' + latlon[0] +  '&lon=' + latlon[1]
     : this._baseURL + 'weather?units=metric&id=' + encodeURIComponent(this.stationID);
     if (this.apikey) apiccurl = apiccurl + '&APPID=' + this.apikey;
+    if (this.langcode) apiccurl += '&lang=' + this.langcode;
     let b = this._getWeather(apiccurl, function(weather) {
       if (weather) {
         this._load_observations(weather); 
