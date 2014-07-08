@@ -1116,8 +1116,8 @@ wxDriver.prototype = {
   },
   
   getLangCode: function() {
-    //let lang_list = GLib.get_language_names();
-    let lang_list = ['fr_BE','fr','de','C'];
+    let lang_list = GLib.get_language_names();
+    //let lang_list = ['ar','zh_TW', 'zh', 'es','C'];
     let lang = '';
     for (let i=0; i<lang_list.length; i++) {
       if (lang_list[i] != 'C') {
@@ -2243,6 +2243,48 @@ wxDriverWWO.prototype = {
   
   _baseURL: 'http://api.worldweatheronline.com/free/v1/',
   
+  lang_map: {
+    'ar' : 'ar',
+    'bn' : 'bn',
+    'bg' : 'bg',
+    'zh' : 'zh',
+    'zh_cn' : 'zh',
+    'zh_tw' : 'zh_tw',
+    'zh_cmn' : 'zh_cmn',
+    'zh_wuu' : 'zh_wuu',
+    'zh_hsn' : 'zh_hsn',
+    'zh_yue' : 'zh_yue',
+    'cs' : 'cs',
+    'nl' : 'nl',
+    'fi' : 'fi',
+    'fr' : 'fr',
+    'de' : 'de',
+    'el' : 'el',
+    'hi' : 'hi',
+    'hu' : 'hu',
+    'it' : 'it',
+    'ja' : 'ja',
+    'jv' : 'jv',
+    'ko' : 'ko',
+    'mr' : 'mr',
+    'pl' : 'pl',
+    'pt' : 'pt',
+    'ro' : 'ro',
+    'ru' : 'ru',
+    'sr' : 'sr',
+    'si' : 'si',
+    'sk' : 'sk',
+    'es' : 'es',
+    'sv' : 'sv',
+    'ta' : 'ta',
+    'te' : 'te',
+    'tr' : 'tr',
+    'uk' : 'uk',
+    'ur' : 'ur',
+    'vi' : 'vi',
+    'zu' : 'zu'    
+  },
+  
   // initialise the driver
   _wwoinit: function(stationID, apikey) {
     this._init(stationID, apikey);
@@ -2261,8 +2303,14 @@ wxDriverWWO.prototype = {
     this.linkTooltip = 'Visit the World Weather Online website';
     this.linkURL = 'http://www.worldweatheronline.com';
     
+    this.langcode = this.getLangCode();
+    this.i18Desc = 'lang_' + this.langcode;
+    
+    let apiurl = this._baseURL + 'weather.ashx?q=' + encodeURIComponent(this.stationID) + '&format=json&extra=localObsTime%2CisDayTime&num_of_days=5&includelocation=yes&key=' + encodeURIComponent(this.apikey);
+    if (this.langcode) apiurl += '&lang=' + this.langcode;
+    
     // process the forecast
-    let a = this._getWeather(this._baseURL + 'weather.ashx?q=' + encodeURIComponent(this.stationID) + '&format=json&extra=localObsTime%2CisDayTime&num_of_days=5&includelocation=yes&key=' + encodeURIComponent(this.apikey), function(weather) {
+    let a = this._getWeather(apiurl, function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
@@ -2306,7 +2354,11 @@ wxDriverWWO.prototype = {
         //day.humidity = days[i].avehumidity;
         day.wind_speed = days[i].windspeedKmph;
         day.wind_direction = days[i].winddir16Point;
-        day.weathertext = days[i].weatherDesc[0].value;
+        if (typeof days[i][this.i18Desc] !== "undefined" && days[i][this.i18Desc][0].value) {
+          day.weathertext = days[i][this.i18Desc][0].value;
+        } else {
+          day.weathertext = days[i].weatherDesc[0].value;
+        }
         day.icon = this._mapicon(days[i].weatherCode, days[i].weatherIconUrl[0].value);
 
         this.data.days[i] = day;
@@ -2320,7 +2372,11 @@ wxDriverWWO.prototype = {
       this.data.cc.wind_direction = cc.winddir16Point;
       let dt = cc.localObsDateTime.split(/\-|\s/);
       this.data.cc.obstime = new Date(dt.slice(0,3).join('/')+' '+dt[3]).toLocaleFormat("%H:%M %Z");
-      this.data.cc.weathertext = cc.weatherDesc[0].value;
+      if (typeof cc[this.i18Desc] !== "undefined" && cc[this.i18Desc][0].value) {
+        this.data.cc.weathertext = cc[this.i18Desc][0].value;
+      } else {
+        this.data.cc.weathertext = cc.weatherDesc[0].value;
+      }
       this.data.cc.icon = this._mapicon(cc.weatherCode, cc.weatherIconUrl[0].value);
       // vis is in km
       this.data.cc.visibility = cc.visibility;
@@ -2443,6 +2499,15 @@ wxDriverForecastIo.prototype = {
   
   _baseURL: 'https://api.forecast.io/forecast/',
   
+  lang_map: {
+    'nl' : 'nl',
+    'en' : 'en',
+    'fr' : 'fr',
+    'de' : 'de',
+    'es' : 'es',
+    'tet' : 'tet'
+  },
+  
   // initialise the driver
   _fioinit: function(stationID, apikey) {
     this._init(stationID, apikey);
@@ -2461,8 +2526,13 @@ wxDriverForecastIo.prototype = {
     
     // check the stationID looks valid before going further
     if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
+      
+      let apiurl = this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=ca&exclude=minutely,hourly,alerts,flags';
+      this.langcode = this.getLangCode();
+      if (this.langcode) apiurl += '&lang=' + this.langcode;
+      
       // process the forecast
-      let a = this._getWeather(this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=ca&exclude=minutely,hourly,alerts,flags', function(weather) {
+      let a = this._getWeather(apiurl, function(weather) {
         if (weather) {
           this._load_forecast(weather);
         }
