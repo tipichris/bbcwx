@@ -93,8 +93,7 @@ MyDesklet.prototype = {
     this.oldwebservice='';
     this.oldshifttemp='';
     this.redrawNeeded=false;
-    
-    
+
         
     //################################
     
@@ -157,7 +156,7 @@ MyDesklet.prototype = {
       
       // set a header for those that don't override the theme
       this.setHeader(_("Weather"));
-
+      
       this.helpFile = DESKLET_DIR + "/help.html"; 
       this._menu.addAction(_("Help"), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
@@ -628,6 +627,8 @@ MyDesklet.prototype = {
     let now=new Date().toLocaleFormat('%H:%M:%S');
     global.log("bbcwx (instance " + this.desklet_id + "): refreshing forecast at " + now);
     
+
+    
     // pass this to refreshData as it needs to call display* functions once the data
     // is updated
     this.service.refreshData(this);  
@@ -950,6 +951,8 @@ wxDriver.prototype = {
   // terms of service when setting specific values
   minTTL: 600,
   
+  lang_map: {},
+  
   ////////////////////////////////////////////////////////////////////////////
   // initialise
   _init: function(stationID, apikey) {
@@ -1083,6 +1086,8 @@ wxDriver.prototype = {
   // -> url: url to call
   // -> callback: callback function to which the retrieved data is passed
   _getWeather: function(url, callback) {
+    //debugging
+    global.log('bbcwx: calling ' + url);
     var here = this;
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
@@ -1108,8 +1113,24 @@ wxDriver.prototype = {
   compassDirection: function(deg) {
     let directions = ['N', 'NNE','NE', 'ENE','E', 'ESE','SE','SSE', 'S','SSW', 'SW', 'WSW','W','WNW', 'NW','NNW'];
     return directions[Math.round(deg / 22.5) % directions.length];
+  },
+  
+  getLangCode: function() {
+    //let lang_list = GLib.get_language_names();
+    let lang_list = ['fr_BE','fr','de','C'];
+    let lang = '';
+    for (let i=0; i<lang_list.length; i++) {
+      if (lang_list[i] != 'C') {
+        if (lang_list[i] && (typeof this.lang_map[lang_list[i].toLowerCase()] !== "undefined")) {
+          lang = this.lang_map[lang_list[i].toLowerCase()];
+          i = lang_list.length;
+        }
+      }    
+    }
+    // debugging
+    global.log("bbcwx: lang_list: " + lang_list.join() + "; lang: " + lang);
+    return lang;
   }
-
 
 };
 
@@ -1918,6 +1939,90 @@ wxDriverWU.prototype = {
   
   _baseURL: 'http://api.wunderground.com/api/',
   
+  lang_map: {
+      'af' : 'AF',
+      'sq' : 'AL',
+      'ar' : 'AR',
+      'hy' : 'HY',
+      'az' : 'AZ',
+      'eu' : 'EU',
+      'be' : 'BY',
+      'bg' : 'BU',
+      'my' : 'MY',
+      'ca' : 'CA',
+      'zh' : 'CN',
+      'zh_cn' : 'CN',
+      'zh_tw' : 'TW',
+      'hr' : 'CR',
+      'cs' : 'CZ',
+      'da' : 'DK',
+      'dv' : 'DV',
+      'nl' : 'NL',
+      'en' : 'EN',
+      'en_gb' : 'LI',
+      'eo' : 'EO',
+      'et' : 'ET',
+      'fi' : 'FI',
+      'fr' : 'FR',
+      'fr_ca' : 'FC',
+      'gl' : 'GZ',
+      'de' : 'DL',
+      'de_ch' : 'CH',
+      'el' : 'GR',
+      'gu' : 'GU',
+      'ht' : 'HT',
+      'he' : 'IL',
+      'hi' : 'HI',
+      'hu' : 'HU',
+      'id' : 'ID',
+      'ga' : 'IR',
+      'io' : 'IO',
+      'is' : 'IS',
+      'it' : 'IT',
+      'ja' : 'JP',
+      'jv' : 'JV',
+      'km' : 'KM',
+      'ko' : 'KR',
+      'ku' : 'KU',
+      'la' : 'LA',
+      'lt' : 'LT',
+      'lv' : 'LV',
+      'mk' : 'MK',
+      'mt' : 'MT',
+      'mi' : 'MI',
+      'mr' : 'MR',
+      'mn' : 'MN',
+      'no' : 'NO',
+      'oc' : 'OC',
+      'pa' : 'PA',
+      'fa' : 'FA',
+      'pl' : 'PL',
+      'ps' : 'PS',
+      'pt' : 'BR',
+      'ro' : 'RO',
+      'ru' : 'RU',
+      'sr' : 'SR',
+      'sk' : 'SK',
+      'sl' : 'SL',
+      'es' : 'SP',
+      'sw' : 'SI',
+      'sv' : 'SW',
+      'th' : 'TH',
+      'tk' : 'TK',
+      'tl' : 'TL',
+      'tr' : 'TR',
+      'tt' : 'TT',
+      'uk' : 'UA',
+      'uz' : 'UZ',
+      'vi' : 'VU',
+      'cy' : 'CY',
+      'wo' : 'SN',
+      'yi' : 'YI',
+      'ji' : 'JI',
+      'mnk' : 'GM',
+      'pdt' : 'GN',
+      'nds' : 'ND'
+   },
   // initialise the driver
   _wuinit: function(stationID, apikey) {
     this._init(stationID, apikey);
@@ -1934,8 +2039,14 @@ wxDriverWU.prototype = {
     this.linkTooltip = 'Visit the Weather Underground website';
     this.linkURL = 'http://wunderground.com' + this._referralRef;
     
+    this.langcode = this.getLangCode();
+    let apiurl = this._baseURL + encodeURIComponent(this.apikey) + '/forecast10day/conditions/astronomy/';
+    if (this.langcode) {
+      apiurl +=  'lang:' + this.langcode + '/';
+    }   
+    apiurl += 'q/' + encodeURIComponent(this.stationID) + '.json'
     // process the forecast - single call for both current conditions and 10 day forecast
-    let a = this._getWeather(this._baseURL + encodeURIComponent(this.apikey) + '/forecast10day/conditions/astronomy/q/' + encodeURIComponent(this.stationID) + '.json', function(weather) {
+    let a = this._getWeather(apiurl, function(weather) {
       if (weather) {
         this._load_forecast(weather);
       }
