@@ -1360,20 +1360,6 @@ wxDriverBBC.prototype = {
     return out;
   },
 
-  _getPressure: function(pressure) {
-    if (!pressure) return '';
-    let parts = pressure.split(', ');
-    let number = parts[0].trim().replace('mb', '');
-    let trajectory = parts[1].trim();
-    //### TODO prepare for gettext
-    out = number;
-    if (units) {
-      out += _('mb');
-    }
-    out += ', ' + _(trajectory);
-    return out;
-  },
-
 };  
 
 ////////////////////////////////////////////////////////////////////////////
