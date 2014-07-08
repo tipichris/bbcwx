@@ -796,7 +796,7 @@ MyDesklet.prototype = {
     let fahr = ((celsius + 40) * 1.8) - 40;
     let out = Math.round(((this.units==1) ? celsius : fahr));
     if (units) {
-      out += ((this.units==1) ? _("\u2103") : _("\u2109"))
+      out = ((this.units==1) ? _("%s\u2103").format(out) : _("%s\u2109").format(out))
     }
     return out;
   },
@@ -815,16 +815,17 @@ MyDesklet.prototype = {
       'mps': 0.278
     };
     let unitstring = {
-      'mph': _('mph'),
-      'knots': _('kn'),
-      'kph': _('km/h'),
-      'mps': _('m/s')
+      'mph': 'mph',
+      'knots': 'kn',
+      'kph': 'km/h',
+      'mps': 'm/s'
     }
     let kph = 1*wind;
     let out = kph * conversion[this.wunits];
     out = out.toFixed(0);
     if (units) {
-      out += unitstring[this.wunits];
+      //out += unitstring[this.wunits];
+      out = _("%s" + unitstring[this.wunits]).format(out)
     }
     return out;
   },
@@ -846,10 +847,10 @@ MyDesklet.prototype = {
       'kpa': 0.1
     };
     let unitstring = {
-      'mb': _('mb'),
-      'in': _('in'),
-      'mm': _('mm'),
-      'kpa': _('kPa')
+      'mb': 'mb',
+      'in': 'in',
+      'mm': 'mm',
+      'kpa': 'kPa'
     };
     let precission = {
       'mb': 0,
@@ -863,10 +864,10 @@ MyDesklet.prototype = {
     //### TODO prepare this for gettext 
     out = out.toFixed(precission[this.punits]);
     if (units) {
-      out += unitstring[this.punits];;
+      out = _("%s" + unitstring[this.punits]).format(out);
     }
     if (direction) {
-      out += ', ' + _(direction);
+      out += ', ' + direction;
     }
     return out;
   },
@@ -895,17 +896,17 @@ MyDesklet.prototype = {
       'mps': 1
     };
     let unitstring = {
-      'mph': _('mi'),
-      'knots': _('nmi'),
-      'kph': _('km'),
-      'mps': _('km')
+      'mph': 'mi',
+      'knots': 'nmi',
+      'kph': 'km',
+      'mps': 'km'
     }
     let km = 1*vis;
     let out = km * conversion[this.wunits];
     let decpl = (out < 4) ? 1 : 0;
     out = out.toFixed(decpl);
     if (units) {
-      out += unitstring[this.wunits];
+      out = _("%s" + unitstring[this.wunits]).format(out);
     }
     return out;
   },
@@ -1087,7 +1088,7 @@ wxDriver.prototype = {
   // -> callback: callback function to which the retrieved data is passed
   _getWeather: function(url, callback) {
     //debugging
-    global.log('bbcwx: calling ' + url);
+    //global.log('bbcwx: calling ' + url);
     var here = this;
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
@@ -1111,7 +1112,7 @@ wxDriver.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Utility function to translate direction in degrees into 16 compass points
   compassDirection: function(deg) {
-    let directions = ['N', 'NNE','NE', 'ENE','E', 'ESE','SE','SSE', 'S','SSW', 'SW', 'WSW','W','WNW', 'NW','NNW'];
+    let directions = [_('N'), _('NNE'),_('NE'), _('ENE'),_('E'), _('ESE'),_('SE'),_('SSE'), _('S'),_('SSW'), _('SW'), _('WSW'),_('W'),_('WNW'), _('NW'),_('NNW')];
     return directions[Math.round(deg / 22.5) % directions.length];
   },
   
@@ -1128,7 +1129,7 @@ wxDriver.prototype = {
       }    
     }
     // debugging
-    global.log("bbcwx: lang_list: " + lang_list.join() + "; lang: " + lang);
+    // global.log("bbcwx: lang_list: " + lang_list.join() + "; lang: " + lang);
     return lang;
   }
 
@@ -1554,7 +1555,7 @@ wxDriverYahoo.prototype = {
       let atmosphere = channel.getChildElement('yweather:atmosphere');
 
 
-      let pressurecodes = ['Steady', 'Rising', 'Falling'];
+      let pressurecodes = [_('Steady'), _('Rising'), _('Falling')];
 
       this.data.city = geo.getAttributeValue('city');
       this.data.region = geo.getAttributeValue('region');
