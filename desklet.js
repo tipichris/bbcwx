@@ -74,6 +74,13 @@ const BBCWX_SERVICE_STATUS_OK = 2;
 const BBCWX_DEFAULT_ICONSET = 'colourful';
 const BBCWX_DEFAULT_ICON_EXT = 'png';
 
+const Gettext = imports.gettext
+Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale")
+
+function _(str) {
+  return Gettext.dgettext(UUID, str)
+}
+
 function MyDesklet(metadata,desklet_id){
   this._init(metadata,desklet_id);
 }
