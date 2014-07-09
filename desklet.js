@@ -85,6 +85,7 @@ MyDesklet.prototype = {
   _init: function(metadata,desklet_id){
     //############Variables###########
     this.desklet_id = desklet_id;
+    //## Days of the week
     this.daynames={Mon: _('Mon'),Tue: _('Tue'), Wed: _('Wed'), Thu: _('Thu'), Fri: _('Fri'), Sat: _('Sat'), Sun: _('Sun')};
     this.fwicons=[];this.labels=[];this.max=[];this.min=[];this.windd=[];this.winds=[];this.tempn=[];this.eachday=[];this.wxtooltip=[];
     this.cc=[];this.days=[];
@@ -102,7 +103,7 @@ MyDesklet.prototype = {
       //#########################binding configuration file################
       this.settings = new Settings.DeskletSettings(this, UUID, this.desklet_id);  
       // these changes require only a change to the styling of the desklet:
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"units","units",this.updateStyle,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"tunits","tunits",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"punits","punits",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"overrideTheme","overrideTheme",this.updateStyle,null);
@@ -155,10 +156,12 @@ MyDesklet.prototype = {
       global.settings.connect('changed::desklet-decorations', Lang.bind(this, this.updateStyle));
       
       // set a header for those that don't override the theme
-      this.setHeader(_("Weather"));
+      //## The desklet title
+      this.setHeader(_('Weather'));
       
       this.helpFile = DESKLET_DIR + "/help.html"; 
-      this._menu.addAction(_("Help"), Lang.bind(this, function() {
+      //## Link to Help file in context menu
+      this._menu.addAction(_('Help'), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
       
@@ -291,7 +294,8 @@ MyDesklet.prototype = {
     }
     
     this.city.add_actor(this.cityname); 
-
+    
+    //## Next five strings are labels for current conditions
     if(ccap.humidity) this.ctemp_captions.add_actor(new St.Label({text: _('Humidity: ')}));
     if(ccap.pressure) this.ctemp_captions.add_actor(new St.Label({text: _('Pressure: ')}));
     if(ccap.wind_speed) this.ctemp_captions.add_actor(new St.Label({text: _('Wind: ')}));
@@ -309,10 +313,16 @@ MyDesklet.prototype = {
     
     // build table to hold three day forecast
     this.fwtable =new St.Table();
+    
+    //## Maximum temperature
     this.maxlabel = new St.Label({text: _('Max:')});
+    //## Minimum temperature
     this.minlabel = new St.Label({text: _('Min:')});
+    //## Wind speed
     this.windlabel = new St.Label({text: _('Wind:')});
+    //## Wind direction
     this.winddlabel = new St.Label({text: _('Dir:')});
+    //## Atmospheric pressure
     this.fpressurelabel = new St.Label({text: _('Pressure:')});
     this.fhumiditylabel = new St.Label({text: _('Humidity:')});
     
@@ -350,6 +360,7 @@ MyDesklet.prototype = {
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.updateForecast));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
+    //## Credit the data supplier. A link to the data supplier appears to the left of this string
     this.bannerpre=new St.Button({label: _('Data from ')});
     this.banner=new St.Button({ 
       reactive: true,
@@ -357,6 +368,7 @@ MyDesklet.prototype = {
       style_class: 'bbcwx-link'});
     this.bannertooltip = new Tooltips.Tooltip(this.banner);
     if (this.cwicon) this.cwicontooltip = new Tooltips.Tooltip(this.cwicon);
+    //## Tooltip for refresh button
     this.refreshtooltip = new Tooltips.Tooltip(this.but, _('Refresh'));
     this.buttons.add_actor(this.bannerpre);
     this.buttons.add_actor(this.banner);
@@ -656,12 +668,13 @@ MyDesklet.prototype = {
       this.labels[f].label=((this.daynames[day.day]) ? this.daynames[day.day] : '');
       let fwiconimage = this._getIconImage(day.icon, BBCWX_ICON_HEIGHT*this.zoom);
       //fwiconimage.set_size(BBCWX_ICON_HEIGHT*this.iconprops.aspect*this.zoom, BBCWX_ICON_HEIGHT*this.zoom);
-      this.fwicons[f].set_child(fwiconimage);      
+      this.fwicons[f].set_child(fwiconimage);   
+      //## Message if we fail to get weather data
       this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
       if(this.max[f]) this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
       if(this.min[f]) this.min[f].text=this._formatTemperature(day.minimum_temperature, true);
       if(this.winds[f]) this.winds[f].text=this._formatWindspeed(day.wind_speed, true);
-      if(this.windd[f]) this.windd[f].text= ((day.wind_direction) ? _(day.wind_direction) : '');   
+      if(this.windd[f]) this.windd[f].text= ((day.wind_direction) ? day.wind_direction : '');   
       if(this.fpressure[f]) this.fpressure[f].text=this._formatPressure(day.pressure, '', true);
       if(this.fhumidity[f]) this.fhumidity[f].text=this._formatHumidity(day.humidity, true);
     }
@@ -677,19 +690,19 @@ MyDesklet.prototype = {
       this.cwicon.set_child(cwimage);
     }
     if (this.shifttemp) {
-      if (this.weathertext) this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '');
+      if (this.weathertext) this.weathertext.text = ((cc.weathertext) ? cc.weathertext : '');
       this.currenttemp.text = this._formatTemperature(cc.temperature, true) ;  
     } else {
-      if (this.weathertext) this.weathertext.text = ((cc.weathertext) ? _(cc.weathertext) : '') + ((cc.temperature && cc.weathertext) ? ', ' : '' )+ this._formatTemperature(cc.temperature, true) ;
+      if (this.weathertext) this.weathertext.text = ((cc.weathertext) ? cc.weathertext : '') + ((cc.temperature && cc.weathertext) ? ', ' : '' )+ this._formatTemperature(cc.temperature, true) ;
     }
     
     if (this.humidity) this.humidity.text= this._formatHumidity(cc.humidity);
     if (this.pressure) this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
-    if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? _(cc.wind_direction) + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
+    if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? cc.wind_direction + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true);
     if (this.visibility) this.visibility.text=this._formatVisibility(cc.visibility, true);
     if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK && this.weathertext) {
-      this.weathertext.text = (this.service.data.status.lasterror) ? _("Error: %s").format(this.service.data.status.lasterror) : _('No data') ;
+      this.weathertext.text = (this.service.data.status.lasterror) ? _('Error: %s').format(this.service.data.status.lasterror) : _('No data') ;
     }
   },
   
@@ -794,9 +807,10 @@ MyDesklet.prototype = {
     if (!temp.toString().length) return ''; 
     let celsius = 1*temp;
     let fahr = ((celsius + 40) * 1.8) - 40;
-    let out = Math.round(((this.units==1) ? celsius : fahr));
+    let out = Math.round(((this.tunits=='F') ? fahr : celsius));
     if (units) {
-      out = ((this.units==1) ? _("%s\u2103").format(out) : _("%s\u2109").format(out))
+      //## Units for temperature, degrees Fahrenheit or celsius. %s is replaced by the value
+      out = ((this.tunits=='F') ? _('%s\u2109').format(out) : _('%s\u2103').format(out))
     }
     return out;
   },
@@ -814,18 +828,26 @@ MyDesklet.prototype = {
       'kph': 1,
       'mps': 0.278
     };
+    //## wind speed, miles per hour
+    let mphfmt = _('%smph');
+    //## wind speed, knots
+    let knotfmt = _('%skn');
+    //## wind speed, kilometers per hour
+    let kphfmt = _('%skm/h');
+    //## wind speed, meters per second
+    let mpsfmt = _('%sm/s');
     let unitstring = {
-      'mph': 'mph',
-      'knots': 'kn',
-      'kph': 'km/h',
-      'mps': 'm/s'
+      'mph': mphfmt,
+      'knots': knotfmt,
+      'kph': kphfmt,
+      'mps': mpsfmt
     }
     let kph = 1*wind;
     let out = kph * conversion[this.wunits];
     out = out.toFixed(0);
     if (units) {
       //out += unitstring[this.wunits];
-      out = _("%s" + unitstring[this.wunits]).format(out)
+      out = unitstring[this.wunits].format(out)
     }
     return out;
   },
@@ -846,11 +868,19 @@ MyDesklet.prototype = {
       'mm': 0.75,
       'kpa': 0.1
     };
+    //## pressure, millbars
+    let mbfmt = _('%smb');
+    //## pressure, inches of mercury
+    let infmt = _('%sin');
+    //## pressure, mm of mercury
+    let mmfmt = _('%smm');
+    //## pressure, kilopascals
+    let kpafmt = _('%skPa');
     let unitstring = {
-      'mb': 'mb',
-      'in': 'in',
-      'mm': 'mm',
-      'kpa': 'kPa'
+      'mb': mbfmt,
+      'in': infmt,
+      'mm': mmfmt,
+      'kpa': kpafmt
     };
     let precission = {
       'mb': 0,
@@ -864,7 +894,7 @@ MyDesklet.prototype = {
     //### TODO prepare this for gettext 
     out = out.toFixed(precission[this.punits]);
     if (units) {
-      out = _("%s" + unitstring[this.punits]).format(out);
+      out = unitstring[this.punits].format(out);
     }
     if (direction) {
       out += ', ' + direction;
@@ -895,18 +925,24 @@ MyDesklet.prototype = {
       'kph': 1,
       'mps': 1
     };
+    //## visibility, miles
+    let mifmt = _('%smi');
+    //## visibility, nautical miles
+    let nmifmt = _('%snmi');
+    //## visibility, kilometers
+    let kmfmt = _('%skm');
     let unitstring = {
-      'mph': 'mi',
-      'knots': 'nmi',
-      'kph': 'km',
-      'mps': 'km'
+      'mph': mifmt,
+      'knots': nmifmt,
+      'kph': kmfmt,
+      'mps': kmfmt
     }
     let km = 1*vis;
     let out = km * conversion[this.wunits];
     let decpl = (out < 4) ? 1 : 0;
     out = out.toFixed(decpl);
     if (units) {
-      out = _("%s" + unitstring[this.wunits]).format(out);
+      out = unitstring[this.wunits].format(out);
     }
     return out;
   },
@@ -940,6 +976,7 @@ wxDriver.prototype = {
   linkText: '',
   // tooltip for credit link
   linkTooltip: 'Click for more information',
+  //## %s is replaced by place name
   lttTemplate: _('Click for the full forecast for %s'),
   linkIcon: false,
   // the maximum number of days of forecast supported 
@@ -1112,10 +1149,13 @@ wxDriver.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Utility function to translate direction in degrees into 16 compass points
   compassDirection: function(deg) {
+    //## Next 16 strings are fore wind direction, compass points
     let directions = [_('N'), _('NNE'),_('NE'), _('ENE'),_('E'), _('ESE'),_('SE'),_('SSE'), _('S'),_('SSW'), _('SW'), _('WSW'),_('W'),_('WNW'), _('NW'),_('NNW')];
     return directions[Math.round(deg / 22.5) % directions.length];
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Get the service specific language code that best serves the current locale
   getLangCode: function() {
     let lang_list = GLib.get_language_names();
     //let lang_list = ['ar','zh_TW', 'zh', 'es','C'];
@@ -1131,8 +1171,74 @@ wxDriver.prototype = {
     // debugging
     // global.log("bbcwx: lang_list: " + lang_list.join() + "; lang: " + lang);
     return lang;
+  },
+  
+  _getDayName: function(i) {
+    let days = ['Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return days[i];
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Utility to get a localised weather text string from a Yahoo/TWC code. This
+  // function is here because both the Yahoo and TWC drivers use it
+  _getWeatherTextFromYahooCode: function(code) {
+    let wxtext = '';
+    let textmap = {
+      '0' : _('Tornado'),
+      '1' : _('Tropical storm'),
+      '2' : _('Hurricane'),
+      '3' : _('Severe thunderstorms'),
+      '4' : _('Thunderstorms'),
+      '5' : _('Mixed rain and snow'),
+      '6' : _('Mixed rain and sleet'),
+      '7' : _('Mixed snow and sleet'),
+      '8' : _('Freezing drizzle'),
+      '9' : _('Drizzle'),
+      '10' : _('Freezing rain'),
+      '11' : _('Showers'),
+      '12' : _('Showers'),
+      '13' : _('Snow flurries'),
+      '14' : _('Light snow showers'),
+      '15' : _('Blowing snow'),
+      '16' : _('Snow'),
+      '17' : _('Hail'),
+      '18' : _('Sleet'),
+      '19' : _('Dust'),
+      '20' : _('Foggy'),
+      '21' : _('Haze'),
+      '22' : _('Smoky'),
+      '23' : _('Blustery'),
+      '24' : _('Windy'),
+      '25' : _('Cold'),
+      '26' : _('Cloudy'),
+      '27' : _('Mostly cloudy'),
+      '28' : _('Mostly cloudy'),
+      '29' : _('Partly cloudy'),
+      '30' : _('Partly cloudy'),
+      '31' : _('Clear'),
+      '32' : _('Sunny'),
+      '33' : _('Fair'),
+      '34' : _('Fair'),
+      '35' : _('Mixed rain and hail'),
+      '36' : _('Hot'),
+      '37' : _('Isolated thunderstorms'),
+      '38' : _('Scattered thunderstorms'),
+      '39' : _('Scattered showers'),  // see http://developer.yahoo.com/forum/YDN-Documentation/Yahoo-Weather-API-Wrong-Condition-Code/1290534174000-1122fc3d-da6d-34a2-9fb9-d0863e6c5bc6
+      '40' : _('Scattered showers'),
+      '41' : _('Heavy snow'),
+      '42' : _('Scattered snow showers'),
+      '43' : _('Heavy snow'),
+      '44' : _('Partly cloudy'),
+      '45' : _('Thundershowers'),
+      '46' : _('Snow showers'),
+      '47' : _('Isolated thundershowers'),
+      '3200' : _('Not available')
+    }
+    if (code && typeof textmap[code] !== "undefined") {
+      wxtext = textmap[code];
+    }
+    return wxtext;    
   }
-
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1222,7 +1328,7 @@ wxDriverBBC.prototype = {
         title = items[i].getChildElement("title").getText();
         data.link = items[i].getChildElement("link").getText();
         data.day = title.split(':')[0].trim().substring(0,3);
-        data.weathertext = title.split(':')[1].split(',')[0].trim();
+        let weathertext = title.split(':')[1].split(',')[0].trim();
         let parts = desc.split(',');
         let k, v;
         for (let b=0; b<parts.length; b++) {
@@ -1241,9 +1347,11 @@ wxDriverBBC.prototype = {
         data.maximum_temperature = this._getTemperature(data.maximum_temperature);
         data.minimum_temperature = this._getTemperature(data.minimum_temperature);
         data.wind_speed = this._getWindspeed(data.wind_speed);
+        data.wind_direction = _(data.wind_direction);
         data.pressure = data.pressure.replace('mb', '');
         data.humidity = data.humidity.replace('%', '');
-        data.icon = this._getIconFromText(data.weathertext);
+        data.icon = this._getIconFromText(weathertext);
+        data.weathertext = _(weathertext);
         this.data.days[i] = data;
       }
       this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
@@ -1297,8 +1405,10 @@ wxDriverBBC.prototype = {
         this.data.cc[k] = v;
       }
       this.data.cc.icon = this._getIconFromText(this.data.cc.weathertext);
+      this.data.cc.weathertext = _(this.data.cc.weathertext);
       this.data.cc.temperature = this._getTemperature(this.data.cc.temperature);
       this.data.cc.wind_speed = this._getWindspeed(this.data.cc.wind_speed);
+      this.data.cc.wind_direction = _(this.data.cc.wind_direction);
       this.data.cc.humidity = this.data.cc.humidity.replace('%', '');
       this.data.cc.pressure = this.data.cc.pressure.replace('mb', '');
       this.data.status.cc = BBCWX_SERVICE_STATUS_OK;
@@ -1359,6 +1469,39 @@ wxDriverBBC.prototype = {
     let out = mph * 1.6;
     return out;
   },
+  
+  // dummy function that exists just to list the strings
+  // for translation
+  _dummy: function() {
+    let a =[  
+      _('Clear Sky'),
+      _('Sunny'),
+      _('Partly Cloudy'),
+      _('Sunny Intervals'),
+      _('Sand Storm'),
+      _('Mist'),
+      _('Fog'),
+      _('White Cloud'),
+      _('Light Cloud'),
+      _('Grey Cloud'),
+      _('Thick Cloud'),
+      _('Light Rain Shower'),
+      _('Drizzle'),
+      _('Light Rain'),
+      _('Heavy Rain Shower'),
+      _('Heavy Rain'),
+      _('Sleet Shower'),
+      _('Sleet'),
+      _('Light Snow Shower'),
+      _('Light Snow'),
+      _('Heavy Snow Shower'),
+      _('Heavy Snow'),
+      _('Thundery Shower'),
+      _('Thunder Storm'),
+      _('Thunderstorm'),
+      _('Hazy')
+    ];
+  }
 
 };  
 
@@ -1540,7 +1683,7 @@ wxDriverYahoo.prototype = {
       let wind = channel.getChildElement('yweather:wind');
       let atmosphere = channel.getChildElement('yweather:atmosphere');
 
-
+      //## direction of movement of pressure
       let pressurecodes = [_('Steady'), _('Rising'), _('Falling')];
 
       this.data.city = geo.getAttributeValue('city');
@@ -1560,7 +1703,9 @@ wxDriverYahoo.prototype = {
 
       this.data.cc.temperature = conditions.getAttributeValue('temp');
       this.data.cc.obstime = conditions.getAttributeValue('date');
-      this.data.cc.weathertext = conditions.getAttributeValue('text');
+      //this.data.cc.weathertext = conditions.getAttributeValue('text');
+      // ### TODO : use text when locale is en
+      this.data.cc.weathertext = this._getWeatherTextFromYahooCode(conditions.getAttributeValue('code'));
       this.data.cc.icon = this._mapicon(conditions.getAttributeValue('code'));
       this.data.cc.feelslike = wind.getAttributeValue('chill');
       
@@ -1574,7 +1719,9 @@ wxDriverYahoo.prototype = {
         day.day = forecasts[i].getAttributeValue('day');
         day.maximum_temperature = forecasts[i].getAttributeValue('high');
         day.minimum_temperature = forecasts[i].getAttributeValue('low');
-        day.weathertext = forecasts[i].getAttributeValue('text');
+        //day.weathertext = forecasts[i].getAttributeValue('text');
+        // ### TODO : use text when locale is en
+        day.weathertext = this._getWeatherTextFromYahooCode(forecasts[i].getAttributeValue('code'));
         day.icon = this._mapicon(forecasts[i].getAttributeValue('code'));
         this.data.days[i] = day;
       }
@@ -1784,7 +1931,7 @@ wxDriverOWM.prototype = {
 
       for (let i=0; i<json.list.length; i++) {
         let day = new Object();
-        day.day = new Date(json.list[i].dt *1000).toLocaleFormat( "%a" );
+        day.day = this._getDayName(new Date(json.list[i].dt *1000).toLocaleFormat( "%u" ));
         day.minimum_temperature = json.list[i].temp.min;
         day.maximum_temperature = json.list[i].temp.max;
         day.pressure = json.list[i].pressure;
@@ -2334,7 +2481,7 @@ wxDriverWWO.prototype = {
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
-        day.day = new Date(days[i].date).toLocaleFormat("%a");
+        day.day = this._getDayName(new Date(days[i].date).toLocaleFormat("%u"));
         day.minimum_temperature = days[i].tempMinC;
         day.maximum_temperature = days[i].tempMaxC;
         //day.pressure = json.list[i].pressure;
@@ -2580,7 +2727,7 @@ wxDriverForecastIo.prototype = {
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
-        day.day = new Date(days[i].time * 1000).toLocaleFormat("%a");
+        day.day = this._getDayName(new Date(days[i].time * 1000).toLocaleFormat("%u"));
         day.minimum_temperature = days[i].temperatureMin;
         day.maximum_temperature = days[i].temperatureMax;
         day.minimum_feelslike = days[i].apparentTemperatureMin;
@@ -2771,7 +2918,9 @@ wxDriverTWC.prototype = {
       this.data.cc.temperature = cc.getChildElement('tmp').getText();
       this.data.cc.feelslike = cc.getChildElement('flik').getText();
       this.data.cc.obstime = new Date(cc.getChildElement('lsup').getText()).toLocaleFormat( "%H:%M %Z" );
-      this.data.cc.weathertext = cc.getChildElement('t').getText();
+      //this.data.cc.weathertext = cc.getChildElement('t').getText();
+      //### TODO use text when locale is en
+      this.data.cc.weathertext = this._getWeatherTextFromYahooCode(cc.getChildElement('icon').getText());
       if(this.data.cc.weathertext == 'N/A') this.data.cc.weathertext = '';
       this.data.cc.icon = this._mapicon(cc.getChildElement('icon').getText());
       let wind = cc.getChildElement('wind');
@@ -2793,7 +2942,9 @@ wxDriverTWC.prototype = {
         var dayparts = forecasts[i].getChildElements("part");
         var p = 0;
         if (dayparts[0].getChildElement('icon').getText() == '') p = 1;
-        day.weathertext = dayparts[p].getChildElement('t').getText();
+        //day.weathertext = dayparts[p].getChildElement('t').getText();
+        // ### TODO use text when locale is en
+        day.weathertext = this._getWeatherTextFromYahooCode(dayparts[p].getChildElement('icon').getText());
         day.icon = this._mapicon(dayparts[p].getChildElement('icon').getText());
         day.humidity = dayparts[p].getChildElement('hmid').getText();
         var windf = dayparts[p].getChildElement('wind');
