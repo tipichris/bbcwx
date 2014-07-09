@@ -134,12 +134,12 @@ msgstr ""
 #. the value
 #: desklet.js:813
 #, python-format
-msgid "%s\\u2109"
+msgid "%s℉"
 msgstr ""
 
 #: desklet.js:813
 #, python-format
-msgid "%s\\u2103"
+msgid "%s℃"
 msgstr ""
 
 #. # wind speed, miles per hour
