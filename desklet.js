@@ -66,6 +66,7 @@ const BBCWX_CONTAINER_PADDING=12;
 const BBCWX_ICON_HEIGHT = 40;
 const BBCWX_CC_ICON_HEIGHT =170;
 const BBCWX_BUTTON_PADDING=3;
+const BBCWX_LABEL_PADDING=4;
 const BBCWX_TEMP_PADDING=12;
 const BBCWX_SEPARATOR_STYLE = 'bbcwx-separator';
 const BBCWX_SERVICE_STATUS_ERROR = 0;
@@ -303,11 +304,11 @@ MyDesklet.prototype = {
     this.city.add_actor(this.cityname); 
     
     //## Next five strings are labels for current conditions
-    if(ccap.humidity) this.ctemp_captions.add_actor(new St.Label({text: _('Humidity: ')}));
-    if(ccap.pressure) this.ctemp_captions.add_actor(new St.Label({text: _('Pressure: ')}));
-    if(ccap.wind_speed) this.ctemp_captions.add_actor(new St.Label({text: _('Wind: ')}));
-    if(ccap.feelslike) this.ctemp_captions.add_actor(new St.Label({text: _('Feels like: ')}));
-    if(ccap.visibility) this.ctemp_captions.add_actor(new St.Label({text: _('Visibility: ')}));
+    if(ccap.humidity) this.ctemp_captions.add_actor(new St.Label({text: _('Humidity:')}));
+    if(ccap.pressure) this.ctemp_captions.add_actor(new St.Label({text: _('Pressure:')}));
+    if(ccap.wind_speed) this.ctemp_captions.add_actor(new St.Label({text: _('Wind:')}));
+    if(ccap.feelslike) this.ctemp_captions.add_actor(new St.Label({text: _('Feels like:')}));
+    if(ccap.visibility) this.ctemp_captions.add_actor(new St.Label({text: _('Visibility:')}));
     
     if(this.humidity) this.ctemp_values.add_actor(this.humidity);
     if(this.pressure) this.ctemp_values.add_actor(this.pressure);
@@ -523,7 +524,7 @@ MyDesklet.prototype = {
     if (this.ctemp_bigtemp) this.ctemp_bigtemp.style = 'text-align : left; padding-right: ' + this.currenttempadding *this.zoom + 'px'
     this.fwtable.style="spacing-rows: "+BBCWX_TABLE_ROW_SPACING*this.zoom+"px;spacing-columns: "+BBCWX_TABLE_COL_SPACING*this.zoom+"px;padding: "+BBCWX_TABLE_PADDING*this.zoom+"px;";
     this.cityname.style="text-align: center;font-size: "+BBCWX_TEXT_SIZE*this.zoom+"px; font-weight: " + ((this.citystyle) ? 'bold' : 'normal') + ";" ;    
-    this.ctemp_captions.style = 'text-align : right;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
+    this.ctemp_captions.style = 'text-align : right;font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px; padding-right: " +BBCWX_LABEL_PADDING*this.zoom+"px";
     this.ctemp_values.style = 'text-align : left; font-size: '+BBCWX_TEXT_SIZE*this.zoom+"px";
     
     if(this.overrideTheme) {
@@ -838,13 +839,13 @@ MyDesklet.prototype = {
       'kph': 1,
       'mps': 0.278
     };
-    //## wind speed, miles per hour
+    //## wind speed, miles per hour. %f is replaced by the value
     let mphfmt = _('%fmph');
-    //## wind speed, knots
+    //## wind speed, knots. %f is replaced by the value
     let knotfmt = _('%fkn');
-    //## wind speed, kilometers per hour
+    //## wind speed, kilometers per hour. %f is replaced by the value
     let kphfmt = _('%fkm/h');
-    //## wind speed, meters per second
+    //## wind speed, meters per second. %f is replaced by the value
     let mpsfmt = _('%fm/s');
     let unitstring = {
       'mph': mphfmt,
@@ -878,13 +879,13 @@ MyDesklet.prototype = {
       'mm': 0.75,
       'kpa': 0.1
     };
-    //## pressure, millbars
+    //## pressure, millbars. %f is replaced by the value
     let mbfmt = _('%fmb');
-    //## pressure, inches of mercury
+    //## pressure, inches of mercury. %f is replaced by the value
     let infmt = _('%fin');
-    //## pressure, mm of mercury
+    //## pressure, mm of mercury. %f is replaced by the value
     let mmfmt = _('%fmm');
-    //## pressure, kilopascals
+    //## pressure, kilopascals. %f is replaced by the value
     let kpafmt = _('%fkPa');
     let unitstring = {
       'mb': mbfmt,
@@ -935,11 +936,11 @@ MyDesklet.prototype = {
       'kph': 1,
       'mps': 1
     };
-    //## visibility, miles
+    //## visibility, miles. %f is replaced by the value
     let mifmt = _('%fmi');
-    //## visibility, nautical miles
+    //## visibility, nautical miles. %f is replaced by the value
     let nmifmt = _('%fnmi');
-    //## visibility, kilometers
+    //## visibility, kilometers. %f is replaced by the value
     let kmfmt = _('%fkm');
     let unitstring = {
       'mph': mifmt,
@@ -2295,8 +2296,11 @@ wxDriverWU.prototype = {
   _getPressureTrend: function (code) {
     let out = '';
     let map = {
+      //## direction of movement of pressure
       '+': _('Rising'),
+      //## direction of movement of pressure
       '-': _('Falling'),
+      //## direction of movement of pressure
       '0': _('Steady')
     };
     if (code && (typeof map[code] !== "undefined")) {

@@ -7,551 +7,543 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.7b3\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2014-07-12 17:20+0100\n"
+"POT-Creation-Date: 2014-07-12 18:07+0100\n"
 "PO-Revision-Date: 2014-07-12 17:20+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. # Days of the week
-#: desklet.js:96
+#: desklet.js:97
 msgid "Mon"
 msgstr "Mon"
 
-#: desklet.js:96
+#: desklet.js:97
 msgid "Tue"
 msgstr "Tue"
 
-#: desklet.js:96
+#: desklet.js:97
 msgid "Wed"
 msgstr "Wed"
 
-#: desklet.js:96
+#: desklet.js:97
 msgid "Thu"
 msgstr "Thu"
 
-#: desklet.js:96
+#: desklet.js:97
 msgid "Fri"
 msgstr "Fri"
 
-#: desklet.js:96
+#: desklet.js:97
 msgid "Sat"
 msgstr "Sat"
 
-#: desklet.js:96
+#: desklet.js:97
 msgid "Sun"
 msgstr "Sun"
 
 #. # The desklet title
-#: desklet.js:167
+#: desklet.js:168
 msgid "Weather"
 msgstr "Weather"
 
 #. # Link to Help file in context menu
-#: desklet.js:171
+#: desklet.js:172
 msgid "Help"
 msgstr "Help"
 
 #. # Next five strings are labels for current conditions
-#: desklet.js:306
-msgid "Humidity: "
-msgstr "Humidity: "
+#: desklet.js:307 desklet.js:335
+msgid "Humidity:"
+msgstr "Humidity:"
 
-#: desklet.js:307
-msgid "Pressure: "
-msgstr "Pressure: "
+#. # Atmospheric pressure
+#: desklet.js:308 desklet.js:334
+msgid "Pressure:"
+msgstr "Pressure:"
 
-#: desklet.js:308
-msgid "Wind: "
-msgstr "Wind: "
-
-#: desklet.js:309
-msgid "Feels like: "
-msgstr "Feels like: "
+#. # Wind speed
+#: desklet.js:309 desklet.js:330
+msgid "Wind:"
+msgstr "Wind:"
 
 #: desklet.js:310
-msgid "Visibility: "
-msgstr "Visibility: "
+#, fuzzy
+msgid "Feels like:"
+msgstr "Feels like:"
+
+#: desklet.js:311
+#, fuzzy
+msgid "Visibility:"
+msgstr "Visibility:"
 
 #. # Maximum temperature
-#: desklet.js:325
+#: desklet.js:326
 msgid "Max:"
 msgstr "Max:"
 
 #. # Minimum temperature
-#: desklet.js:327
+#: desklet.js:328
 msgid "Min:"
 msgstr "Min:"
 
-#. # Wind speed
-#: desklet.js:329
-msgid "Wind:"
-msgstr "Wind:"
-
 #. # Wind direction
-#: desklet.js:331
+#: desklet.js:332
 msgid "Dir:"
 msgstr "Dir:"
 
-#. # Atmospheric pressure
-#: desklet.js:333
-msgid "Pressure:"
-msgstr "Pressure:"
-
-#: desklet.js:334
-msgid "Humidity:"
-msgstr "Humidity:"
-
 #. # Credit the data supplier. A link to the data supplier appears to the left
 #. of this string
-#: desklet.js:371
+#: desklet.js:372
 msgid "Data from "
 msgstr "Data from "
 
 #. # Tooltip for refresh button
-#: desklet.js:379
+#: desklet.js:380
 msgid "Refresh"
 msgstr "Refresh"
 
 #. # Message if we fail to get weather data
-#: desklet.js:680
+#: desklet.js:681
 msgid "No data available"
 msgstr "No data available"
 
-#: desklet.js:712 desklet.js:749
+#: desklet.js:713 desklet.js:750
 #, python-format
 msgid "Error: %s"
 msgstr "Error: %s"
 
-#: desklet.js:712 desklet.js:749
+#: desklet.js:713 desklet.js:750
 msgid "No data"
 msgstr "No data"
 
 #. # Units for temperature, degrees Fahrenheit. %f is replaced the value. NB:
 #. English translation uses unicode character u+2109
-#: desklet.js:819
+#: desklet.js:820
 #, python-format
 msgid "%fF"
 msgstr "%f℉"
 
 #. # Units for temperature, degrees Celsius. %f is replaced the value. NB:
 #. English translation uses unicode character u+2103
-#: desklet.js:821
+#: desklet.js:822
 #, python-format
 msgid "%fC"
 msgstr "%f℃"
 
-#. # wind speed, miles per hour
-#: desklet.js:842
+#. # wind speed, miles per hour. %f is replaced by the value
+#: desklet.js:843
 #, python-format
 msgid "%fmph"
 msgstr "%fmph"
 
-#. # wind speed, knots
-#: desklet.js:844
+#. # wind speed, knots. %f is replaced by the value
+#: desklet.js:845
 #, python-format
 msgid "%fkn"
 msgstr "%fkn"
 
-#. # wind speed, kilometers per hour
-#: desklet.js:846
+#. # wind speed, kilometers per hour. %f is replaced by the value
+#: desklet.js:847
 #, python-format
 msgid "%fkm/h"
 msgstr "%fkm/h"
 
-#. # wind speed, meters per second
-#: desklet.js:848
+#. # wind speed, meters per second. %f is replaced by the value
+#: desklet.js:849
 #, python-format
 msgid "%fm/s"
 msgstr "%fm/s"
 
-#. # pressure, millbars
-#: desklet.js:882
+#. # pressure, millbars. %f is replaced by the value
+#: desklet.js:883
 #, python-format
 msgid "%fmb"
 msgstr "%fmb"
 
-#. # pressure, inches of mercury
-#: desklet.js:884
+#. # pressure, inches of mercury. %f is replaced by the value
+#: desklet.js:885
 #, python-format
 msgid "%fin"
 msgstr "%fin"
 
-#. # pressure, mm of mercury
-#: desklet.js:886
+#. # pressure, mm of mercury. %f is replaced by the value
+#: desklet.js:887
 #, python-format
 msgid "%fmm"
 msgstr "%fmm"
 
-#. # pressure, kilopascals
-#: desklet.js:888
+#. # pressure, kilopascals. %f is replaced by the value
+#: desklet.js:889
 #, python-format
 msgid "%fkPa"
 msgstr "%fkPa"
 
-#. # visibility, miles
-#: desklet.js:939
+#. # visibility, miles. %f is replaced by the value
+#: desklet.js:940
 #, python-format
 msgid "%fmi"
 msgstr "%fmi"
 
-#. # visibility, nautical miles
-#: desklet.js:941
+#. # visibility, nautical miles. %f is replaced by the value
+#: desklet.js:942
 #, python-format
 msgid "%fnmi"
 msgstr "%fnmi"
 
-#. # visibility, kilometers
-#: desklet.js:943
+#. # visibility, kilometers. %f is replaced by the value
+#: desklet.js:944
 #, python-format
 msgid "%fkm"
 msgstr "%fkm"
 
 #. # %s is replaced by place name
-#: desklet.js:990
+#: desklet.js:991
 #, python-format
 msgid "Click for the full forecast for %s"
 msgstr "Click for the full forecast for %s"
 
 #. # Next 16 strings are fore wind direction, compass points
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "N"
 msgstr "N"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "NNE"
 msgstr "NNE"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "NE"
 msgstr "NE"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "ENE"
 msgstr "ENE"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "E"
 msgstr "E"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "ESE"
 msgstr "ESE"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "SE"
 msgstr "SE"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "SSE"
 msgstr "SSE"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "S"
 msgstr "S"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "SSW"
 msgstr "SSW"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "SW"
 msgstr "SW"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "WSW"
 msgstr "WSW"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "W"
 msgstr "W"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "WNW"
 msgstr "WNW"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "NW"
 msgstr "NW"
 
-#: desklet.js:1163
+#: desklet.js:1164
 msgid "NNW"
 msgstr "NNW"
 
-#: desklet.js:1197
+#: desklet.js:1198
 msgid "Tornado"
 msgstr "Tornado"
 
-#: desklet.js:1198
+#: desklet.js:1199
 msgid "Tropical storm"
 msgstr "Tropical storm"
 
-#: desklet.js:1199
+#: desklet.js:1200
 msgid "Hurricane"
 msgstr "Hurricane"
 
-#: desklet.js:1200
+#: desklet.js:1201
 msgid "Severe thunderstorms"
 msgstr "Severe thunderstorms"
 
-#: desklet.js:1201
+#: desklet.js:1202
 msgid "Thunderstorms"
 msgstr "Thunderstorms"
 
-#: desklet.js:1202
+#: desklet.js:1203
 msgid "Mixed rain and snow"
 msgstr "Mixed rain and snow"
 
-#: desklet.js:1203
+#: desklet.js:1204
 msgid "Mixed rain and sleet"
 msgstr "Mixed rain and sleet"
 
-#: desklet.js:1204
+#: desklet.js:1205
 msgid "Mixed snow and sleet"
 msgstr "Mixed snow and sleet"
 
-#: desklet.js:1205
+#: desklet.js:1206
 msgid "Freezing drizzle"
 msgstr "Freezing drizzle"
 
-#: desklet.js:1206 desklet.js:1499
+#: desklet.js:1207 desklet.js:1500
 msgid "Drizzle"
 msgstr "Drizzle"
 
-#: desklet.js:1207
+#: desklet.js:1208
 msgid "Freezing rain"
 msgstr "Freezing rain"
 
-#: desklet.js:1208 desklet.js:1209
+#: desklet.js:1209 desklet.js:1210
 msgid "Showers"
 msgstr "Showers"
 
-#: desklet.js:1210
+#: desklet.js:1211
 msgid "Snow flurries"
 msgstr "Snow flurries"
 
-#: desklet.js:1211
+#: desklet.js:1212
 msgid "Light snow showers"
 msgstr "Light snow showers"
 
-#: desklet.js:1212
+#: desklet.js:1213
 msgid "Blowing snow"
 msgstr "Blowing snow"
 
-#: desklet.js:1213
+#: desklet.js:1214
 msgid "Snow"
 msgstr "Snow"
 
-#: desklet.js:1214
+#: desklet.js:1215
 msgid "Hail"
 msgstr "Hail"
 
-#: desklet.js:1215 desklet.js:1504
+#: desklet.js:1216 desklet.js:1505
 msgid "Sleet"
 msgstr "Sleet"
 
-#: desklet.js:1216
+#: desklet.js:1217
 msgid "Dust"
 msgstr "Dust"
 
-#: desklet.js:1217
+#: desklet.js:1218
 msgid "Foggy"
 msgstr "Foggy"
 
-#: desklet.js:1218
+#: desklet.js:1219
 msgid "Haze"
 msgstr "Haze"
 
-#: desklet.js:1219
+#: desklet.js:1220
 msgid "Smoky"
 msgstr "Smoky"
 
-#: desklet.js:1220
+#: desklet.js:1221
 msgid "Blustery"
 msgstr "Blustery"
 
-#: desklet.js:1221
+#: desklet.js:1222
 msgid "Windy"
 msgstr "Windy"
 
-#: desklet.js:1222
+#: desklet.js:1223
 msgid "Cold"
 msgstr "Cold"
 
-#: desklet.js:1223
+#: desklet.js:1224
 msgid "Cloudy"
 msgstr "Cloudy"
 
-#: desklet.js:1224 desklet.js:1225
+#: desklet.js:1225 desklet.js:1226
 msgid "Mostly cloudy"
 msgstr "Mostly cloudy"
 
-#: desklet.js:1226 desklet.js:1227 desklet.js:1241
+#: desklet.js:1227 desklet.js:1228 desklet.js:1242
 msgid "Partly cloudy"
 msgstr "Partly cloudy"
 
-#: desklet.js:1228
+#: desklet.js:1229
 msgid "Clear"
 msgstr "Clear"
 
-#: desklet.js:1229 desklet.js:1488
+#: desklet.js:1230 desklet.js:1489
 msgid "Sunny"
 msgstr "Sunny"
 
-#: desklet.js:1230 desklet.js:1231
+#: desklet.js:1231 desklet.js:1232
 msgid "Fair"
 msgstr "Fair"
 
-#: desklet.js:1232
+#: desklet.js:1233
 msgid "Mixed rain and hail"
 msgstr "Mixed rain and hail"
 
-#: desklet.js:1233
+#: desklet.js:1234
 msgid "Hot"
 msgstr "Hot"
 
-#: desklet.js:1234
+#: desklet.js:1235
 msgid "Isolated thunderstorms"
 msgstr "Isolated thunderstorms"
 
-#: desklet.js:1235
+#: desklet.js:1236
 msgid "Scattered thunderstorms"
 msgstr "Scattered thunderstorms"
 
-#: desklet.js:1236 desklet.js:1237
+#: desklet.js:1237 desklet.js:1238
 msgid "Scattered showers"
 msgstr "Scattered showers"
 
-#: desklet.js:1238 desklet.js:1240
+#: desklet.js:1239 desklet.js:1241
 msgid "Heavy snow"
 msgstr "Heavy snow"
 
-#: desklet.js:1239
+#: desklet.js:1240
 msgid "Scattered snow showers"
 msgstr "Scattered snow showers"
 
-#: desklet.js:1242
+#: desklet.js:1243
 msgid "Thundershowers"
 msgstr "Thundershowers"
 
-#: desklet.js:1243
+#: desklet.js:1244
 msgid "Snow showers"
 msgstr "Snow showers"
 
-#: desklet.js:1244
+#: desklet.js:1245
 msgid "Isolated thundershowers"
 msgstr "Isolated thundershowers"
 
-#: desklet.js:1245
+#: desklet.js:1246
 msgid "Not available"
 msgstr "Not available"
 
-#: desklet.js:1487
+#: desklet.js:1488
 msgid "Clear Sky"
 msgstr "Clear Sky"
 
-#: desklet.js:1489
+#: desklet.js:1490
 msgid "Partly Cloudy"
 msgstr "Partly Cloudy"
 
-#: desklet.js:1490
+#: desklet.js:1491
 msgid "Sunny Intervals"
 msgstr "Sunny Intervals"
 
-#: desklet.js:1491
+#: desklet.js:1492
 msgid "Sand Storm"
 msgstr "Sand Storm"
 
-#: desklet.js:1492
+#: desklet.js:1493
 msgid "Mist"
 msgstr "Mist"
 
-#: desklet.js:1493
+#: desklet.js:1494
 msgid "Fog"
 msgstr "Fog"
 
-#: desklet.js:1494
+#: desklet.js:1495
 msgid "White Cloud"
 msgstr "White Cloud"
 
-#: desklet.js:1495
+#: desklet.js:1496
 msgid "Light Cloud"
 msgstr "Light Cloud"
 
-#: desklet.js:1496
+#: desklet.js:1497
 msgid "Grey Cloud"
 msgstr "Grey Cloud"
 
-#: desklet.js:1497
+#: desklet.js:1498
 msgid "Thick Cloud"
 msgstr "Thick Cloud"
 
-#: desklet.js:1498
+#: desklet.js:1499
 msgid "Light Rain Shower"
 msgstr "Light Rain Shower"
 
-#: desklet.js:1500
+#: desklet.js:1501
 msgid "Light Rain"
 msgstr "Light Rain"
 
-#: desklet.js:1501
+#: desklet.js:1502
 msgid "Heavy Rain Shower"
 msgstr "Heavy Rain Shower"
 
-#: desklet.js:1502
+#: desklet.js:1503
 msgid "Heavy Rain"
 msgstr "Heavy Rain"
 
-#: desklet.js:1503
+#: desklet.js:1504
 msgid "Sleet Shower"
 msgstr "Sleet Shower"
 
-#: desklet.js:1505
+#: desklet.js:1506
 msgid "Light Snow Shower"
 msgstr "Light Snow Shower"
 
-#: desklet.js:1506
+#: desklet.js:1507
 msgid "Light Snow"
 msgstr "Light Snow"
 
-#: desklet.js:1507
+#: desklet.js:1508
 msgid "Heavy Snow Shower"
 msgstr "Heavy Snow Shower"
 
-#: desklet.js:1508
+#: desklet.js:1509
 msgid "Heavy Snow"
 msgstr "Heavy Snow"
 
-#: desklet.js:1509
+#: desklet.js:1510
 msgid "Thundery Shower"
 msgstr "Thundery Shower"
 
-#: desklet.js:1510
+#: desklet.js:1511
 msgid "Thunder Storm"
 msgstr "Thunder Storm"
 
-#: desklet.js:1511
+#: desklet.js:1512
 msgid "Thunderstorm"
 msgstr "Thunderstorm"
 
-#: desklet.js:1512
+#: desklet.js:1513
 msgid "Hazy"
 msgstr "Hazy"
 
 #. # direction of movement of pressure
-#: desklet.js:1697 desklet.js:2300
+#: desklet.js:1698 desklet.js:2304
 msgid "Steady"
 msgstr "Steady"
 
-#: desklet.js:1697 desklet.js:2298
+#. # direction of movement of pressure
+#: desklet.js:1698 desklet.js:2300
 msgid "Rising"
 msgstr "Rising"
 
-#: desklet.js:1697 desklet.js:2299
+#. # direction of movement of pressure
+#: desklet.js:1698 desklet.js:2302
 msgid "Falling"
 msgstr "Falling"
 
