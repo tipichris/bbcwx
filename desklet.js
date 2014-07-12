@@ -74,6 +74,7 @@ const BBCWX_SERVICE_STATUS_INIT = 1;
 const BBCWX_SERVICE_STATUS_OK = 2;
 const BBCWX_DEFAULT_ICONSET = 'colourful';
 const BBCWX_DEFAULT_ICON_EXT = 'png';
+const BBCWX_TRANSLATION_URL = 'https://github.com/tipichris/bbcwx/wiki/Translating';
 
 const Gettext = imports.gettext
 Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale")
@@ -172,7 +173,10 @@ MyDesklet.prototype = {
       this._menu.addAction(_('Help'), Lang.bind(this, function() {
         Util.spawnCommandLine("xdg-open " + this.helpFile);
       }));
-      
+      //## Link to information on translating in context menu
+      this._menu.addAction(_('Translate'), Lang.bind(this, function() {
+        Util.spawnCommandLine("xdg-open " + BBCWX_TRANSLATION_URL);
+      }));
       this.initForecast(); 
       
     }
