@@ -330,8 +330,8 @@ MyDesklet.prototype = {
     this.maxlabel = new St.Label({text: _('Max:')});
     //## Minimum temperature
     this.minlabel = new St.Label({text: _('Min:')});
-    //## Wind speed
-    this.windlabel = new St.Label({text: _('Wind:')});
+    //## Wind speed (English translation is "Wind:")
+    this.windlabel = new St.Label({text: _('Wind speed:')});
     //## Wind direction
     this.winddlabel = new St.Label({text: _('Dir:')});
     //## Atmospheric pressure

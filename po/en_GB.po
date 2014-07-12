@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.7b3\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2014-07-12 20:49+0100\n"
+"POT-Creation-Date: 2014-07-12 21:09+0100\n"
 "PO-Revision-Date: 2014-07-12 17:20+0100\n"
 "Last-Translator: Chris Hastie <chris@oak-wood.co.uk>\n"
 "Language-Team: none\n"
@@ -71,8 +71,7 @@ msgstr "Humidity:"
 msgid "Pressure:"
 msgstr "Pressure:"
 
-#. # Wind speed
-#: desklet.js:313 desklet.js:334
+#: desklet.js:313
 msgid "Wind:"
 msgstr "Wind:"
 
@@ -95,6 +94,11 @@ msgstr "Max:"
 #: desklet.js:332
 msgid "Min:"
 msgstr "Min:"
+
+#. # Wind speed (English translation is "Wind:")
+#: desklet.js:334
+msgid "Wind speed:"
+msgstr "Wind:"
 
 #. # Wind direction
 #: desklet.js:336
