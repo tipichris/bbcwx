@@ -1164,7 +1164,7 @@ wxDriver.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Utility function to translate direction in degrees into 16 compass points
   compassDirection: function(deg) {
-    //## Next 16 strings are fore wind direction, compass points
+    //## Next 16 strings are for wind direction, compass points
     let directions = [_('N'), _('NNE'),_('NE'), _('ENE'),_('E'), _('ESE'),_('SE'),_('SSE'), _('S'),_('SSW'), _('SW'), _('WSW'),_('W'),_('WNW'), _('NW'),_('NNW')];
     return directions[Math.round(deg / 22.5) % directions.length];
   },

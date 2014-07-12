@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.7b3\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2014-07-12 21:09+0100\n"
+"POT-Creation-Date: 2014-07-12 21:13+0100\n"
 "PO-Revision-Date: 2014-07-12 17:20+0100\n"
 "Last-Translator: Chris Hastie <chris@oak-wood.co.uk>\n"
 "Language-Team: none\n"
@@ -216,7 +216,7 @@ msgstr "%fkm"
 msgid "Click for the full forecast for %s"
 msgstr "Click for the full forecast for %s"
 
-#. # Next 16 strings are fore wind direction, compass points
+#. # Next 16 strings are for wind direction, compass points
 #: desklet.js:1168
 msgid "N"
 msgstr "N"
