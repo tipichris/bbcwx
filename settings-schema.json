@@ -39,8 +39,8 @@
     "default" : "C",
     "description" : "Temperature measurement unit",
     "options" : {
-        "C" : "C",
-        "F" : "F"
+        "Celsius" : "C",
+        "Fahrenheit" : "F"
     },
     "tooltip" : "Measurement units used to display temperature"
   },

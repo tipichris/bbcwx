@@ -815,9 +815,12 @@ MyDesklet.prototype = {
     let celsius = 1*temp;
     let fahr = ((celsius + 40) * 1.8) - 40;
     let out = Math.round(((this.tunits=='F') ? fahr : celsius));
+    //## Units for temperature, degrees Fahrenheit. %f is replaced the value. NB: English translation uses unicode character u+2109 
+    let fahrfmt = _('%fF');
+    //## Units for temperature, degrees Celsius. %f is replaced the value. NB: English translation uses unicode character u+2103
+    let celfmt = _('%fC')
     if (units) {
-      //## Units for temperature, degrees Fahrenheit or celsius. %s is replaced by the value
-      out = ((this.tunits=='F') ? _('%s\u2109').format(out) : _('%s\u2103').format(out))
+      out = ((this.tunits=='F') ? fahrfmt.format(out) : celfmt.format(out))
     }
     return out;
   },
@@ -836,13 +839,13 @@ MyDesklet.prototype = {
       'mps': 0.278
     };
     //## wind speed, miles per hour
-    let mphfmt = _('%smph');
+    let mphfmt = _('%fmph');
     //## wind speed, knots
-    let knotfmt = _('%skn');
+    let knotfmt = _('%fkn');
     //## wind speed, kilometers per hour
-    let kphfmt = _('%skm/h');
+    let kphfmt = _('%fkm/h');
     //## wind speed, meters per second
-    let mpsfmt = _('%sm/s');
+    let mpsfmt = _('%fm/s');
     let unitstring = {
       'mph': mphfmt,
       'knots': knotfmt,
@@ -876,13 +879,13 @@ MyDesklet.prototype = {
       'kpa': 0.1
     };
     //## pressure, millbars
-    let mbfmt = _('%smb');
+    let mbfmt = _('%fmb');
     //## pressure, inches of mercury
-    let infmt = _('%sin');
+    let infmt = _('%fin');
     //## pressure, mm of mercury
-    let mmfmt = _('%smm');
+    let mmfmt = _('%fmm');
     //## pressure, kilopascals
-    let kpafmt = _('%skPa');
+    let kpafmt = _('%fkPa');
     let unitstring = {
       'mb': mbfmt,
       'in': infmt,
@@ -933,11 +936,11 @@ MyDesklet.prototype = {
       'mps': 1
     };
     //## visibility, miles
-    let mifmt = _('%smi');
+    let mifmt = _('%fmi');
     //## visibility, nautical miles
-    let nmifmt = _('%snmi');
+    let nmifmt = _('%fnmi');
     //## visibility, kilometers
-    let kmfmt = _('%skm');
+    let kmfmt = _('%fkm');
     let unitstring = {
       'mph': mifmt,
       'knots': nmifmt,
