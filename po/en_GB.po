@@ -76,12 +76,10 @@ msgid "Wind:"
 msgstr "Wind:"
 
 #: desklet.js:314
-#, fuzzy
 msgid "Feels like:"
 msgstr "Feels like:"
 
 #: desklet.js:315
-#, fuzzy
 msgid "Visibility:"
 msgstr "Visibility:"
 
