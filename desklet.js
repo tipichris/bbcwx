@@ -2698,7 +2698,7 @@ wxDriverForecastIo.prototype = {
       if (typeof this._geocache[this.stationID] === 'object') {
         //global.log ("bbcwx: geocache hit for " + this.stationID + ": " + this._geocache[this.stationID].city);
         this.data.city = this._geocache[this.stationID].city;
-        this.data.country = this._geocache[this.stationID].city;
+        this.data.country = this._geocache[this.stationID].country;
         this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
         this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
         this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
@@ -2706,8 +2706,9 @@ wxDriverForecastIo.prototype = {
       } else {
         //global.log ("bbcwx: Looking up city for " + this.stationID);
         let latlon = this.stationID.split(',')
-        //let geourl = 'http://api.geonames.org/findNearbyPlaceNameJSON?lat=' + latlon[0] + '&lng=' + latlon[1] + '&username=foo';
-        let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + latlon[0] + '%2C' + latlon[1] +'%22%20and%20gflags%3D%22R%22&format=json&callback=';
+        // just use the most preferred language and hope Yahoo! supports it
+        let locale = GLib.get_language_names()[0];
+        let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + latlon[0] + '%2C' + latlon[1] +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
         let b = this._getWeather(geourl, function(geo) {
           if (geo) {
             this._load_geo(geo);
