@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.7b3\n"
+"Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.7\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2014-07-13 20:36+0100\n"
 "PO-Revision-Date: 2014-07-12 17:20+0100\n"
