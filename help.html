@@ -213,6 +213,34 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     in the Weather Desklet on the project wiki, or in the <a href="icons/user/README">README</a> 
     file in the icons/user directory
     of the Weather Desklet's installation directory</p>
+    <h2 id="i18n">Language support</h2>
+    <p>The Weather Desklet provides partial support for languages other than English. The messages
+    displayed by the Weather Desklet come from two different sources</p>
+    <ul>
+    <li>Text descriptions of weather forecasts and current conditions are provided directly by
+    the data service being used</li>
+    <li>Labels (eg 'Humidity', 'Pressure'), units, and all text in the settings dialogue come from
+    translation files shipped with the Desklet</li>
+    </ul>
+    <h3 id="dataservicetranslations">Data service provided translations</h3>
+    <p>Some data services provide translations of their weather data. Where these are available in one
+    of the preferred languages configured for your desktop, they will be used. The following services support
+    translations. Click on the link to find out which languages are supported:
+    <ul>
+    <li><a href="http://www.openweathermap.org/current#multi">Openweathermap.org</a></li>
+    <li><a href="http://www.wunderground.com/weather/api/d/docs?d=language-support&amp;MR=1">Weather Underground</a></li>
+    <li><a href="http://www.worldweatheronline.com/weather-api-multilingual.aspx">World Weather Online</a></li>
+    <li><a href="https://developer.forecast.io/docs/v2">Forecast.io</a></li>
+    </ul>
+    <p>Note that although forecasts are translated, names of localities may not be.</p>
+    
+    <h3 id="internaltranslations">Internal translations</h3>
+    <p>The Weather Desklet has been prepared for translation of most of the internal messages,
+    and some forecast messages from services that do not support translated forecasts themselves.
+    As yet, however, we don't have any translations. That's where you come in! If you are a native
+    speaker of a language other than English, why not help out with a translation? 
+    <a href="https://github.com/tipichris/bbcwx/wiki/Translating">Find out more about
+    translating the Weather Desklet</a>.</p>
     <h2 id="credits">Credits</h2>
     <p>
     The BBC Weather Desklet is written by <a href="http://www.oak-wood.co.uk/">Chris Hastie</a> and 
