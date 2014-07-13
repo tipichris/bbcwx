@@ -256,7 +256,7 @@
 
   "overrideTheme": {
     "type" : "checkbox",
-    "default" : false,
+    "default" : true,
     "description": "Override desktop theme (enables the settings below)",
     "tooltip": "Check this to override the desktop theme and configure the appearance manually"
   },
