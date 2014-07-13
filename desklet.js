@@ -1946,7 +1946,7 @@ wxDriverOWM.prototype = {
 
       for (let i=0; i<json.list.length; i++) {
         let day = new Object();
-        day.day = this._getDayName(new Date(json.list[i].dt *1000).toLocaleFormat( "%u" ));
+        day.day = this._getDayName(new Date(json.list[i].dt *1000).toLocaleFormat( "%w" ));
         day.minimum_temperature = json.list[i].temp.min;
         day.maximum_temperature = json.list[i].temp.max;
         day.pressure = json.list[i].pressure;
@@ -2499,7 +2499,7 @@ wxDriverWWO.prototype = {
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
-        day.day = this._getDayName(new Date(days[i].date).toLocaleFormat("%u"));
+        day.day = this._getDayName(new Date(days[i].date).toLocaleFormat("%w"));
         day.minimum_temperature = days[i].tempMinC;
         day.maximum_temperature = days[i].tempMaxC;
         //day.pressure = json.list[i].pressure;
@@ -2746,7 +2746,7 @@ wxDriverForecastIo.prototype = {
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
-        day.day = this._getDayName(new Date(days[i].time * 1000).toLocaleFormat("%u"));
+        day.day = this._getDayName(new Date(days[i].time * 1000).toLocaleFormat("%w"));
         day.minimum_temperature = days[i].temperatureMin;
         day.maximum_temperature = days[i].temperatureMax;
         day.minimum_feelslike = days[i].apparentTemperatureMin;
