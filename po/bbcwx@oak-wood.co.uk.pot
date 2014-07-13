@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.7b3\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2014-07-13 10:47+0100\n"
+"POT-Creation-Date: 2014-07-13 15:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -597,7 +597,7 @@ msgid ""
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
-msgid "Right centre"
+msgid "Bottom center"
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
@@ -605,7 +605,7 @@ msgid "Default"
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
-msgid "Top centre"
+msgid "Left center"
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
@@ -621,7 +621,7 @@ msgid "Top left"
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
-msgid "Bottom centre"
+msgid "Right center"
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
@@ -629,7 +629,7 @@ msgid "Bottom right"
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
-msgid "Left centre"
+msgid "Top center"
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-

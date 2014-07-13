@@ -360,13 +360,13 @@
     "options" : {
       "Default": 0,
       "Top left": 8,
-      "Left centre": 7,
+      "Left center": 7,
       "Bottom left": 6,
-      "Bottom centre": 5,
+      "Bottom center": 5,
       "Bottom right": 4,
-      "Right centre": 3,
+      "Right center": 3,
       "Top right" : 2,
-      "Top centre" : 1
+      "Top center" : 1
     },
     "tooltip": "Select the point on the desklet to which it is anchored. This point will remain static as the desklet grows and shrinks"
   }
