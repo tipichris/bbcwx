@@ -603,7 +603,6 @@ msgstr ""
 "remain static as the desklet grows and shrinks"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
-#, fuzzy
 msgid "Bottom center"
 msgstr "Bottom centre"
 
@@ -612,7 +611,6 @@ msgid "Default"
 msgstr "Default"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
-#, fuzzy
 msgid "Left center"
 msgstr "Left centre"
 
@@ -629,7 +627,6 @@ msgid "Top left"
 msgstr "Top left"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
-#, fuzzy
 msgid "Right center"
 msgstr "Right centre"
 
@@ -638,7 +635,6 @@ msgid "Bottom right"
 msgstr "Bottom right"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
-#, fuzzy
 msgid "Top center"
 msgstr "Top centre"
 
