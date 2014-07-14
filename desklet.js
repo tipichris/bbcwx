@@ -1738,9 +1738,12 @@ wxDriverYahoo.prototype = {
         day.day = forecasts[i].getAttributeValue('day');
         day.maximum_temperature = forecasts[i].getAttributeValue('high');
         day.minimum_temperature = forecasts[i].getAttributeValue('low');
-        //day.weathertext = forecasts[i].getAttributeValue('text');
-        // ### TODO : use text when locale is en
-        day.weathertext = this._getWeatherTextFromYahooCode(forecasts[i].getAttributeValue('code'));
+        // use the text if our locale is English, otherwise try and get a translation from the code
+        if (this._isEnglish) {
+          day.weathertext = forecasts[i].getAttributeValue('text');
+        } else {
+          day.weathertext = this._getWeatherTextFromYahooCode(forecasts[i].getAttributeValue('code'));
+        }
         day.icon = this._mapicon(forecasts[i].getAttributeValue('code'));
         this.data.days[i] = day;
       }
@@ -2966,9 +2969,12 @@ wxDriverTWC.prototype = {
         var dayparts = forecasts[i].getChildElements("part");
         var p = 0;
         if (dayparts[0].getChildElement('icon').getText() == '') p = 1;
-        //day.weathertext = dayparts[p].getChildElement('t').getText();
-        // ### TODO use text when locale is en
-        day.weathertext = this._getWeatherTextFromYahooCode(dayparts[p].getChildElement('icon').getText());
+        // use the text if our locale is English, otherwise try and get a translation from the code
+        if (this._isEnglish) {
+          day.weathertext = dayparts[p].getChildElement('t').getText();
+        } else {
+          day.weathertext = this._getWeatherTextFromYahooCode(dayparts[p].getChildElement('icon').getText());
+        }
         day.icon = this._mapicon(dayparts[p].getChildElement('icon').getText());
         day.humidity = dayparts[p].getChildElement('hmid').getText();
         var windf = dayparts[p].getChildElement('wind');
