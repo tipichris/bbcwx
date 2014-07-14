@@ -1,6 +1,6 @@
 {
-    "description": "Display weather from the BBC, Yahoo! or Open Weather Map", 
-    "last-edited": "1391160776", 
+    "description": "Display weather from several web services on your desktop", 
+    "last-edited": "1405366621", 
     "name": "Weather Desklet", 
     "uuid": "bbcwx@oak-wood.co.uk",
     "max-instances": "10",
