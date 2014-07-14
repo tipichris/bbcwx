@@ -1551,6 +1551,7 @@ wxDriverYahoo.prototype = {
     this.capabilities.forecast.humidity =  false;  
     this.capabilities.cc.visibility = false;
     this._woeidcache = new Object();
+    this._isEnglish = GLib.get_language_names()[0].substr(0,2).toLowerCase() == 'en' ? true : false;
   },
   
   // for the yahoo driver, this is a wrapper around _refreshData. This is needed in order
@@ -1718,9 +1719,12 @@ wxDriverYahoo.prototype = {
 
       this.data.cc.temperature = conditions.getAttributeValue('temp');
       this.data.cc.obstime = conditions.getAttributeValue('date');
-      //this.data.cc.weathertext = conditions.getAttributeValue('text');
-      // ### TODO : use text when locale is en
-      this.data.cc.weathertext = this._getWeatherTextFromYahooCode(conditions.getAttributeValue('code'));
+      // use the text if our locale is English, otherwise try and get a translation from the code
+      if (this._isEnglish) {
+        this.data.cc.weathertext = conditions.getAttributeValue('text');
+      } else {
+        this.data.cc.weathertext = this._getWeatherTextFromYahooCode(conditions.getAttributeValue('code'));
+      }
       this.data.cc.icon = this._mapicon(conditions.getAttributeValue('code'));
       this.data.cc.feelslike = wind.getAttributeValue('chill');
       
@@ -2863,11 +2867,9 @@ wxDriverTWC.prototype = {
     this.capabilities.forecast.pressure =  false;
     this.capabilities.forecast.pressure_direction =  false;
     this.capabilities.forecast.visibility = false;
-    this._woeidcache = new Object();
+    this._isEnglish = GLib.get_language_names()[0].substr(0,2).toLowerCase() == 'en' ? true : false;
   },
   
-  // for the yahoo driver, this is a wrapper around _refreshData. This is needed in order
-  // to get the yahoo WOEID if this.stationID has been provided as lat,lon
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
@@ -2937,9 +2939,12 @@ wxDriverTWC.prototype = {
       this.data.cc.temperature = cc.getChildElement('tmp').getText();
       this.data.cc.feelslike = cc.getChildElement('flik').getText();
       this.data.cc.obstime = new Date(cc.getChildElement('lsup').getText()).toLocaleFormat( "%H:%M %Z" );
-      //this.data.cc.weathertext = cc.getChildElement('t').getText();
-      //### TODO use text when locale is en
-      this.data.cc.weathertext = this._getWeatherTextFromYahooCode(cc.getChildElement('icon').getText());
+      // use the text if our locale is English, otherwise try and get a translation from the code
+      if (this._isEnglish) {
+        this.data.cc.weathertext = cc.getChildElement('t').getText();
+      } else {
+        this.data.cc.weathertext = this._getWeatherTextFromYahooCode(cc.getChildElement('icon').getText());
+      }
       if(this.data.cc.weathertext == 'N/A') this.data.cc.weathertext = '';
       this.data.cc.icon = this._mapicon(cc.getChildElement('icon').getText());
       let wind = cc.getChildElement('wind');
