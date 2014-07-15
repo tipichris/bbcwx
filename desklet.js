@@ -2721,6 +2721,8 @@ wxDriverForecastIo.prototype = {
           if (geo) {
             this._load_geo(geo);
           }
+          this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
+          this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
           // get the main object to update the display  
           deskletObj.displayMeta(); 
         });
@@ -2811,8 +2813,6 @@ wxDriverForecastIo.prototype = {
       this.data.country = geo.country;
       this._geocache[this.stationID].city = geo.city;
       this._geocache[this.stationID].country = geo.country;
-      this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
-      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
     } catch(e) {
       global.logError(e);
