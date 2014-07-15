@@ -726,6 +726,9 @@ MyDesklet.prototype = {
     if (this.show.meta.country) {
       city = city + ', ' + this.service.data.country;
     }
+    // debugging
+    //city += this.service.data.wgs84.lat ? ', ' + this.service.data.wgs84.lat : '';
+    //city += this.service.data.wgs84.lon ? ', ' + this.service.data.wgs84.lon : '';
     this.cityname.text=city;
     if (this.service.linkIcon) {
       this.banner.label = '';
@@ -1005,6 +1008,7 @@ wxDriver.prototype = {
   // terms of service when setting specific values
   minTTL: 600,
   
+  
   lang_map: {},
   
   ////////////////////////////////////////////////////////////////////////////
@@ -1069,6 +1073,10 @@ wxDriver.prototype = {
   _emptyData: function() {
     this.data.city = '';
     this.data.country = '';
+    this.data.wgs84 = new Object();
+    this.data.wgs84.lat = null;
+    this.data.wgs84.lon = null;
+    
     this.data.days=[];
     
     // the status of the service request
@@ -1336,6 +1344,9 @@ wxDriverBBC.prototype = {
       this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.linkURL = channel.getChildElement("link").getText();
       let items = channel.getChildElements("item");
+      let geo = items[0].getChildElement("georss:point").getText();
+      this.data.wgs84.lat = geo.split(' ')[0].trim();
+      this.data.wgs84.lon = geo.split(' ')[1].trim();
       let desc, title;
 
       for (let i=0; i<items.length; i++) {
@@ -1707,7 +1718,6 @@ wxDriverYahoo.prototype = {
       this.data.region = geo.getAttributeValue('region');
       this.data.country = geo.getAttributeValue('country');
 
-
       this.data.cc.wind_speed = wind.getAttributeValue('speed');
       this.data.cc.wind_direction = this.compassDirection(wind.getAttributeValue('direction'));
       this.data.cc.pressure = atmosphere.getAttributeValue('pressure');
@@ -1748,6 +1758,9 @@ wxDriverYahoo.prototype = {
         day.icon = this._mapicon(forecasts[i].getAttributeValue('code'));
         this.data.days[i] = day;
       }
+      
+      this.data.wgs84.lat = items[0].getChildElement('geo:lat').getText();
+      this.data.wgs84.lon = items[0].getChildElement('geo:long').getText();
       
       this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
       this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
@@ -1949,6 +1962,8 @@ wxDriverOWM.prototype = {
     try {
       this.data.city = json.city.name;
       this.data.country = json.city.country;
+      this.data.wgs84.lat = json.city.coord.lat;
+      this.data.wgs84.lon = json.city.coord.lon;
       this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
       this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
 
@@ -2292,6 +2307,8 @@ wxDriverWU.prototype = {
       this.data.cc.visibility = co.visibility_km;
       this.data.city = co.display_location.city;
       this.data.country = co.display_location.country;
+      this.data.wgs84.lat = co.display_location.latitude;
+      this.data.wgs84.lon = co.display_location.longitude;
       this.linkURL = co.forecast_url + this._referralRef;
       this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
@@ -2545,6 +2562,8 @@ wxDriverWWO.prototype = {
       this.data.city = locdata.areaName[0].value;
       this.data.country = locdata.country[0].value;
       this.data.region = locdata.region[0].value;
+      this.data.wgs84.lat = locdata.latitude;
+      this.data.wgs84.lon = locdata.longitude;
       // we don't reliably get weatherURL in the response :(
       if (typeof locdata.weatherUrl != 'undefined') {
         this.linkURL = locdata.weatherUrl[0].value;
@@ -2686,6 +2705,9 @@ wxDriverForecastIo.prototype = {
     
     // check the stationID looks valid before going further
     if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
+      let latlon = this.stationID.split(',')
+      this.data.wgs84.lat = latlon[0];
+      this.data.wgs84.lon = latlon[1];
       
       let apiurl = this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=ca&exclude=minutely,hourly,alerts,flags';
       this.langcode = this.getLangCode();
@@ -2712,8 +2734,7 @@ wxDriverForecastIo.prototype = {
         this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
         deskletObj.displayMeta();
       } else {
-        //global.log ("bbcwx: Looking up city for " + this.stationID);
-        let latlon = this.stationID.split(',')
+        //global.log ("bbcwx: Looking up city for " + this.stationID);  
         // just use the most preferred language and hope Yahoo! supports it
         let locale = GLib.get_language_names()[0];
         let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + latlon[0] + '%2C' + latlon[1] +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
@@ -2937,7 +2958,8 @@ wxDriverTWC.prototype = {
       this.data.country = locparts[locparts.length-1].trim();
       this.linkURL = 'http://www.weather.com/weather/today/' + geo.getAttributeValue('id').trim();
       this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-
+      this.data.wgs84.lat=geo.getChildElement('lat').getText();
+      this.data.wgs84.lon=geo.getChildElement('lon').getText();
       // data.region
 
       this.data.cc.temperature = cc.getChildElement('tmp').getText();
