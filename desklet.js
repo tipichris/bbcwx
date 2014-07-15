@@ -80,6 +80,7 @@ const Gettext = imports.gettext
 Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale")
 
 function _(str) {
+  if (!str.toString().length) return '';
   return Gettext.dgettext(UUID, str)
 }
 
