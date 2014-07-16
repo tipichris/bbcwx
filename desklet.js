@@ -169,6 +169,8 @@ MyDesklet.prototype = {
       //## The desklet title
       this.setHeader(_('Weather'));
       
+      this._geocache = new Object();
+      
       this.helpFile = DESKLET_DIR + "/help.html"; 
       //## Link to Help file in context menu
       this._menu.addAction(_('Help'), Lang.bind(this, function() {
@@ -722,14 +724,34 @@ MyDesklet.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Update the display of the meta data, eg city name
   displayMeta: function() {
-    let city=this.service.data.city;
-    if (this.show.meta.country) {
-      city = city + ', ' + this.service.data.country;
+    let locsrc = 'service';
+    this.manuallocation = '';
+    if (this.manuallocation.toString().length) locsrc = 'manual'
+    
+    this.displaycity = '';
+    this.tooltiplocation = '';
+    
+    if (locsrc == 'manual') {
+      this.displaycity=this.manuallocation;
+      this.tooltiplocation = this.manuallocation
+    } else {
+      if (!this.service.data.city.toString().length) {
+        locsrc = 'yahoo';
+        this.displaycity=this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
+        this.tooltiplocation = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;    
+      } else {
+        this.displaycity=this.service.data.city;
+        this.tooltiplocation = this.service.data.city;
+        if (this.show.meta.country) {
+          this.displaycity += ', ' + this.service.data.country;
+        }
+      }
     }
     // debugging
     //city += this.service.data.wgs84.lat ? ', ' + this.service.data.wgs84.lat : '';
     //city += this.service.data.wgs84.lon ? ', ' + this.service.data.wgs84.lon : '';
-    this.cityname.text=city;
+    this._updateLocationDisplay();
+    
     if (this.service.linkIcon) {
       this.banner.label = '';
       let bannericonimage = this._getIconImage(this.service.linkIcon.file, this.service.linkIcon.height*this.zoom, this.service.linkIcon.width*this.zoom, false);
@@ -738,8 +760,8 @@ MyDesklet.prototype = {
     } else {
       this.banner.label = this.service.linkText;
     }
-    this.bannertooltip.set_text(this.service.linkTooltip);
-    if (this.cwicontooltip) this.cwicontooltip.set_text(this.service.linkTooltip);
+    
+    
     try {
       if (this.bannersig) this.banner.disconnect(this.bannersig);
       if (this.cwiconsig && this.cwicon) this.cwicon.disconnect(this.cwiconsig);
@@ -757,7 +779,87 @@ MyDesklet.prototype = {
     if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
       this.cityname.text = (this.service.data.status.lasterror) ? _('Error: %s').format(this.service.data.status.lasterror) : _('No data') ;
     }
+    else if (locsrc == 'yahoo') {
+      // get geo data
+      let latlon = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
+      if (typeof this._geocache[latlon] === 'object') {
+        global.log ("bbcwx: geocache hit for " + latlon + ": " + this._geocache[this.stationID].city);
+        this.displaycity = this._geocache[latlon].city;
+        this.tooltiplocation = this.displaycity
+        if (this.show.meta.country) {
+          this.displaycity += ', ' + this._geocache[latlon].country;
+        }
+        this._updateLocationDisplay();
+      } else {
+        global.log ("bbcwx: Looking up city for " + latlon);  
+        // just use the most preferred language and hope Yahoo! supports it
+        let locale = GLib.get_language_names()[0];
+        local='ar';
+        let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
+        let b = this._getGeo(geourl, function(geo) {
+          if (geo) {
+            this._load_geo(geo);
+            this._updateLocationDisplay();
+          }         
+          // get the main object to update the display  
+          //this._updateLocationDisplay();
+        });
+
+      } 
+    }
   },
+  
+  _updateLocationDisplay: function() {
+    this.cityname.text=this.displaycity;
+    //## %s is replaced by place name
+    let linktooltip = _('Click for the full forecast for %s').format(this.tooltiplocation)
+    this.bannertooltip.set_text(linktooltip);
+    if (this.cwicontooltip) this.cwicontooltip.set_text(linktooltip);
+  },
+  
+  _load_geo: function(data) {
+    if (!data) {
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+   
+    let json = JSON.parse(data);
+    let latlon = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
+    this._geocache[latlon] = new Object();
+    
+    try {
+      let geo = json.query.results.Result;
+      this.displaycity = geo.city;
+      this.tooltiplocation = this.displaycity;
+      if (this.show.meta.country) {
+        this.displaycity += ', ' + geo.country;
+      }
+      
+      this._geocache[latlon].city = geo.city;
+      this._geocache[latlon].country = geo.country;
+    } catch(e) {
+      global.logError(e);
+      delete this._geocache[latlon]
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+    }
+  },
+  
+  _getGeo: function(url, callback) {
+    //debugging
+    global.log('bbcwx: geo, calling ' + url);
+    var here = this;
+    let message = Soup.Message.new('GET', url);
+    _httpSession.queue_message(message, function (session, message) {
+      if( message.status_code == 200) {
+        try {callback.call(here,message.response_body.data.toString());} catch(e) {global.logError(e)}
+      } else {
+        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
+        //here.data.status.lasterror = message.status_code;
+        callback.call(here,false);
+      }
+    });
+  }, 
+  
   
   ////////////////////////////////////////////////////////////////////////////
   // Get an icon
@@ -993,10 +1095,7 @@ wxDriver.prototype = {
   linkURL: '',
   // text for credit link
   linkText: '',
-  // tooltip for credit link
-  linkTooltip: 'Click for more information',
-  //## %s is replaced by place name
-  lttTemplate: _('Click for the full forecast for %s'),
+
   linkIcon: false,
   // the maximum number of days of forecast supported 
   // by this driver
@@ -1280,7 +1379,6 @@ wxDriverBBC.prototype = {
   
   // these will be dynamically reset when data is loaded
   linkURL: 'http://www.bbc.co.uk/weather/',
-  linkTooltip: 'Visit the BBC weather website',
   
   _baseURL: 'http://open.live.bbc.co.uk/weather/feeds/en/',
   
@@ -1295,7 +1393,6 @@ wxDriverBBC.prototype = {
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
-    this.linkTooltip = 'Visit the BBC weather website';
     this.linkURL = 'http://www.bbc.co.uk/weather';
     
     // process the three day forecast
@@ -1341,7 +1438,6 @@ wxDriverBBC.prototype = {
       let location = channel.getChildElement("title").getText().split("Forecast for")[1].trim();
       this.data.city = location.split(',')[0].trim();
       this.data.country = location.split(',')[1].trim();
-      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.linkURL = channel.getChildElement("link").getText();
       let items = channel.getChildElements("item");
       let geo = items[0].getChildElement("georss:point").getText();
@@ -1547,7 +1643,6 @@ wxDriverYahoo.prototype = {
   
   // these will be dynamically reset when data is loaded
   linkURL: 'http://weather.yahoo.com',
-  linkTooltip: 'Visit the Yahoo! Weather website',
   
   _baseURL: 'http://weather.yahooapis.com/forecastrss?u=c&w=',
   
@@ -1571,7 +1666,6 @@ wxDriverYahoo.prototype = {
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
-    this.linkTooltip = 'Visit the Yahoo! Weather website';
     this.linkURL = 'http://weather.yahoo.com/';
     
     // lat,lon location
@@ -1740,7 +1834,6 @@ wxDriverYahoo.prototype = {
       this.data.cc.feelslike = wind.getAttributeValue('chill');
       
       this.linkURL = items[0].getChildElement('link').getText();
-      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
 
       let forecasts = items[0].getChildElements('yweather:forecast');
 
@@ -1853,7 +1946,6 @@ wxDriverOWM.prototype = {
   
   // these will be dynamically reset when data is loaded
   linkURL: 'http://openweathermap.org',
-  linkTooltip: 'Visit the Open Weather Map website',
   
   _baseURL: 'http://api.openweathermap.org/data/2.5/',
   
@@ -1892,7 +1984,6 @@ wxDriverOWM.prototype = {
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
-    this.linkTooltip = 'Visit the Open Weather Map website';
     this.linkURL = 'http://openweathermap.org';
 
     if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
@@ -1965,7 +2056,6 @@ wxDriverOWM.prototype = {
       this.data.wgs84.lat = json.city.coord.lat;
       this.data.wgs84.lon = json.city.coord.lon;
       this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
-      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
 
       for (let i=0; i<json.list.length; i++) {
         let day = new Object();
@@ -2128,7 +2218,6 @@ wxDriverWU.prototype = {
   
   // these will be dynamically reset when data is loaded
   linkURL: 'http://wunderground.com' + this._referralRef,
-  linkTooltip: 'Visit the Weather Underground website',
   linkIcon: {
     file: 'wunderground',
     width: 145,
@@ -2234,7 +2323,6 @@ wxDriverWU.prototype = {
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
-    this.linkTooltip = 'Visit the Weather Underground website';
     this.linkURL = 'http://wunderground.com' + this._referralRef;
     
     this.langcode = this.getLangCode();
@@ -2310,7 +2398,6 @@ wxDriverWU.prototype = {
       this.data.wgs84.lat = co.display_location.latitude;
       this.data.wgs84.lon = co.display_location.longitude;
       this.linkURL = co.forecast_url + this._referralRef;
-      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
       this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
       this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
@@ -2412,7 +2499,6 @@ wxDriverWWO.prototype = {
   
   // these will be dynamically reset when data is loaded
   linkURL: 'http://www.worldweatheronline.com',
-  linkTooltip: 'Visit the World Weather Online website',
 
   // see http://developer.worldweatheronline.com/free_api_terms_of_use,
   // point 3
@@ -2477,7 +2563,6 @@ wxDriverWWO.prototype = {
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
-    this.linkTooltip = 'Visit the World Weather Online website';
     this.linkURL = 'http://www.worldweatheronline.com';
     
     this.langcode = this.getLangCode();
@@ -2571,7 +2656,6 @@ wxDriverWWO.prototype = {
         this.linkURL = 'http://www.worldweatheronline.com/v2/weather.aspx?q=' + encodeURIComponent(this.stationID);
       }
       
-      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
       this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
       this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
@@ -2674,7 +2758,6 @@ wxDriverForecastIo.prototype = {
   
   // these will be dynamically reset when data is loaded
   linkURL: 'http://forecast.io',
-  linkTooltip: 'Visit the Forecast.io website',
   
   _baseURL: 'https://api.forecast.io/forecast/',
   
@@ -2694,20 +2777,20 @@ wxDriverForecastIo.prototype = {
     this.capabilities.cc.pressure_direction =  false;
     this.capabilities.cc.obstime = false;
     //this.capabilities.meta.country = false;
-    this._geocache = new Object();
+    //this._geocache = new Object();
   },
   
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
-    this.linkTooltip = 'Visit the Forecast.io website';
     this.linkURL = 'http://forecast.io';
     
     // check the stationID looks valid before going further
     if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
       let latlon = this.stationID.split(',')
-      this.data.wgs84.lat = latlon[0];
-      this.data.wgs84.lon = latlon[1];
+      //this.data.wgs84.lat = latlon[0];
+      //this.data.wgs84.lon = latlon[1];
+      //this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
       
       let apiurl = this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=ca&exclude=minutely,hourly,alerts,flags';
       this.langcode = this.getLangCode();
@@ -2721,34 +2804,9 @@ wxDriverForecastIo.prototype = {
         // get the main object to update the display
         deskletObj.displayForecast();
         deskletObj.displayCurrent();   
-        //deskletObj.displayMeta(); 
+        deskletObj.displayMeta(); 
       });
-      
-      // get geo data
-      if (typeof this._geocache[this.stationID] === 'object') {
-        //global.log ("bbcwx: geocache hit for " + this.stationID + ": " + this._geocache[this.stationID].city);
-        this.data.city = this._geocache[this.stationID].city;
-        this.data.country = this._geocache[this.stationID].country;
-        this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
-        this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-        this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
-        deskletObj.displayMeta();
-      } else {
-        //global.log ("bbcwx: Looking up city for " + this.stationID);  
-        // just use the most preferred language and hope Yahoo! supports it
-        let locale = GLib.get_language_names()[0];
-        let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + latlon[0] + '%2C' + latlon[1] +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
-        let b = this._getWeather(geourl, function(geo) {
-          if (geo) {
-            this._load_geo(geo);
-          }
-          this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
-          this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-          // get the main object to update the display  
-          deskletObj.displayMeta(); 
-        });
 
-      }
     } else {
       this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
@@ -2804,13 +2862,13 @@ wxDriverForecastIo.prototype = {
       this.data.cc.visibility = cc.visibility;
       this.data.cc.feelslike = cc.apparentTemperature;
       
-      //this.data.city = json.latitude + ', ' + json.longitude;
-      //this.linkURL = 'http://forecast.io/#/f/' + json.latitude + ',' + json.longitude;
+      this.data.wgs84.lat = json.latitude;
+      this.data.wgs84.lon = json.longitude;
+      this.linkURL = 'http://forecast.io/#/f/' + json.latitude + ',' + json.longitude;
       
-      //this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
-      //this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
       this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
       this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
     } catch(e) {
       global.logError(e);
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
@@ -2882,7 +2940,6 @@ wxDriverTWC.prototype = {
   
   // these will be dynamically reset when data is loaded
   linkURL: 'http://www.weather.com',
-  linkTooltip: 'Visit the weather.com website',
   
   _baseURL: 'http://wxdata.weather.com/wxdata/weather/local/',
   
@@ -2898,7 +2955,6 @@ wxDriverTWC.prototype = {
   refreshData: function(deskletObj) {
     // reset the data object
     this._emptyData();
-    this.linkTooltip = 'Visit the weather.com website';
     this.linkURL = 'http://www.weather.com';
     
     // process the forecast
@@ -2957,7 +3013,6 @@ wxDriverTWC.prototype = {
       //### TODO this returns state for US - somehow detect that and add US
       this.data.country = locparts[locparts.length-1].trim();
       this.linkURL = 'http://www.weather.com/weather/today/' + geo.getAttributeValue('id').trim();
-      this.linkTooltip = this.lttTemplate.replace('%s', this.data.city);
       this.data.wgs84.lat=geo.getChildElement('lat').getText();
       this.data.wgs84.lon=geo.getChildElement('lon').getText();
       // data.region
