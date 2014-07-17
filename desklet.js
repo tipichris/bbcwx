@@ -79,6 +79,10 @@ const BBCWX_TRANSLATION_URL = 'https://github.com/tipichris/bbcwx/wiki/Translati
 const Gettext = imports.gettext
 Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale")
 
+// list of preferred languages, most preferred first
+const LangList = GLib.get_language_names()
+//const LangList = ['ar', 'zh_CN', 'es_ES', 'es', 'en'];
+
 function _(str) {
   if (!str.toString().length) return '';
   return Gettext.dgettext(UUID, str)
@@ -793,7 +797,7 @@ MyDesklet.prototype = {
       } else {
         global.log ("bbcwx: Looking up city for " + latlon);  
         // just use the most preferred language and hope Yahoo! supports it
-        let locale = GLib.get_language_names()[0];
+        let locale = LangList[0];
         local='ar';
         let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
         let b = this._getGeo(geourl, function(geo) {
@@ -1280,8 +1284,7 @@ wxDriver.prototype = {
   ////////////////////////////////////////////////////////////////////////////
   // Get the service specific language code that best serves the current locale
   getLangCode: function() {
-    let lang_list = GLib.get_language_names();
-    //let lang_list = ['ar','zh_TW', 'zh', 'es','C'];
+    let lang_list = LangList;
     let lang = '';
     for (let i=0; i<lang_list.length; i++) {
       if (lang_list[i] != 'C') {
@@ -1658,7 +1661,7 @@ wxDriverYahoo.prototype = {
     this.capabilities.forecast.humidity =  false;  
     this.capabilities.cc.visibility = false;
     this._woeidcache = new Object();
-    this._isEnglish = GLib.get_language_names()[0].substr(0,2).toLowerCase() == 'en' ? true : false;
+    this._isEnglish = LangList[0].substr(0,2).toLowerCase() == 'en' ? true : false;
   },
   
   // for the yahoo driver, this is a wrapper around _refreshData. This is needed in order
@@ -2949,7 +2952,7 @@ wxDriverTWC.prototype = {
     this.capabilities.forecast.pressure =  false;
     this.capabilities.forecast.pressure_direction =  false;
     this.capabilities.forecast.visibility = false;
-    this._isEnglish = GLib.get_language_names()[0].substr(0,2).toLowerCase() == 'en' ? true : false;
+    this._isEnglish = LangList[0].substr(0,2).toLowerCase() == 'en' ? true : false;
   },
   
   refreshData: function(deskletObj) {
