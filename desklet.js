@@ -798,7 +798,6 @@ MyDesklet.prototype = {
         global.log ("bbcwx: Looking up city for " + latlon);  
         // just use the most preferred language and hope Yahoo! supports it
         let locale = LangList[0];
-        local='ar';
         let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
         let b = this._getGeo(geourl, function(geo) {
           if (geo) {
