@@ -174,6 +174,8 @@ MyDesklet.prototype = {
       this.setHeader(_('Weather'));
       
       this._geocache = new Object();
+      this._geocache.yahoo = new Object();
+      this._geocache.google = new Object();
       
       this.helpFile = DESKLET_DIR + "/help.html"; 
       //## Link to Help file in context menu
@@ -740,7 +742,7 @@ MyDesklet.prototype = {
       this.tooltiplocation = this.manuallocation
     } else {
       if (!this.service.data.city.toString().length) {
-        locsrc = 'yahoo';
+        locsrc = 'google';
         this.displaycity=this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
         this.tooltiplocation = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;    
       } else {
@@ -783,25 +785,22 @@ MyDesklet.prototype = {
     if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
       this.cityname.text = (this.service.data.status.lasterror) ? _('Error: %s').format(this.service.data.status.lasterror) : _('No data') ;
     }
-    else if (locsrc == 'yahoo') {
+    else if (locsrc == 'yahoo' || locsrc == 'google') {
       // get geo data
       let latlon = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
-      if (typeof this._geocache[latlon] === 'object') {
-        global.log ("bbcwx: geocache hit for " + latlon + ": " + this._geocache[this.stationID].city);
-        this.displaycity = this._geocache[latlon].city;
+      if (typeof this._geocache[locsrc][latlon] === 'object') {
+        global.log ("bbcwx: geocache hit for " + latlon + ": " + this._geocache[locsrc][latlon].city);
+        this.displaycity = this._geocache[locsrc][latlon].city;
         this.tooltiplocation = this.displaycity
         if (this.show.meta.country) {
-          this.displaycity += ', ' + this._geocache[latlon].country;
+          this.displaycity += ', ' + this._geocache[locsrc][latlon].country;
         }
         this._updateLocationDisplay();
       } else {
-        global.log ("bbcwx: Looking up city for " + latlon);  
-        // just use the most preferred language and hope Yahoo! supports it
-        let locale = LangList[0];
-        let geourl = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
-        let b = this._getGeo(geourl, function(geo) {
+        global.log ("bbcwx: Looking up city for " + latlon + " at " + locsrc);  
+        let b = this._getGeo(locsrc, function(geo, locsrc) {
           if (geo) {
-            this._load_geo(geo);
+            this._load_geo(geo, locsrc);
             this._updateLocationDisplay();
           }         
           // get the main object to update the display  
@@ -820,7 +819,20 @@ MyDesklet.prototype = {
     if (this.cwicontooltip) this.cwicontooltip.set_text(linktooltip);
   },
   
-  _load_geo: function(data) {
+  _load_geo: function(data, locsrc) {
+    switch(locsrc) {
+      case 'google':
+        this._load_geo_google(data);
+        break;
+      case 'yahoo':
+        this._load_geo_yahoo(data);
+        break;
+      default:
+        this._load_geo_yahoo(data);
+    }
+  },
+  
+  _load_geo_yahoo: function (data) {
     if (!data) {
       //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       return;
@@ -828,7 +840,7 @@ MyDesklet.prototype = {
    
     let json = JSON.parse(data);
     let latlon = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
-    this._geocache[latlon] = new Object();
+    this._geocache.yahoo[latlon] = new Object();
     
     try {
       let geo = json.query.results.Result;
@@ -838,27 +850,128 @@ MyDesklet.prototype = {
         this.displaycity += ', ' + geo.country;
       }
       
-      this._geocache[latlon].city = geo.city;
-      this._geocache[latlon].country = geo.country;
+      this._geocache.yahoo[latlon].city = geo.city;
+      this._geocache.yahoo[latlon].country = geo.country;
     } catch(e) {
       global.logError(e);
-      delete this._geocache[latlon]
+      delete this._geocache.yahoo[latlon]
       //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
     }
   },
   
-  _getGeo: function(url, callback) {
+  _load_geo_google: function (data) {
+    if (!data) {
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+    let city = '';
+    let country = ''; 
+    let admin3 = new Object();
+    let locality = new Object();
+    
+    let json = JSON.parse(data);
+    
+    let latlon = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
+    this._geocache.google[latlon] = new Object();
+    
+    try {
+      let results = json.results;
+      for (let i=0; i<results.length; i++) {
+        for (let t=0; t<results[i].types.length; t++) {
+          if (results[i].types[t] == 'administrative_area_level_3') {
+            admin3 = results[i];
+          }
+          if (results[i].types[t] == 'locality') {
+            locality = results[i];
+          }     
+          if (results[i].types[t] == 'street_address') {
+            streetaddr = results[i];
+          }          
+        }
+        
+      }
+
+      if (typeof locality.address_components !== "undefined") {
+        let components = locality.address_components;
+        for (let i=0; i<components.length; i++) {
+          for (let t=0; t<components[i].types.length; t++) {
+            if (components[i].types[t] == 'locality') {
+              city = components[i].long_name;
+            }
+            if (components[i].types[t] == 'country') {
+              country = components[i].long_name;
+            }
+          }
+        }  
+      }
+      else if (typeof streetaddr.address_components !== "undefined") {
+        let components = streetaddr.address_components;
+        for (let i=0; i<components.length; i++) {
+          for (let t=0; t<components[i].types.length; t++) {
+            if (components[i].types[t] == 'locality') {
+              city = components[i].long_name;
+            }
+            if (components[i].types[t] == 'country') {
+              country = components[i].long_name;
+            }
+          }
+        }  
+      }      
+      else if (typeof admin3.address_components !== "undefined") {
+        let components = admin3.address_components;
+        for (let i=0; i<components.length; i++) {
+          for (let t=0; t<components[i].types.length; t++) {
+            if (components[i].types[t] == 'administrative_area_level_3') {
+              city = components[i].long_name;
+            }
+            if (components[i].types[t] == 'country') {
+              country = components[i].long_name;
+            }
+          }
+        }  
+      }
+      
+      if (city) {
+        this.displaycity = city;
+        this.tooltiplocation = this.displaycity;
+        if (this.show.meta.country && country) {
+          this.displaycity += ', ' + country;
+        }
+      }
+      
+      this._geocache.google[latlon].city = city;
+      this._geocache.google[latlon].country = country;
+
+    } catch(e) {
+      global.logError(e);
+      delete this._geocache.google[latlon]
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+    }
+  },
+  
+  _getGeo: function( locsrc, callback) {
+    // just use the most preferred language and hope Yahoo! / Google  supports it
+    let locale = LangList[0];
+    let url = '';
+    if (locsrc == 'yahoo') {
+      url = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
+    } else if (locsrc == 'google') {
+      url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon + '&language=' + locale;
+    } else {
+      // set some error flag?
+      return;
+    }
     //debugging
     global.log('bbcwx: geo, calling ' + url);
     var here = this;
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
       if( message.status_code == 200) {
-        try {callback.call(here,message.response_body.data.toString());} catch(e) {global.logError(e)}
+        try {callback.call(here,message.response_body.data.toString(),locsrc);} catch(e) {global.logError(e)}
       } else {
         global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
         //here.data.status.lasterror = message.status_code;
-        callback.call(here,false);
+        callback.call(here,false,locsrc);
       }
     });
   }, 
@@ -2877,29 +2990,6 @@ wxDriverForecastIo.prototype = {
       //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
     }      
-  },
-  
-  _load_geo: function(data) {
-    if (!data) {
-      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-      return;
-    }    
-   
-    let json = JSON.parse(data);
-    this._geocache[this.stationID] = new Object();
-    
-    try {
-      let geo = json.query.results.Result;
-      this.data.city = geo.city;
-      this.data.country = geo.country;
-      this._geocache[this.stationID].city = geo.city;
-      this._geocache[this.stationID].country = geo.country;
-      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
-    } catch(e) {
-      global.logError(e);
-      delete this._geocache[this.stationID]
-      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
-    }
   },
   
   _mapicon: function(iconcode) {
