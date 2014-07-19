@@ -339,7 +339,35 @@
   "sep3" : {
     "type" : "separator"
   },
+  
+  "locationlookups" : {
+    "type" : "header",
+    "description" : "Location display settings"
+  },  
+  
+  "locsrc" : {
+    "type": "combobox",
+    "default": "service",
+    "description" : "Get display location from",
+    "options" : {
+      "Data service": "service",
+      "Yahoo!": "yahoo",
+      "Google": "google"
+    },
+    "tooltip": "The source of the text displayed as the current location. Yahoo! and Google may offer city names in other languages"
+  },
+  
+  "manuallocation" : {
+    "type" : "entry",
+    "default" : "",
+    "description" : "Manually override displayed location",
+    "tooltip" : "Set your city name manually."
+  },
 
+  "sep4" : {
+    "type" : "separator"
+  },
+  
   "experimental" : {
     "type" : "header",
     "description" : "Experimental and buggy features (read documentation!!)"

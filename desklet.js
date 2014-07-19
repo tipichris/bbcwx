@@ -163,6 +163,9 @@ MyDesklet.prototype = {
       // a change to webservice requires data to be fetched and the window redrawn
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"webservice","webservice",this.initForecast,null);
       
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"locsrc","locsrc",this.displayMeta,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"manuallocation","manuallocation",this.displayMeta,null);
+      
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"experimental_enabled","experimental_enabled",this.doExperimental,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"gravity","gravity",this.setGravity,null);
       
@@ -728,10 +731,10 @@ MyDesklet.prototype = {
   },
   
   ////////////////////////////////////////////////////////////////////////////
-  // Update the display of the meta data, eg city name
+  // Update the display of the meta data, eg city name, link tooltip. Handles
+  // managing reverse geocode lookups from Yahoo or Google if needed
   displayMeta: function() {
-    let locsrc = 'service';
-    this.manuallocation = '';
+    let locsrc = this.locsrc;
     if (this.manuallocation.toString().length) locsrc = 'manual'
     
     this.displaycity = '';
@@ -741,11 +744,20 @@ MyDesklet.prototype = {
       this.displaycity=this.manuallocation;
       this.tooltiplocation = this.manuallocation
     } else {
+      // if city name from service is empty, use wgs84, or stationID 
       if (!this.service.data.city.toString().length) {
-        locsrc = 'google';
-        this.displaycity=this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
-        this.tooltiplocation = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;    
+        if (this.service.capabilities.meta.wgs84) {
+          // If city name is empty and source is 'service', we'll look it up with Yahoo!
+          if (locsrc == 'service') locsrc = 'yahoo';
+          this.displaycity=this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
+          this.tooltiplocation = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;   
+        } else {
+          this.displaycity = this.stationID;
+          this.tooltiplocation = this.stationID;
+        }
       } else {
+        // initially set the displayed location to that from the data service,
+        // if available. Google / Yahoo lookups we'll do asyncronously later        
         this.displaycity=this.service.data.city;
         this.tooltiplocation = this.service.data.city;
         if (this.show.meta.country) {
@@ -753,9 +765,8 @@ MyDesklet.prototype = {
         }
       }
     }
-    // debugging
-    //city += this.service.data.wgs84.lat ? ', ' + this.service.data.wgs84.lat : '';
-    //city += this.service.data.wgs84.lon ? ', ' + this.service.data.wgs84.lon : '';
+    
+    // initial update (Google/Yahoo to follow)
     this._updateLocationDisplay();
     
     if (this.service.linkIcon) {
@@ -766,8 +777,7 @@ MyDesklet.prototype = {
     } else {
       this.banner.label = this.service.linkText;
     }
-    
-    
+       
     try {
       if (this.bannersig) this.banner.disconnect(this.bannersig);
       if (this.cwiconsig && this.cwicon) this.cwicon.disconnect(this.cwiconsig);
@@ -782,20 +792,24 @@ MyDesklet.prototype = {
           Util.spawnCommandLine("xdg-open " + this.service.linkURL );
       }));
     }
+    
     if (this.service.data.status.meta != BBCWX_SERVICE_STATUS_OK) {
       this.cityname.text = (this.service.data.status.lasterror) ? _('Error: %s').format(this.service.data.status.lasterror) : _('No data') ;
     }
-    else if (locsrc == 'yahoo' || locsrc == 'google') {
-      // get geo data
+    
+    // do async lookup of location with yahoo or google
+    else if (this.service.capabilities.meta.wgs84 && (locsrc == 'yahoo' || locsrc == 'google')) {
       let latlon = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
+      // check the cache
       if (typeof this._geocache[locsrc][latlon] === 'object') {
-        global.log ("bbcwx: geocache hit for " + latlon + ": " + this._geocache[locsrc][latlon].city);
+        global.log ("bbcwx: geocache hit for " + latlon + ", " + locsrc + ": " + this._geocache[locsrc][latlon].city);
         this.displaycity = this._geocache[locsrc][latlon].city;
         this.tooltiplocation = this.displaycity
         if (this.show.meta.country) {
           this.displaycity += ', ' + this._geocache[locsrc][latlon].country;
         }
         this._updateLocationDisplay();
+      // no cache - lookup
       } else {
         global.log ("bbcwx: Looking up city for " + latlon + " at " + locsrc);  
         let b = this._getGeo(locsrc, function(geo, locsrc) {
@@ -803,14 +817,13 @@ MyDesklet.prototype = {
             this._load_geo(geo, locsrc);
             this._updateLocationDisplay();
           }         
-          // get the main object to update the display  
-          //this._updateLocationDisplay();
         });
-
       } 
     }
   },
-  
+
+  ////////////////////////////////////////////////////////////////////////////
+  // Update the display of city name and link tooltip
   _updateLocationDisplay: function() {
     this.cityname.text=this.displaycity;
     //## %s is replaced by place name
@@ -819,6 +832,42 @@ MyDesklet.prototype = {
     if (this.cwicontooltip) this.cwicontooltip.set_text(linktooltip);
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Do async reverse geocode lookups at Yahoo! or Google
+  // -> locsrc: which service to use: either 'yahoo' or 'google'
+  // -> callback: callback function to process returned results
+  _getGeo: function( locsrc, callback) {
+    // just use the most preferred language and hope Yahoo! / Google  supports it
+    let locale = LangList[0];
+    let url = '';
+    if (locsrc == 'yahoo') {
+      url = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
+    } else if (locsrc == 'google') {
+      url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon + '&language=' + locale;
+    } else {
+      // set some error flag?
+      return;
+    }
+    //debugging
+    global.log('bbcwx: geo, calling ' + url);
+    var here = this;
+    let message = Soup.Message.new('GET', url);
+    _httpSession.queue_message(message, function (session, message) {
+      if( message.status_code == 200) {
+        try {callback.call(here,message.response_body.data.toString(),locsrc);} catch(e) {global.logError(e)}
+      } else {
+        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
+        //here.data.status.lasterror = message.status_code;
+        callback.call(here,false,locsrc);
+      }
+    });
+  }, 
+  
+  ///////////////////////////////////////////////////////////////////////////
+  // Call back function to process returned object from reverse geocode lookups
+  // Wraper around _load_geo_yahoo and _load_geo_google
+  // -> data: returned data
+  // -> locsrc: the service it came from, 'yahoo' or 'google'
   _load_geo: function(data, locsrc) {
     switch(locsrc) {
       case 'google':
@@ -832,6 +881,9 @@ MyDesklet.prototype = {
     }
   },
   
+  ///////////////////////////////////////////////////////////////////////////
+  // Call back function to process returned object from reverse geocode lookups
+  // from Yahoo!
   _load_geo_yahoo: function (data) {
     if (!data) {
       //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
@@ -858,7 +910,10 @@ MyDesklet.prototype = {
       //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
     }
   },
-  
+
+  ///////////////////////////////////////////////////////////////////////////
+  // Call back function to process returned object from reverse geocode lookups
+  // from Google
   _load_geo_google: function (data) {
     if (!data) {
       //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
@@ -868,6 +923,8 @@ MyDesklet.prototype = {
     let country = ''; 
     let admin3 = new Object();
     let locality = new Object();
+    let streetaddr = new Object();
+    let postal_code = new Object();
     
     let json = JSON.parse(data);
     
@@ -886,6 +943,9 @@ MyDesklet.prototype = {
           }     
           if (results[i].types[t] == 'street_address') {
             streetaddr = results[i];
+          }
+          if (results[i].types[t] == 'postal_code' && results[i].types.join().indexOf("postal_code_prefix") == -1) {
+            postal_code = results[i];
           }          
         }
         
@@ -906,6 +966,19 @@ MyDesklet.prototype = {
       }
       else if (typeof streetaddr.address_components !== "undefined") {
         let components = streetaddr.address_components;
+        for (let i=0; i<components.length; i++) {
+          for (let t=0; t<components[i].types.length; t++) {
+            if (components[i].types[t] == 'locality') {
+              city = components[i].long_name;
+            }
+            if (components[i].types[t] == 'country') {
+              country = components[i].long_name;
+            }
+          }
+        }  
+      }
+      else if (typeof postal_code.address_components !== "undefined") {
+        let components = postal_code.address_components;
         for (let i=0; i<components.length; i++) {
           for (let t=0; t<components[i].types.length; t++) {
             if (components[i].types[t] == 'locality') {
@@ -937,10 +1010,10 @@ MyDesklet.prototype = {
         if (this.show.meta.country && country) {
           this.displaycity += ', ' + country;
         }
+        this._geocache.google[latlon].city = city;
       }
-      
-      this._geocache.google[latlon].city = city;
-      this._geocache.google[latlon].country = country;
+         
+      if (country) this._geocache.google[latlon].country = country;
 
     } catch(e) {
       global.logError(e);
@@ -948,34 +1021,6 @@ MyDesklet.prototype = {
       //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
     }
   },
-  
-  _getGeo: function( locsrc, callback) {
-    // just use the most preferred language and hope Yahoo! / Google  supports it
-    let locale = LangList[0];
-    let url = '';
-    if (locsrc == 'yahoo') {
-      url = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon +'%22%20and%20gflags%3D%22R%22%20and%20locale%3D%22' + locale + '%22&format=json&callback=';
-    } else if (locsrc == 'google') {
-      url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + this.service.data.wgs84.lat + '%2C' + this.service.data.wgs84.lon + '&language=' + locale;
-    } else {
-      // set some error flag?
-      return;
-    }
-    //debugging
-    global.log('bbcwx: geo, calling ' + url);
-    var here = this;
-    let message = Soup.Message.new('GET', url);
-    _httpSession.queue_message(message, function (session, message) {
-      if( message.status_code == 200) {
-        try {callback.call(here,message.response_body.data.toString(),locsrc);} catch(e) {global.logError(e)}
-      } else {
-        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
-        //here.data.status.lasterror = message.status_code;
-        callback.call(here,false,locsrc);
-      }
-    });
-  }, 
-  
   
   ////////////////////////////////////////////////////////////////////////////
   // Get an icon
@@ -1264,7 +1309,8 @@ wxDriver.prototype = {
       meta: {
         city: true,
         country: true,
-        region: true
+        region: true,
+        wgs84: true
       }
     };
     // ### TODO: if we later use visibility, we need to indicate if driver returns
