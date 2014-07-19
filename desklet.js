@@ -922,11 +922,11 @@ MyDesklet.prototype = {
     let city = '';
     let country = ''; 
     let geo = new Object();
-    let addrtypes = [ 'locality', 'streetaddr', 'postal_code', 'admin3'];
-    geo.admin3 = new Object();
-    geo.locality = new Object();
-    geo.streetaddr = new Object();
-    geo.postal_code = new Object();
+    let addrtypes = [ 'xlocality', 'xstreetaddr', 'xpostal_code', 'administrative_area_level_3', 'administrative_area_level_2', 'administrative_area_level_1', 'xcountry'];
+    for (let a=0; a<addrtypes.length; a++) {
+      geo[addrtypes[a]] = new Object();
+    }
+    
     
     let json = JSON.parse(data);
     
@@ -938,16 +938,25 @@ MyDesklet.prototype = {
       for (let i=0; i<results.length; i++) {
         for (let t=0; t<results[i].types.length; t++) {
           if (results[i].types[t] == 'administrative_area_level_3') {
-            geo.admin3 = results[i];
+            geo.administrative_area_level_3 = results[i];
           }
+          if (results[i].types[t] == 'administrative_area_level_2') {
+            geo.administrative_area_level_2 = results[i];
+          }
+          if (results[i].types[t] == 'administrative_area_level_1') {
+            geo.administrative_area_level_1 = results[i];
+          }
+          if (results[i].types[t] == 'country') {
+            geo.xcountry = results[i];
+          }          
           if (results[i].types[t] == 'locality') {
-            geo.locality = results[i];
+            geo.xlocality = results[i];
           }     
           if (results[i].types[t] == 'street_address') {
-            geo.streetaddr = results[i];
+            geo.xstreetaddr = results[i];
           }
           if (results[i].types[t] == 'postal_code' && results[i].types.join().indexOf("postal_code_prefix") == -1) {
-            geo.postal_code = results[i];
+            geo.xpostal_code = results[i];
           }          
         }        
       }
@@ -964,8 +973,16 @@ MyDesklet.prototype = {
                 country = components[i].long_name;
               }
             }
+            if (!city) {
+              for (let t=0; t<components[i].types.length; t++) {
+                if (components[i].types[t] == addrtypes[a] && !city) {
+                  city = components[i].long_name;
+                }
+              }
+            }
           }  
-        }        
+        }   
+        if (city && country) a = addrtypes.length;
       }
 
       if (city) {
