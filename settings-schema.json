@@ -348,7 +348,7 @@
   "locsrc" : {
     "type": "combobox",
     "default": "service",
-    "description" : "Get display location from",
+    "description" : "Get displayed location from",
     "options" : {
       "Data service": "service",
       "Yahoo!": "yahoo",
