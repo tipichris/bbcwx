@@ -921,10 +921,12 @@ MyDesklet.prototype = {
     }    
     let city = '';
     let country = ''; 
-    let admin3 = new Object();
-    let locality = new Object();
-    let streetaddr = new Object();
-    let postal_code = new Object();
+    let geo = new Object();
+    let addrtypes = [ 'locality', 'streetaddr', 'postal_code', 'admin3'];
+    geo.admin3 = new Object();
+    geo.locality = new Object();
+    geo.streetaddr = new Object();
+    geo.postal_code = new Object();
     
     let json = JSON.parse(data);
     
@@ -936,74 +938,36 @@ MyDesklet.prototype = {
       for (let i=0; i<results.length; i++) {
         for (let t=0; t<results[i].types.length; t++) {
           if (results[i].types[t] == 'administrative_area_level_3') {
-            admin3 = results[i];
+            geo.admin3 = results[i];
           }
           if (results[i].types[t] == 'locality') {
-            locality = results[i];
+            geo.locality = results[i];
           }     
           if (results[i].types[t] == 'street_address') {
-            streetaddr = results[i];
+            geo.streetaddr = results[i];
           }
           if (results[i].types[t] == 'postal_code' && results[i].types.join().indexOf("postal_code_prefix") == -1) {
-            postal_code = results[i];
+            geo.postal_code = results[i];
           }          
-        }
-        
-      }
-
-      if (typeof locality.address_components !== "undefined") {
-        let components = locality.address_components;
-        for (let i=0; i<components.length; i++) {
-          for (let t=0; t<components[i].types.length; t++) {
-            if (components[i].types[t] == 'locality') {
-              city = components[i].long_name;
-            }
-            if (components[i].types[t] == 'country') {
-              country = components[i].long_name;
-            }
-          }
-        }  
-      }
-      else if (typeof streetaddr.address_components !== "undefined") {
-        let components = streetaddr.address_components;
-        for (let i=0; i<components.length; i++) {
-          for (let t=0; t<components[i].types.length; t++) {
-            if (components[i].types[t] == 'locality') {
-              city = components[i].long_name;
-            }
-            if (components[i].types[t] == 'country') {
-              country = components[i].long_name;
-            }
-          }
-        }  
-      }
-      else if (typeof postal_code.address_components !== "undefined") {
-        let components = postal_code.address_components;
-        for (let i=0; i<components.length; i++) {
-          for (let t=0; t<components[i].types.length; t++) {
-            if (components[i].types[t] == 'locality') {
-              city = components[i].long_name;
-            }
-            if (components[i].types[t] == 'country') {
-              country = components[i].long_name;
-            }
-          }
-        }  
-      }      
-      else if (typeof admin3.address_components !== "undefined") {
-        let components = admin3.address_components;
-        for (let i=0; i<components.length; i++) {
-          for (let t=0; t<components[i].types.length; t++) {
-            if (components[i].types[t] == 'administrative_area_level_3') {
-              city = components[i].long_name;
-            }
-            if (components[i].types[t] == 'country') {
-              country = components[i].long_name;
-            }
-          }
-        }  
+        }        
       }
       
+      for (let a=0; a<addrtypes.length; a++) {
+        if (typeof geo[addrtypes[a]].address_components !== "undefined" && (!city || !country)) {
+          let components = geo[addrtypes[a]].address_components;
+          for (let i=0; i<components.length; i++) {
+            for (let t=0; t<components[i].types.length; t++) {
+              if (components[i].types[t] == 'locality' && !city) {
+                city = components[i].long_name;
+              }
+              if (components[i].types[t] == 'country' && !country) {
+                country = components[i].long_name;
+              }
+            }
+          }  
+        }        
+      }
+
       if (city) {
         this.displaycity = city;
         this.tooltiplocation = this.displaycity;
