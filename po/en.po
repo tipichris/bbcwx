@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.8\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2014-07-19 21:14+0100\n"
+"POT-Creation-Date: 2014-07-19 21:55+0100\n"
 "PO-Revision-Date: 2014-07-12 17:20+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -103,8 +103,8 @@ msgstr "Wind:"
 msgid "Dir:"
 msgstr "Dir:"
 
-#. # Credit the data supplier. A link to the data supplier appears to the left
-#. of this string
+#. # Credit the data supplier. A link to the data supplier appears to the
+#. right of this string
 #: desklet.js:388
 msgid "Data from "
 msgstr "Data from "

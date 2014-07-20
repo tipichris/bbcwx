@@ -384,7 +384,7 @@ MyDesklet.prototype = {
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.updateForecast));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
-    //## Credit the data supplier. A link to the data supplier appears to the left of this string
+    //## Credit the data supplier. A link to the data supplier appears to the right of this string
     this.bannerpre=new St.Button({label: _('Data from ')});
     this.banner=new St.Button({ 
       reactive: true,
@@ -746,7 +746,7 @@ MyDesklet.prototype = {
     } else {
       // if city name from service is empty, use wgs84, or stationID 
       if (!this.service.data.city.toString().length) {
-        if (this.service.capabilities.meta.wgs84) {
+        if (this.service.capabilities.meta.wgs84 && this.service.data.status.meta == BBCWX_SERVICE_STATUS_OK) {
           // If city name is empty and source is 'service', we'll look it up with Yahoo!
           if (locsrc == 'service') locsrc = 'yahoo';
           this.displaycity=this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
@@ -802,7 +802,8 @@ MyDesklet.prototype = {
       let latlon = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
       // check the cache
       if (typeof this._geocache[locsrc][latlon] === 'object') {
-        global.log ("bbcwx: geocache hit for " + latlon + ", " + locsrc + ": " + this._geocache[locsrc][latlon].city);
+        // debugging
+        //global.log ("bbcwx: geocache hit for " + latlon + ", " + locsrc + ": " + this._geocache[locsrc][latlon].city);
         this.displaycity = this._geocache[locsrc][latlon].city;
         this.tooltiplocation = this.displaycity
         if (this.show.meta.country) {
@@ -811,7 +812,8 @@ MyDesklet.prototype = {
         this._updateLocationDisplay();
       // no cache - lookup
       } else {
-        global.log ("bbcwx: Looking up city for " + latlon + " at " + locsrc);  
+        // debugging
+        //global.log ("bbcwx: Looking up city for " + latlon + " at " + locsrc);  
         let b = this._getGeo(locsrc, function(geo, locsrc) {
           if (geo) {
             this._load_geo(geo, locsrc);
@@ -849,7 +851,7 @@ MyDesklet.prototype = {
       return;
     }
     //debugging
-    global.log('bbcwx: geo, calling ' + url);
+    //global.log('bbcwx: geo, calling ' + url);
     var here = this;
     let message = Soup.Message.new('GET', url);
     _httpSession.queue_message(message, function (session, message) {
