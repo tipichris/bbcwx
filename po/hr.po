@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-07-20 08:36+0000\n"
-"X-Generator: Launchpad (build 17114)\n"
+"X-Launchpad-Export-Date: 2014-07-19 15:48+0000\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -133,7 +133,7 @@ msgstr "Nema podataka"
 #: desklet.js:832
 #, python-format
 msgid "Click for the full forecast for %s"
-msgstr "Kliknite za potpunu prognozu za %s"
+msgstr "Kliknite za cjelovitu prognozu za %s"
 
 #. # Units for temperature, degrees Fahrenheit. %f is replaced the value. NB:
 #. English translation uses unicode character u+2109
@@ -442,7 +442,7 @@ msgstr "Mećave"
 
 #: desklet.js:1501
 msgid "Isolated thundershowers"
-msgstr "Lokalni grmljavinski pljuskovi"
+msgstr "Izolirani grmljavinski pljuskovi"
 
 #: desklet.js:1502
 msgid "Not available"
@@ -697,7 +697,7 @@ msgid ""
 "Select the point on the desklet to which it is anchored. This point will "
 "remain static as the desklet grows and shrinks"
 msgstr ""
-"Odaberite točku na deskletu koja će biti usidrena. Ta toča će ostati "
+"Odaberite točku na deskletu koja će biti usidrena. Ta točka će ostati "
 "nepromjenjiva kako se desklet smanjuje ili povečava"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
@@ -771,7 +771,7 @@ msgstr "Izgled deskleta"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->description
 msgid "Forecast maximum"
-msgstr "Maksmilana temperatura prognoze"
+msgstr "Maksmilana temperatura"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->tooltip
@@ -784,7 +784,7 @@ msgstr "Mjerna jedinica brzine vjetra"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->tooltip
 msgid "Measurement units used to display wind speed"
-msgstr "Mjerna jedinica prikaza brzine vjetra"
+msgstr "Mjerna jedinica za prikaz brzine vjetra"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "knots"
@@ -823,7 +823,7 @@ msgstr "Odaberite za prikaz trenutnog tlaka"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->description
 msgid "Forecast wind direction"
-msgstr "Smjer vjetra prognoze"
+msgstr "Smjer vjetra"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->tooltip
@@ -872,12 +872,13 @@ msgid ""
 "Select the color for the border. Only available if the 'Border' checkbox is "
 "enabled"
 msgstr ""
-"Odaberite boju obruba. dostupno je samo ako je mogućnost 'Obrub' odabrana"
+"Odaberite boju obruba. dostupno je samo ako je mogućnost 'Prikaži obrub' "
+"odabrana"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_speed->description
 msgid "Forecast wind speed"
-msgstr "Brzina vjetra prognoze"
+msgstr "Brzina vjetra"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_speed->tooltip
@@ -887,7 +888,7 @@ msgstr "Odaberite za prikaz brzine vjetra prognoze"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__weather->description
 msgid "Current weather and icon"
-msgstr "Trenutno vrijeme i ikona"
+msgstr "Trenutna prognoza i ikona"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__weather->tooltip
 msgid "Check to display the current weather and large icon"
@@ -902,7 +903,7 @@ msgid ""
 "Check this to override the desktop theme and configure the appearance "
 "manually"
 msgstr ""
-"Odaberite ovo za isključivanje teme radne površine i prilagodite izgled ručno"
+"Odaberite za isključivanje teme radne površine i prilagodite izgled ručno"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->description
 msgid "Bold city name"
@@ -910,7 +911,7 @@ msgstr "Podebljaj naziv grada"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->tooltip
 msgid "Check to display the city name in bold"
-msgstr "Odaberite ovo za podebljanje naziva grada"
+msgstr "Odaberite za podebljanje naziva grada"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->description
@@ -925,7 +926,7 @@ msgstr "Odaberite za prikaz trenutne vidljivosti"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->description
 msgid "Forecast minimum"
-msgstr "Minimalana temperatura prognoze"
+msgstr "Minimalana temperatura"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->tooltip
@@ -944,7 +945,7 @@ msgstr "API ključ"
 msgid ""
 "Required for some services only. Enter your API key for your chosen service"
 msgstr ""
-"Potrebno samo za neke usluge. Upišite vaš API ključ za vašu odabranu uslugu"
+"Potrebno samo za neke usluge. Upišite svoj API ključ za vašu odabranu uslugu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->tooltip
 msgid "Select the data service you wish to use"
@@ -1010,7 +1011,7 @@ msgstr "Odaberite izgled ikona vremena"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat white"
-msgstr "Ravnomjerno bijela"
+msgstr "Ravnomjerno bijelo"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Novacon"
@@ -1022,11 +1023,11 @@ msgstr "VClouds"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Colorful"
-msgstr "Obojano"
+msgstr "Obojani"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Light"
-msgstr "Svjetla"
+msgstr "Svjetli"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 2"
@@ -1034,7 +1035,7 @@ msgstr "Meteocons 2"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat black"
-msgstr "Ravnomjerno crna"
+msgstr "Ravnomjerno crno"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 1"
@@ -1042,7 +1043,7 @@ msgstr "Meteocons 1"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Dark"
-msgstr "Tamna"
+msgstr "Tamni"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Sketchy"
@@ -1058,7 +1059,7 @@ msgstr "Korisnički definirano"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Weezle"
-msgstr "Malene"
+msgstr "Maleni"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->stationID->description
 msgid "Location"
@@ -1111,4 +1112,5 @@ msgid ""
 "Select the width of the border. Only available if the 'Border' checkbox is "
 "enabled"
 msgstr ""
-"Odaberite širinu obruba. Dostupno samo ako je mogućnost 'Obrub' omogućena"
+"Odaberite širinu obruba. Dostupno samo ako je mogućnost 'Prikaži obrub' "
+"omogućena"
