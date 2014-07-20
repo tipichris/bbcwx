@@ -563,10 +563,12 @@ msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
 msgstr ""
+"The source of the text displayed as the current location. Yahoo! and Google "
+"may offer city names in other languages"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
@@ -615,11 +617,11 @@ msgstr "minutes"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->description
 msgid "Manually override displayed location"
-msgstr ""
+msgstr "Manually override displayed location"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
-msgstr ""
+msgstr "Set your city name manually."
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->description
@@ -937,7 +939,7 @@ msgstr "Check to display the forecast minimum temperature"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locationlookups->description
 msgid "Location display settings"
-msgstr ""
+msgstr "Location display settings"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->apikey->description
 msgid "API key"
