@@ -556,9 +556,8 @@ msgid "Falling"
 msgstr "Menguante"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->description
-#, fuzzy
 msgid "Get displayed location from"
-msgstr "Establezca su ubicación aquí"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->tooltip
 msgid ""
