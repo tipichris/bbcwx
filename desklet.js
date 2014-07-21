@@ -76,8 +76,9 @@ const BBCWX_DEFAULT_ICONSET = 'colourful';
 const BBCWX_DEFAULT_ICON_EXT = 'png';
 const BBCWX_TRANSLATION_URL = 'https://github.com/tipichris/bbcwx/wiki/Translating';
 
-const Gettext = imports.gettext
-Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale")
+const Gettext = imports.gettext;
+Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale");
+//Gettext.setlocale(Gettext.LC_ALL, 'es');
 
 // list of preferred languages, most preferred first
 const LangList = GLib.get_language_names()
@@ -1667,7 +1668,7 @@ wxDriverBBC.prototype = {
         if (k == 'pressure' && v != '') {
           let pparts=v.split('|');
           v = pparts[0].trim();
-          this.data.cc.pressure_direction = pparts[1].trim();
+          this.data.cc.pressure_direction = _(pparts[1].trim());
         }      
         this.data.cc[k] = v;
       }
@@ -3156,7 +3157,7 @@ wxDriverTWC.prototype = {
       this.data.cc.visibility = cc.getChildElement('vis').getText();
       let bar = cc.getChildElement('bar');
       this.data.cc.pressure = bar.getChildElement('r').getText();
-      this.data.cc.pressure_direction = bar.getChildElement('d').getText().ucwords();
+      this.data.cc.pressure_direction = _(bar.getChildElement('d').getText().ucwords());
 
       let forecasts = dayf.getChildElements("day");
 

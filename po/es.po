@@ -108,7 +108,7 @@ msgstr ""
 #. right of this string
 #: desklet.js:388
 msgid "Data from "
-msgstr "Datos de"
+msgstr "Datos de "
 
 #. # Tooltip for refresh button
 #: desklet.js:396
