@@ -78,7 +78,6 @@ const BBCWX_TRANSLATION_URL = 'https://github.com/tipichris/bbcwx/wiki/Translati
 
 const Gettext = imports.gettext;
 Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale");
-//Gettext.setlocale(Gettext.LC_ALL, 'es');
 
 // list of preferred languages, most preferred first
 const LangList = GLib.get_language_names()
