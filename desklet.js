@@ -858,7 +858,7 @@ MyDesklet.prototype = {
       if( message.status_code == 200) {
         try {callback.call(here,message.response_body.data.toString(),locsrc);} catch(e) {global.logError(e)}
       } else {
-        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
+        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
         //here.data.status.lasterror = message.status_code;
         callback.call(here,false,locsrc);
       }
@@ -1400,7 +1400,7 @@ wxDriver.prototype = {
       if( message.status_code == 200) {
         try {callback.call(here,message.response_body.data.toString());} catch(e) {global.logError(e)}
       } else {
-        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code);
+        global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
         here.data.status.lasterror = message.status_code;
         callback.call(here,false);
       }
