@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.7.1\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2014-07-21 20:29+0100\n"
+"POT-Creation-Date: 2014-08-15 21:32+0100\n"
 "PO-Revision-Date: 2014-08-11 23:28+0000\n"
 "Last-Translator: mzs.112000 <mzs.112000@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-08-13 20:48+0000\n"
 "X-Generator: Launchpad (build 17156)\n"
-"Language: es_ES\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #. # Days of the week
@@ -572,9 +572,9 @@ msgstr ""
 msgid "Google"
 msgstr "Google"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.1)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.1)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Servicios de datos"
@@ -749,8 +749,7 @@ msgstr "Unidades de presión"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->tooltip
 msgid "Measurement units used to display atmospheric pressure"
-msgstr ""
-"Las unidades de medida utilizadas para mostrar la presión atmosférica"
+msgstr "Las unidades de medida utilizadas para mostrar la presión atmosférica"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "in (Hg)"
@@ -1085,9 +1084,9 @@ msgstr "Radio de la esquina"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Radio para redondear las esquinas de la desklet"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.1)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.1)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr ""

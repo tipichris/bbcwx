@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2014-07-21 20:29+0100\n"
+"POT-Creation-Date: 2014-08-15 21:32+0100\n"
 "PO-Revision-Date: 2014-07-19 20:47+0000\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
@@ -569,9 +569,9 @@ msgstr ""
 msgid "Google"
 msgstr ""
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.1)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.1)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Usluga prognoze"
@@ -1077,9 +1077,9 @@ msgstr "Radius kuta"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Radijus okretanja kuta deskleta"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.1)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.1)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr "piksela"
