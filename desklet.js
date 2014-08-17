@@ -1713,7 +1713,8 @@ wxDriverBBC.prototype = {
       'thundery shower' : '37',
       'thunder storm' : '04',
       'thunderstorm' : '04',
-      'hazy' : '22'
+      'hazy' : '22',
+      'hail shower': '18'
     }
     if (wxtext) {
       wxtext = wxtext.toLowerCase();
@@ -1766,7 +1767,8 @@ wxDriverBBC.prototype = {
       _('Thundery Shower'),
       _('Thunder Storm'),
       _('Thunderstorm'),
-      _('Hazy')
+      _('Hazy'),
+      _('Hail Shower')
     ];
   }
 
