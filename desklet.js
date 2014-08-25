@@ -1700,7 +1700,7 @@ wxDriverBBC.prototype = {
       'grey cloud' : '26d',
       'thick cloud' : '26d',
       'light rain shower' : '39',
-      'drizzle' : '9',
+      'drizzle' : '09',
       'light rain' : '11',
       'heavy rain shower' : '39',
       'heavy rain' : '12',
