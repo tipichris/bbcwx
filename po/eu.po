@@ -1,139 +1,138 @@
-# CINNAMON WEATHER DESKLET TRANSLATIONS.
-# Copyright (C) 2014 Gregor Pavuna
-# This file is distributed under the same license as the Cinnamon Weather Desklet - bbcwx package.
-# gp <gregor.pavuna@gmail.com>, 2014.
+# Basque translation for bbcwx
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the bbcwx package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.8\n"
-"Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
+"Project-Id-Version: bbcwx\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-15 21:32+0100\n"
-"PO-Revision-Date: 2014-09-09 12:53+0000\n"
-"Last-Translator: Damir Jerovšek <Unknown>\n"
-"Language-Team: Slovenian\n"
+"PO-Revision-Date: 2014-09-16 17:53+0000\n"
+"Last-Translator: Asier Iturralde Sarasola <Unknown>\n"
+"Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-09-18 13:52+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
-"Language: sl\n"
 
 #. # Days of the week
 #: desklet.js:103
 msgid "Mon"
-msgstr "Pon"
+msgstr "al."
 
 #: desklet.js:103
 msgid "Tue"
-msgstr "Tor"
+msgstr "ar."
 
 #: desklet.js:103
 msgid "Wed"
-msgstr "Sre"
+msgstr "az."
 
 #: desklet.js:103
 msgid "Thu"
-msgstr "Čet"
+msgstr "og."
 
 #: desklet.js:103
 msgid "Fri"
-msgstr "Pet"
+msgstr "ol."
 
 #: desklet.js:103
 msgid "Sat"
-msgstr "Sob"
+msgstr "lr."
 
 #: desklet.js:103
 msgid "Sun"
-msgstr "Ned"
+msgstr "ig."
 
 #. # The desklet title
 #: desklet.js:177
 msgid "Weather"
-msgstr "Vreme"
+msgstr "Eguraldia"
 
 #. # Link to Help file in context menu
 #: desklet.js:185
 msgid "Help"
-msgstr "Pomoč"
+msgstr "Laguntza"
 
 #. # Link to information on translating in context menu
 #: desklet.js:189
 msgid "Translate"
-msgstr "Prevajanje"
+msgstr "Itzuli"
 
 #. # Next five strings are labels for current conditions
 #: desklet.js:323 desklet.js:351
 msgid "Humidity:"
-msgstr "Vlažnost:"
+msgstr "Hezetasuna:"
 
 #. # Atmospheric pressure
 #: desklet.js:324 desklet.js:350
 msgid "Pressure:"
-msgstr "Tlak:"
+msgstr "Presioa:"
 
 #: desklet.js:325
 msgid "Wind:"
-msgstr "Veter:"
+msgstr "Haizea:"
 
 #: desklet.js:326
 msgid "Feels like:"
-msgstr "Občuti se kot:"
+msgstr "Sentsazioa:"
 
 #: desklet.js:327
 msgid "Visibility:"
-msgstr "Vidljivost:"
+msgstr "Ikuspena:"
 
 #. # Maximum temperature
 #: desklet.js:342
 msgid "Max:"
-msgstr "Najvišja:"
+msgstr "Max:"
 
 #. # Minimum temperature
 #: desklet.js:344
 msgid "Min:"
-msgstr "Najmanj:"
+msgstr "Min:"
 
 #. # Wind speed (English translation is "Wind:")
 #: desklet.js:346
 msgid "Wind speed:"
-msgstr "Hitrost vetra:"
+msgstr "Haizearen abiadura:"
 
 #. # Wind direction
 #: desklet.js:348
 msgid "Dir:"
-msgstr "Smer:"
+msgstr "Norab:"
 
 #. # Credit the data supplier. A link to the data supplier appears to the
 #. right of this string
 #: desklet.js:388
 msgid "Data from "
-msgstr "Podatki iz "
+msgstr "Datuen jatorria: "
 
 #. # Tooltip for refresh button
 #: desklet.js:396
 msgid "Refresh"
-msgstr "Osveži"
+msgstr "Freskatu"
 
 #. # Message if we fail to get weather data
 #: desklet.js:697
 msgid "No data available"
-msgstr "Podatkov ni na voljo"
+msgstr "Ez dago daturik eskuragarri"
 
 #: desklet.js:729 desklet.js:797
 #, python-format
 msgid "Error: %s"
-msgstr "Napaka: %s"
+msgstr "Errorea: %s"
 
 #: desklet.js:729 desklet.js:797
 msgid "No data"
-msgstr "Ni podatka"
+msgstr "Ez dago daturik"
 
 #. # %s is replaced by place name
 #: desklet.js:832
 #, python-format
 msgid "Click for the full forecast for %s"
-msgstr "Kliknite za celotno napoved za %s"
+msgstr "Klikatu %s(r)ako iragarpen osoa ikusteko"
 
 #. # Units for temperature, degrees Fahrenheit. %f is replaced the value. NB:
 #. English translation uses unicode character u+2109
@@ -147,7 +146,7 @@ msgstr "%fF"
 #: desklet.js:1076
 #, python-format
 msgid "%fC"
-msgstr "%f°C"
+msgstr "%fC"
 
 #. # wind speed, miles per hour. %f is replaced by the value
 #: desklet.js:1097
@@ -159,7 +158,7 @@ msgstr "%fmph"
 #: desklet.js:1099
 #, python-format
 msgid "%fkn"
-msgstr "%fkn"
+msgstr "%fkora"
 
 #. # wind speed, kilometers per hour. %f is replaced by the value
 #: desklet.js:1101
@@ -183,7 +182,7 @@ msgstr "%fmb"
 #: desklet.js:1139
 #, python-format
 msgid "%fin"
-msgstr "%fin"
+msgstr "%fhazb"
 
 #. # pressure, mm of mercury. %f is replaced by the value
 #: desklet.js:1141
@@ -218,354 +217,354 @@ msgstr "%fkm"
 #. # Next 16 strings are for wind direction, compass points
 #: desklet.js:1421
 msgid "N"
-msgstr "S"
+msgstr "I"
 
 #: desklet.js:1421
 msgid "NNE"
-msgstr "SSV"
+msgstr "IIE"
 
 #: desklet.js:1421
 msgid "NE"
-msgstr "SV"
+msgstr "IE"
 
 #: desklet.js:1421
 msgid "ENE"
-msgstr "VSV"
+msgstr "EIE"
 
 #: desklet.js:1421
 msgid "E"
-msgstr "V"
+msgstr "E"
 
 #: desklet.js:1421
 msgid "ESE"
-msgstr "VJV"
+msgstr "EHE"
 
 #: desklet.js:1421
 msgid "SE"
-msgstr "JV"
+msgstr "HE"
 
 #: desklet.js:1421
 msgid "SSE"
-msgstr "JJV"
+msgstr "HHE"
 
 #: desklet.js:1421
 msgid "S"
-msgstr "J"
+msgstr "H"
 
 #: desklet.js:1421
 msgid "SSW"
-msgstr "JJZ"
+msgstr "HHM"
 
 #: desklet.js:1421
 msgid "SW"
-msgstr "JZ"
+msgstr "HM"
 
 #: desklet.js:1421
 msgid "WSW"
-msgstr "ZJZ"
+msgstr "MHM"
 
 #: desklet.js:1421
 msgid "W"
-msgstr "Z"
+msgstr "M"
 
 #: desklet.js:1421
 msgid "WNW"
-msgstr "ZSZ"
+msgstr "MIM"
 
 #: desklet.js:1421
 msgid "NW"
-msgstr "SZ"
+msgstr "IM"
 
 #: desklet.js:1421
 msgid "NNW"
-msgstr "SSZ"
+msgstr "IIM"
 
 #: desklet.js:1454
 msgid "Tornado"
-msgstr "Tornado"
+msgstr "Tornadoa"
 
 #: desklet.js:1455
 msgid "Tropical storm"
-msgstr "Tropska nevihta"
+msgstr "Ekaitz tropikala"
 
 #: desklet.js:1456
 msgid "Hurricane"
-msgstr "Orkan"
+msgstr "Urakana"
 
 #: desklet.js:1457
 msgid "Severe thunderstorms"
-msgstr "Hude nevihte"
+msgstr "Trumoi-ekaitz gogorrak"
 
 #: desklet.js:1458
 msgid "Thunderstorms"
-msgstr "Nevihte"
+msgstr "Trumoi-ekaitzak"
 
 #: desklet.js:1459
 msgid "Mixed rain and snow"
-msgstr "Dež s snegom"
+msgstr "Euria eta elurra"
 
 #: desklet.js:1460
 msgid "Mixed rain and sleet"
-msgstr "Dež s sodro"
+msgstr "Euria eta elurbustia"
 
 #: desklet.js:1461
 msgid "Mixed snow and sleet"
-msgstr "Sneg s sodro"
+msgstr "Elurra eta elurbustia"
 
 #: desklet.js:1462
 msgid "Freezing drizzle"
-msgstr "Ledeno rosenje"
+msgstr "Zirimiri izoztua"
 
 #: desklet.js:1463 desklet.js:1756
 msgid "Drizzle"
-msgstr "Pršenje"
+msgstr "Zirimiria"
 
 #: desklet.js:1464
 msgid "Freezing rain"
-msgstr "Ledeni dež"
+msgstr "Euri izoztua"
 
 #: desklet.js:1465 desklet.js:1466
 msgid "Showers"
-msgstr "Plohe"
+msgstr "Zaparradak"
 
 #: desklet.js:1467
 msgid "Snow flurries"
-msgstr "Snežni sunki vetra"
+msgstr "Elur-jasak"
 
 #: desklet.js:1468
 msgid "Light snow showers"
-msgstr "Lahke snežne plohe"
+msgstr "Elur-zaparrada arinak"
 
 #: desklet.js:1469
 msgid "Blowing snow"
-msgstr "Snežni vihar"
+msgstr "Elur-jasa haizetsua"
 
 #: desklet.js:1470
 msgid "Snow"
-msgstr "Sneg"
+msgstr "Elurra"
 
 #: desklet.js:1471
 msgid "Hail"
-msgstr "Toča"
+msgstr "Kazkabarra"
 
 #: desklet.js:1472 desklet.js:1761
 msgid "Sleet"
-msgstr "Sodra"
+msgstr "Elurbustia"
 
 #: desklet.js:1473
 msgid "Dust"
-msgstr "Prah"
+msgstr "Hautsa"
 
 #: desklet.js:1474
 msgid "Foggy"
-msgstr "Megleno"
+msgstr "Lainotsua"
 
 #: desklet.js:1475
 msgid "Haze"
-msgstr "Meglica"
+msgstr "Gandua"
 
 #: desklet.js:1476
 msgid "Smoky"
-msgstr "Megleno"
+msgstr "Ketsua"
 
 #: desklet.js:1477
 msgid "Blustery"
-msgstr "Močni sunki vetra"
+msgstr "Ekaiztsua"
 
 #: desklet.js:1478
 msgid "Windy"
-msgstr "Vetrovno"
+msgstr "Haizetsua"
 
 #: desklet.js:1479
 msgid "Cold"
-msgstr "Hladno"
+msgstr "Hotza"
 
 #: desklet.js:1480
 msgid "Cloudy"
-msgstr "Oblačno"
+msgstr "Hodeitsua"
 
 #: desklet.js:1481 desklet.js:1482
 msgid "Mostly cloudy"
-msgstr "Pretežno oblačno"
+msgstr "Nagusiki hodeitsua"
 
 #: desklet.js:1483 desklet.js:1484 desklet.js:1498
 msgid "Partly cloudy"
-msgstr "Delno oblačno"
+msgstr "Nahiko hodeitsua"
 
 #: desklet.js:1485
 msgid "Clear"
-msgstr "Jasno"
+msgstr "Garbia"
 
 #: desklet.js:1486 desklet.js:1745
 msgid "Sunny"
-msgstr "Sončno"
+msgstr "Eguzkitsua"
 
 #: desklet.js:1487 desklet.js:1488
 msgid "Fair"
-msgstr "Normalno"
+msgstr "Ona"
 
 #: desklet.js:1489
 msgid "Mixed rain and hail"
-msgstr "Dež s točo"
+msgstr "Euria eta kazkabarra"
 
 #: desklet.js:1490
 msgid "Hot"
-msgstr "Vroče"
+msgstr "Beroa"
 
 #: desklet.js:1491
 msgid "Isolated thunderstorms"
-msgstr "Krajevne nevihte"
+msgstr "Trumoi-ekaitz isolatuak"
 
 #: desklet.js:1492
 msgid "Scattered thunderstorms"
-msgstr "Razširjene nevihte"
+msgstr "Trumoi-ekaitz sakabanatuak"
 
 #: desklet.js:1493 desklet.js:1494
 msgid "Scattered showers"
-msgstr "Razširjene plohe"
+msgstr "Zaparrada sakabanatuak"
 
 #: desklet.js:1495 desklet.js:1497
 msgid "Heavy snow"
-msgstr "Močno sneženje"
+msgstr "Elur-jasa"
 
 #: desklet.js:1496
 msgid "Scattered snow showers"
-msgstr "Razširjene snežne plohe"
+msgstr "Elur-zaparrada sakabanatuak"
 
 #: desklet.js:1499
 msgid "Thundershowers"
-msgstr "Plohe z grmenjem"
+msgstr "Zaparrada ekaiztsuak"
 
 #: desklet.js:1500
 msgid "Snow showers"
-msgstr "Snežne plohe"
+msgstr "Elur-zaparradak"
 
 #: desklet.js:1501
 msgid "Isolated thundershowers"
-msgstr "Krajevne plohe z grmenjem"
+msgstr "Zaparrada ekaiztsu sakabanatuak"
 
 #: desklet.js:1502
 msgid "Not available"
-msgstr "Ni na voljo"
+msgstr "Ez dago eskuragarri"
 
 #: desklet.js:1744
 msgid "Clear Sky"
-msgstr "Jasno nebo"
+msgstr "Oskarbia"
 
 #: desklet.js:1746
 msgid "Partly Cloudy"
-msgstr "Delno oblačno"
+msgstr "Nahiko lainotua"
 
 #: desklet.js:1747
 msgid "Sunny Intervals"
-msgstr "Sončni dnevi"
+msgstr "Ostarteak"
 
 #: desklet.js:1748
 msgid "Sand Storm"
-msgstr "Peščeni vihar"
+msgstr "Harea-ekaitza"
 
 #: desklet.js:1749
 msgid "Mist"
-msgstr "Meglica"
+msgstr "Lanbroa"
 
 #: desklet.js:1750
 msgid "Fog"
-msgstr "Megla"
+msgstr "Lainoa"
 
 #: desklet.js:1751
 msgid "White Cloud"
-msgstr "Beli oblak"
+msgstr "Hodei zuriak"
 
 #: desklet.js:1752
 msgid "Light Cloud"
-msgstr "Svetli oblaki"
+msgstr "Hodei arinak"
 
 #: desklet.js:1753
 msgid "Grey Cloud"
-msgstr "Sivi oblaki"
+msgstr "Hodei grisak"
 
 #: desklet.js:1754
 msgid "Thick Cloud"
-msgstr "Gosti oblaki"
+msgstr "Hodei itxiak"
 
 #: desklet.js:1755
 msgid "Light Rain Shower"
-msgstr "Rahla ploha"
+msgstr "Euri-zaparrada arinak"
 
 #: desklet.js:1757
 msgid "Light Rain"
-msgstr "Rahel dež"
+msgstr "Euri arina"
 
 #: desklet.js:1758
 msgid "Heavy Rain Shower"
-msgstr "Močna ploha"
+msgstr "Euri-zaparrada gogorra"
 
 #: desklet.js:1759
 msgid "Heavy Rain"
-msgstr "Močan dež"
+msgstr "Euri mardula"
 
 #: desklet.js:1760
 msgid "Sleet Shower"
-msgstr "Ledeni dež"
+msgstr "Elurbusti-zaparrada"
 
 #: desklet.js:1762
 msgid "Light Snow Shower"
-msgstr "Rahle snežne plohe"
+msgstr "Elur arin-zaparrada"
 
 #: desklet.js:1763
 msgid "Light Snow"
-msgstr "Rahlo sneženje"
+msgstr "Elur arina"
 
 #: desklet.js:1764
 msgid "Heavy Snow Shower"
-msgstr "Močne snežne plohe"
+msgstr "Euri-zaparrada gogorra"
 
 #: desklet.js:1765
 msgid "Heavy Snow"
-msgstr "Močno sneženje"
+msgstr "Elur mardula"
 
 #: desklet.js:1766
 msgid "Thundery Shower"
-msgstr "Plohe z bliskanjem in grmenjem"
+msgstr "Zaparrada trumoitsua"
 
 #: desklet.js:1767
 msgid "Thunder Storm"
-msgstr "Nevihta"
+msgstr "Trumoi-ekaitza"
 
 #: desklet.js:1768
 msgid "Thunderstorm"
-msgstr "Nevihte"
+msgstr "Trumoi-ekaitza"
 
 #: desklet.js:1769
 msgid "Hazy"
-msgstr "Megleno"
+msgstr "Lainotsua"
 
 #. # direction of movement of pressure
 #: desklet.js:1953 desklet.js:2564
 msgid "Steady"
-msgstr "Enakomerno"
+msgstr "Egonkorra"
 
 #. # direction of movement of pressure
 #: desklet.js:1953 desklet.js:2560
 msgid "Rising"
-msgstr "Narašča"
+msgstr "Igotzen"
 
 #. # direction of movement of pressure
 #: desklet.js:1953 desklet.js:2562
 msgid "Falling"
-msgstr "Pada"
+msgstr "Jaisten"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->description
 msgid "Get displayed location from"
-msgstr "Dobi prikaz kraja iz"
+msgstr "Eskuratu bistaratutako kokapena hemendik:"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->tooltip
 msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
 msgstr ""
-"Vir besedila, prikazanega kot trenutni kraj. Yahoo! in Google lahko morda "
-"ponudita imena mest v drugih jezikih"
+"Uneko kokapen bezala bistaratutako testuaren iturburua. Yahoo! eta Google-k "
+"hiri izenak beste hizkuntzetan eskein ditzakete"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Google"
@@ -576,7 +575,7 @@ msgstr "Google"
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
-msgstr "Podatkovne storitve"
+msgstr "Datu-zerbitzua"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Yahoo!"
@@ -585,174 +584,172 @@ msgstr "Yahoo!"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->experimental_enabled->description
 msgid "Enable experimental features"
-msgstr "Omogoči poskusne zmožnosti"
+msgstr "Gaitu ezaugarri esperimentalak"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
-msgstr "Omogočite poskusne ter hroščate zmožnosti"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
 msgid "Current humidity"
-msgstr "Trenutna vlažnost"
+msgstr "Uneko hezetasuna"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__humidity->tooltip
 msgid "Check to display the current humidity"
-msgstr "Omogočite prikaz trenutne vlažnosti"
+msgstr "Hautatu uneko hezetasuna bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->description
 msgid "Refresh forecast every"
-msgstr "Osveži napoved vsakih"
+msgstr "Freskatu iragarpena"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->tooltip
 msgid ""
 "Period between refreshing forecasts. Note that not all services support "
 "lower refresh times"
 msgstr ""
-"Obdobje osveževanja napovedi. Upoštevajte, da ne podpirajo vse storitve "
-"nižjih časov osveževanja."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->units
 msgid "minutes"
-msgstr "minut"
+msgstr "minuturo"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->description
 msgid "Manually override displayed location"
-msgstr "Ročno prepiši prikazan kraj"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
-msgstr "Ročno nastavite ime mesta."
+msgstr "Ezarri zure hiriaren izena eskuz."
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->description
 msgid "Current wind"
-msgstr "Trenutni veter"
+msgstr "Uneko haizea"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->tooltip
 msgid "Check to display the current wind"
-msgstr "Omogočite za prikaz trenutnega vetra"
+msgstr "Hautatu uneko haizea bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->description
 msgid "Temperature measurement unit"
-msgstr "Enota temperature"
+msgstr "Tenperaturaren neurri-unitatea"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->tooltip
 msgid "Measurement units used to display temperature"
-msgstr "Merske enote, ki se uporabljajo za prikaz temperature"
+msgstr "Tenperatura bistaratzeko erabilitako neurri-unitateak"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->options
 msgid "Fahrenheit"
-msgstr "stopinje Fahrenheita"
+msgstr "Fahrenheit"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->options
 msgid "Celsius"
-msgstr "stopinje Celzija"
+msgstr "Celsius"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->textcolor->description
 msgid "Text color"
-msgstr "Barva besedila"
+msgstr "Testu-kolorea"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->textcolor->tooltip
 msgid "Click the button to select a new text color"
-msgstr "Kliknite na gumb za izbor nove barve besedila"
+msgstr "Klikatu botoia testu-kolore berria hautatzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->border->description
 msgid "Show border"
-msgstr "Pokaži obrobo"
+msgstr "Erakutsi ertza"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->border->tooltip
 msgid "Check this to turn border on/off"
-msgstr "Označite to, če želite vklopiti/izklopiti obrobo"
+msgstr "Hautatu hau ertza jarri/kentzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->description
 msgid "Layout"
-msgstr "Postavitev"
+msgstr "Diseinua"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->tooltip
 msgid "Set the overall layout of the desklet"
-msgstr "Nastavite celotno postavitev deskleta"
+msgstr "Ezarri desklet-aren diseinu orokorra"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->options
 msgid "Horizontal"
-msgstr "Vodoravno"
+msgstr "Horizontala"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->options
 msgid "Vertical"
-msgstr "Navpično"
+msgstr "Bertikala"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bgcolor->description
 msgid "Background color"
-msgstr "Barva ozadja"
+msgstr "Atzeko planoaren kolorea"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bgcolor->tooltip
 msgid "Click the button to select a new background color"
-msgstr "Kliknite na gumb za izbor nove barve ozadja"
+msgstr "Klikatu botoia atzeko planoaren kolore berria hautatzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->description
 msgid "Anchor desklet by"
-msgstr "Zasidraj aplet namizja za"
+msgstr "Ainguratu desklet-a hemen:"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->tooltip
 msgid ""
 "Select the point on the desklet to which it is anchored. This point will "
 "remain static as the desklet grows and shrinks"
 msgstr ""
-"Izberite točko na apletu namizja, na katero je zasidran. Ta točka bo ostala "
-"statična, ko se aplet namizja širi in krči."
+"Hautatu non ainguratuko den desklet-a. Puntu hau estatiko mantenduko da "
+"desklet-a handitu edo txikiagotzean"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom center"
-msgstr "Spodnja sredina"
+msgstr "Behean erdian"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Default"
-msgstr "Privzeto"
+msgstr "Lehenetsia"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Left center"
-msgstr "Leva sredina"
+msgstr "Ezkerrean erdian"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Top right"
-msgstr "Zgoraj desno"
+msgstr "Goian eskuinean"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom left"
-msgstr "Spodaj levo"
+msgstr "Behean ezkerrean"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Top left"
-msgstr "Zgoraj levo"
+msgstr "Goian ezkerrean"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Right center"
-msgstr "Desna sredina"
+msgstr "Erdian eskuinean"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom right"
-msgstr "Spodaj desno"
+msgstr "Behean eskuinean"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Top center"
-msgstr "Zgornja sredina"
+msgstr "Goian erdian"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->top->description
 msgid "Weather configuration"
-msgstr "Nastavitve za napoved vremena"
+msgstr "Eguraldiaren konfigurazioa"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->description
 msgid "Pressure measurement unit"
-msgstr "Enota za merjenje tlaka"
+msgstr "Presioaren neurri-unitatea"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->tooltip
 msgid "Measurement units used to display atmospheric pressure"
-msgstr "Merske enote, ki se uporabljajo za prikaz atmosferskega tlaka"
+msgstr "Presio atmosferikoa bistaratzeko erabilitako neurri-unitateak"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "in (Hg)"
-msgstr "in (Hg)"
+msgstr "hazb. (Hg)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "mm (Hg)"
@@ -768,29 +765,29 @@ msgstr "mb"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->styling->description
 msgid "Desklet style"
-msgstr "Slog apleta namizja"
+msgstr "Desklet-aren estiloa"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->description
 msgid "Forecast maximum"
-msgstr "Najvišja napoved"
+msgstr "Maximoaren iragarpena"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->tooltip
 msgid "Check to display the forecast maximum temperature"
-msgstr "Omogočite za prikaz napovedi najvišje temperature"
+msgstr "Hautatu tenperatura maximoaren iragarpena bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->description
 msgid "Wind speed measurement unit"
-msgstr "Enota za merjenje hitrosti vetra"
+msgstr "Haizearen abiaduraren neurri-unitatea"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->tooltip
 msgid "Measurement units used to display wind speed"
-msgstr "Merske enote, ki se uporabljajo za prikaz hitrosti vetra"
+msgstr "Haizearen abiadura bistaratzeko erabilitako neurri-unitateak"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "knots"
-msgstr "vozli"
+msgstr "korapiloak"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "m/s"
@@ -807,160 +804,161 @@ msgstr "mph"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__meta__country->description
 msgid "Country"
-msgstr "Država"
+msgstr "Herrialdea"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__meta__country->tooltip
 msgid "Check to display the country"
-msgstr "Omogočite prikaz države"
+msgstr "Hautatu herrialdea bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__pressure->description
 msgid "Current pressure"
-msgstr "Trenutni tlak"
+msgstr "Uneko presioa"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__pressure->tooltip
 msgid "Check to display the current pressure"
-msgstr "Omogočite prikaz trenutnega tlaka"
+msgstr "Hautatu uneko presioa bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->description
 msgid "Forecast wind direction"
-msgstr "Napoved smeri vetra"
+msgstr "Haizearen norabidearen iragarpena"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->tooltip
 msgid "Check to display the forecast wind direction"
-msgstr "Omogočite prikaz napovedi smeri vetra"
+msgstr "Hautatu haizearen norabidearen iragarpena bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__feelslike->description
 msgid "Current 'feels like'"
-msgstr "Sedanji 'občutek'"
+msgstr "Uneko 'sentsazioa'"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__feelslike->tooltip
 msgid "Check to display the current apparent temperature"
-msgstr "Omogočite prikaz trenutne očitne temperature"
+msgstr "Hautatu uneko itxurazko tenperatura bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->description
 msgid "Forecast humidity"
-msgstr "Napoved vlažnosti"
+msgstr "Hezetasunaren iragarpena"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->tooltip
 msgid "Check to display the forecast humidity"
-msgstr "Označite za prikaz napovedi vlažnosti"
+msgstr "Hautatu hezetasunaren iragarpena bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->description
 msgid "Show forecast for"
-msgstr "Pokaži napoved za"
+msgstr "Iragarpenaren iraupena:"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->tooltip
 msgid ""
 "The number of days of forecast to display. Note that not all services "
 "support all values"
 msgstr ""
-"Število dni za prikazovanje napovedi. Upoštevajte, da ne podpirajo vse "
-"storitve vseh vrednosti"
+"Bistaratu beharreko iragarpenaren egun kopurua. Kontutan izan zerbitzu "
+"guztiek ez dituztela balio guztiak onartzen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->units
 msgid "days"
-msgstr "dnevi"
+msgstr "egun"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bordercolor->description
 msgid "Border color"
-msgstr "Barva obrobe"
+msgstr "Ertzaren kolorea"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bordercolor->tooltip
 msgid ""
 "Select the color for the border. Only available if the 'Border' checkbox is "
 "enabled"
 msgstr ""
-"Izberite barvo obrobe. Na voljo le, če je omogočeno polje \"Prikaži obrobo\""
+"Hautatu ertzaren kolorea. 'Ertza' kontrol-laukia hautatuta badago soilik "
+"erabilgarri"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_speed->description
 msgid "Forecast wind speed"
-msgstr "Napoved hitrosti vetra"
+msgstr "Haizearen abiaduraren iragarpena"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_speed->tooltip
 msgid "Check to display the forecast wind speed"
-msgstr "Omogočite za prikaz napovedi hitrosti vetra"
+msgstr "Hautatu haizearen abiaduraren iragarpena bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__weather->description
 msgid "Current weather and icon"
-msgstr "Trenutno vreme in slika napovedi"
+msgstr "Uneko eguraldia eta ikonoa"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__weather->tooltip
 msgid "Check to display the current weather and large icon"
-msgstr "Omogočite prikaz trenutnega vremena in ikone"
+msgstr "Hautatu uneko eguraldia eta ikono handia bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
-msgstr "Prepiše temo ozadja (omogoči nastavitve spodaj)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->tooltip
 msgid ""
 "Check this to override the desktop theme and configure the appearance "
 "manually"
-msgstr "Omogočite za prepis teme ozadja in ročne nastavitve videza"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->description
 msgid "Bold city name"
-msgstr "Krepko ime mesta"
+msgstr "Hiriaren izena lodiz"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->tooltip
 msgid "Check to display the city name in bold"
-msgstr "Omogočite, da se prikaže ime mesta v krepki pisavi"
+msgstr "Hautatu hiriaren izena lodiz bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->description
 msgid "Current visibility"
-msgstr "Trenutna vidnost"
+msgstr "Uneko ikuspena"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->tooltip
 msgid "Check to display the current visibility"
-msgstr "Omogočite za prikaz trenutne vidnosti"
+msgstr "Hautatu uneko ikuspena bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->description
 msgid "Forecast minimum"
-msgstr "Najnižja napoved"
+msgstr "Minimoaren iragarpena"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->tooltip
 msgid "Check to display the forecast minimum temperature"
-msgstr "Omogočite za prikaz najnižje napovedi temperature"
+msgstr "Hautatu tenperatura minimoaren iragarpena bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locationlookups->description
 msgid "Location display settings"
-msgstr "Nastavitve prikaza kraja"
+msgstr "Kokapenaren bistaratzearen ezarpenak"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->apikey->description
 msgid "API key"
-msgstr "API ključ"
+msgstr "API gakoa"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->apikey->tooltip
 msgid ""
 "Required for some services only. Enter your API key for your chosen service"
 msgstr ""
-"Potrebna samo za nekatere storitve. Vnesite svoj API ključ za izbrano "
-"storitev"
+"Zerbitzu batzurentzat soilik beharrezkoa. Sartu hautatutako zerbitzuaren "
+"zure API gakoa"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->tooltip
 msgid "Select the data service you wish to use"
-msgstr "Izberite podatkovno storitev, ki jo želite uporabiti"
+msgstr "Hautatu erabili nahi duzun datu-zerbitzua"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Forecast.io (requires API key)"
-msgstr "Forecast.io (zahteva API ključ)"
+msgstr "Forecast.io (API gakoa eskatzen du)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Wunderground (requires API key)"
-msgstr "Wunderground (zahteva API ključ)"
+msgstr "Wunderground (API gakoa eskatzen du)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -972,11 +970,11 @@ msgstr "Yahoo"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "weather.com (deprecated)"
-msgstr "weather.com (opuščeno)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "World Weather Online (requires API key)"
-msgstr "World Weather Online (zahteva API ključ)"
+msgstr "World Weather Online (API gakoa eskatzen du)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Open Weather Map"
@@ -985,140 +983,135 @@ msgstr "Open Weather Map"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__pressure->description
 msgid "Forecast pressure"
-msgstr "Napoved tlaka"
+msgstr "Presioaren iragarpena"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__pressure->tooltip
 msgid "Check to display the forecast pressure"
-msgstr "Omogočite za prikaz napovedi tlaka"
+msgstr "Hautatu presioaren aurrikuspena bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->description
 msgid "Zoom by"
-msgstr "Približaj za"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->tooltip
 msgid "Change the size of the desklet"
-msgstr "Spremenite velikost apleta namizja"
+msgstr "Aldatu desklet-aren tamaina"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->units
 msgid "times"
-msgstr "krat"
+msgstr "aldiz"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->description
 msgid "Icon style"
-msgstr "Slog ikon"
+msgstr "Ikono-estiloa"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->tooltip
 msgid "Select the style for the weather icons"
-msgstr "Izberite slog za ikone vremena"
+msgstr "Hautatu eguraldi-ikonoen estiloa"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat white"
-msgstr "Ravno bela"
+msgstr "Zuri laua"
 
-# Layout name...we do not have specific name for that
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Novacon"
 msgstr "Novacon"
 
-# Layout name...we do not have specific name for that
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "VClouds"
 msgstr "VClouds"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Colorful"
-msgstr "Barvno"
+msgstr "Koloretsua"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Light"
-msgstr "Svetlo"
+msgstr "Argia"
 
-# Layout name...we do not have specific name for that
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 2"
 msgstr "Meteocons 2"
 
-# Layout name...we do not have specific name for that
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat black"
-msgstr "Ravno črna"
+msgstr "Beltz laua"
 
-# Layout name...we do not have specific name for that
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 1"
 msgstr "Meteocons 1"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Dark"
-msgstr "Temno"
+msgstr "Iluna"
 
-# Layout name...we do not have specific name for that
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Sketchy"
-msgstr "Skicirana"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat colorful"
-msgstr "Ravno barvita"
+msgstr "Lau koloretsua"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "User defined"
-msgstr "Uporabniško določeno"
+msgstr "Erabiltzaileak definitua"
 
-# Layout name...we do not have specific name for that
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Weezle"
-msgstr "Weezle"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->stationID->description
 msgid "Location"
-msgstr "Kraj"
+msgstr "Kokapena"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->stationID->tooltip
 msgid "Set your location here"
-msgstr "Tukaj nastavite svoj kraj"
+msgstr "Ezarri zure kokapena hemen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->description
 msgid "Corner radius"
-msgstr "Zaobljenost kota"
+msgstr "Izkina-erradioa"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->tooltip
 msgid "Radius for rounding the desklet's corners"
-msgstr "Stopinje za zaobljanje kotov apleta namizja"
+msgstr "Desklet-aren izkinak borobiltzeko erradioa"
 
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
-msgstr "točk"
+msgstr "px"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->transparency->description
 msgid "Transparency"
-msgstr "Prosojnost"
+msgstr "Gardentasuna"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->transparency->tooltip
 msgid "Set the transparency of the desklet"
-msgstr "Nastavite prosojnost apleta namizja"
+msgstr "Ezarri desklet-aren gardentasuna"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display->description
 msgid ""
 "Optional items to display (not all options are supported by all services)"
 msgstr ""
-"Dodatni predmeti a prikaz (nekatere možnosti niso podprte pri vseh storitvah)"
+"Bistaratzeko hautazko elementuak (zerbitzu guztiek ez dituzte aukera guztiak "
+"onartzen)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental->description
 msgid "Experimental and buggy features (read documentation!!)"
-msgstr "Poskusne in hroščate zmožnosti (preberite dokumentacijo!)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->description
 msgid "Border width"
-msgstr "Širina obrobe"
+msgstr "Ertz-zabalera"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->tooltip
 msgid ""
 "Select the width of the border. Only available if the 'Border' checkbox is "
 "enabled"
 msgstr ""
-"Izberite širino obrobe. Na voljo le, če je omogočeno polje \"Obroba\""
+"Hautatu ertzaren zabalera. 'Ertza' kontrol-laukia hautatuta soilik "
+"erabilgarri"

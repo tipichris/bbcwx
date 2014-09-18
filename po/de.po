@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2014-08-15 21:32+0100\n"
-"PO-Revision-Date: 2014-08-13 21:14+0000\n"
-"Last-Translator: Daniel Schürmann <Unknown>\n"
+"PO-Revision-Date: 2014-08-30 10:56+0000\n"
+"Last-Translator: Michael Dix <thylamediol@googlemail.com>\n"
 "Language-Team: German <de@li.org>\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-13 21:20+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-18 13:52+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+"Language: de\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -548,7 +548,7 @@ msgstr "Gleichbleibend"
 #. # direction of movement of pressure
 #: desklet.js:1953 desklet.js:2560
 msgid "Rising"
-msgstr ""
+msgstr "Steigend"
 
 #. # direction of movement of pressure
 #: desklet.js:1953 desklet.js:2562
@@ -702,27 +702,27 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom center"
-msgstr ""
+msgstr "Unten mittig"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Left center"
-msgstr ""
+msgstr "Links mittig"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Top right"
-msgstr ""
+msgstr "Oben rechts"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom left"
-msgstr ""
+msgstr "Unten links"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Top left"
-msgstr ""
+msgstr "Oben links"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Right center"
@@ -771,7 +771,7 @@ msgstr ""
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->description
 msgid "Forecast maximum"
-msgstr ""
+msgstr "Voraussichtlicher Maximalwert"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->tooltip
@@ -792,7 +792,7 @@ msgstr "Knoten"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "km/h"
@@ -1105,7 +1105,8 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental->description
 msgid "Experimental and buggy features (read documentation!!)"
-msgstr "Experimentielle und fehlerhafte Funktionen (Lese die Dokumentation!!)"
+msgstr ""
+"Experimentielle und fehlerhafte Funktionen (Lese die Dokumentation!!)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->description
 msgid "Border width"
