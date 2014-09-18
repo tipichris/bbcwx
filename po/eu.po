@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-15 21:32+0100\n"
+"Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
+"POT-Creation-Date: 2014-09-18 16:13+0100\n"
 "PO-Revision-Date: 2014-09-16 17:53+0000\n"
 "Last-Translator: Asier Iturralde Sarasola <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
+"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -315,7 +316,7 @@ msgstr "Elurra eta elurbustia"
 msgid "Freezing drizzle"
 msgstr "Zirimiri izoztua"
 
-#: desklet.js:1463 desklet.js:1756
+#: desklet.js:1463 desklet.js:1757
 msgid "Drizzle"
 msgstr "Zirimiria"
 
@@ -347,7 +348,7 @@ msgstr "Elurra"
 msgid "Hail"
 msgstr "Kazkabarra"
 
-#: desklet.js:1472 desklet.js:1761
+#: desklet.js:1472 desklet.js:1762
 msgid "Sleet"
 msgstr "Elurbustia"
 
@@ -395,7 +396,7 @@ msgstr "Nahiko hodeitsua"
 msgid "Clear"
 msgstr "Garbia"
 
-#: desklet.js:1486 desklet.js:1745
+#: desklet.js:1486 desklet.js:1746
 msgid "Sunny"
 msgstr "Eguzkitsua"
 
@@ -447,110 +448,115 @@ msgstr "Zaparrada ekaiztsu sakabanatuak"
 msgid "Not available"
 msgstr "Ez dago eskuragarri"
 
-#: desklet.js:1744
+#: desklet.js:1745
 msgid "Clear Sky"
 msgstr "Oskarbia"
 
-#: desklet.js:1746
+#: desklet.js:1747
 msgid "Partly Cloudy"
 msgstr "Nahiko lainotua"
 
-#: desklet.js:1747
+#: desklet.js:1748
 msgid "Sunny Intervals"
 msgstr "Ostarteak"
 
-#: desklet.js:1748
+#: desklet.js:1749
 msgid "Sand Storm"
 msgstr "Harea-ekaitza"
 
-#: desklet.js:1749
+#: desklet.js:1750
 msgid "Mist"
 msgstr "Lanbroa"
 
-#: desklet.js:1750
+#: desklet.js:1751
 msgid "Fog"
 msgstr "Lainoa"
 
-#: desklet.js:1751
+#: desklet.js:1752
 msgid "White Cloud"
 msgstr "Hodei zuriak"
 
-#: desklet.js:1752
+#: desklet.js:1753
 msgid "Light Cloud"
 msgstr "Hodei arinak"
 
-#: desklet.js:1753
+#: desklet.js:1754
 msgid "Grey Cloud"
 msgstr "Hodei grisak"
 
-#: desklet.js:1754
+#: desklet.js:1755
 msgid "Thick Cloud"
 msgstr "Hodei itxiak"
 
-#: desklet.js:1755
+#: desklet.js:1756
 msgid "Light Rain Shower"
 msgstr "Euri-zaparrada arinak"
 
-#: desklet.js:1757
+#: desklet.js:1758
 msgid "Light Rain"
 msgstr "Euri arina"
 
-#: desklet.js:1758
+#: desklet.js:1759
 msgid "Heavy Rain Shower"
 msgstr "Euri-zaparrada gogorra"
 
-#: desklet.js:1759
+#: desklet.js:1760
 msgid "Heavy Rain"
 msgstr "Euri mardula"
 
-#: desklet.js:1760
+#: desklet.js:1761
 msgid "Sleet Shower"
 msgstr "Elurbusti-zaparrada"
 
-#: desklet.js:1762
+#: desklet.js:1763
 msgid "Light Snow Shower"
 msgstr "Elur arin-zaparrada"
 
-#: desklet.js:1763
+#: desklet.js:1764
 msgid "Light Snow"
 msgstr "Elur arina"
 
-#: desklet.js:1764
+#: desklet.js:1765
 msgid "Heavy Snow Shower"
 msgstr "Euri-zaparrada gogorra"
 
-#: desklet.js:1765
+#: desklet.js:1766
 msgid "Heavy Snow"
 msgstr "Elur mardula"
 
-#: desklet.js:1766
+#: desklet.js:1767
 msgid "Thundery Shower"
 msgstr "Zaparrada trumoitsua"
 
-#: desklet.js:1767
+#: desklet.js:1768
 msgid "Thunder Storm"
 msgstr "Trumoi-ekaitza"
 
-#: desklet.js:1768
+#: desklet.js:1769
 msgid "Thunderstorm"
 msgstr "Trumoi-ekaitza"
 
-#: desklet.js:1769
+#: desklet.js:1770
 msgid "Hazy"
 msgstr "Lainotsua"
 
+#: desklet.js:1771
+#, fuzzy
+msgid "Hail Shower"
+msgstr "Euri-zaparrada gogorra"
+
 #. # direction of movement of pressure
-#: desklet.js:1953 desklet.js:2564
+#: desklet.js:1955 desklet.js:2568
 msgid "Steady"
 msgstr "Egonkorra"
 
 #. # direction of movement of pressure
-#: desklet.js:1953 desklet.js:2560
+#: desklet.js:1955 desklet.js:2564
 msgid "Rising"
 msgstr "Igotzen"
 
 #. # direction of movement of pressure
-#: desklet.js:1953 desklet.js:2562
+#: desklet.js:1955 desklet.js:2566
 msgid "Falling"
 msgstr "Jaisten"
 
@@ -570,9 +576,9 @@ msgstr ""
 msgid "Google"
 msgstr "Google"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Datu-zerbitzua"
@@ -1078,9 +1084,9 @@ msgstr "Izkina-erradioa"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Desklet-aren izkinak borobiltzeko erradioa"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr "px"

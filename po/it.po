@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-15 21:32+0100\n"
+"Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
+"POT-Creation-Date: 2014-09-18 16:13+0100\n"
 "PO-Revision-Date: 2014-08-27 20:02+0000\n"
 "Last-Translator: Matteo <matteocolpo@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -315,7 +316,7 @@ msgstr "Neve mista a nevischio"
 msgid "Freezing drizzle"
 msgstr "Pioggia fine ghiacciata"
 
-#: desklet.js:1463 desklet.js:1756
+#: desklet.js:1463 desklet.js:1757
 msgid "Drizzle"
 msgstr "Pioggia fine"
 
@@ -347,7 +348,7 @@ msgstr "Neve"
 msgid "Hail"
 msgstr "Grandine"
 
-#: desklet.js:1472 desklet.js:1761
+#: desklet.js:1472 desklet.js:1762
 msgid "Sleet"
 msgstr "Nevischio"
 
@@ -395,7 +396,7 @@ msgstr "Parzialmente nuvoloso"
 msgid "Clear"
 msgstr "Limpido"
 
-#: desklet.js:1486 desklet.js:1745
+#: desklet.js:1486 desklet.js:1746
 msgid "Sunny"
 msgstr "Soleggiato"
 
@@ -447,110 +448,115 @@ msgstr "Rovesci temporaleschi isolati"
 msgid "Not available"
 msgstr "Non disponibile"
 
-#: desklet.js:1744
+#: desklet.js:1745
 msgid "Clear Sky"
 msgstr "Cielo sereno"
 
-#: desklet.js:1746
+#: desklet.js:1747
 msgid "Partly Cloudy"
 msgstr "Parzialmente nuvoloso"
 
-#: desklet.js:1747
+#: desklet.js:1748
 msgid "Sunny Intervals"
 msgstr "Schiarite"
 
-#: desklet.js:1748
+#: desklet.js:1749
 msgid "Sand Storm"
 msgstr "Tempesta di sabbia"
 
-#: desklet.js:1749
+#: desklet.js:1750
 msgid "Mist"
 msgstr "Nebbia"
 
-#: desklet.js:1750
+#: desklet.js:1751
 msgid "Fog"
 msgstr "Nebbia fitta"
 
-#: desklet.js:1751
+#: desklet.js:1752
 msgid "White Cloud"
 msgstr "Nuvole"
 
-#: desklet.js:1752
+#: desklet.js:1753
 msgid "Light Cloud"
 msgstr "Leggermente nuvoloso"
 
-#: desklet.js:1753
+#: desklet.js:1754
 msgid "Grey Cloud"
 msgstr "Nuvole grige"
 
-#: desklet.js:1754
+#: desklet.js:1755
 msgid "Thick Cloud"
 msgstr "Dense nubi"
 
-#: desklet.js:1755
+#: desklet.js:1756
 msgid "Light Rain Shower"
 msgstr "Scrosci d'acqua leggeri"
 
-#: desklet.js:1757
+#: desklet.js:1758
 msgid "Light Rain"
 msgstr "Pioggia leggera"
 
-#: desklet.js:1758
+#: desklet.js:1759
 msgid "Heavy Rain Shower"
 msgstr "Acquazoni"
 
-#: desklet.js:1759
+#: desklet.js:1760
 msgid "Heavy Rain"
 msgstr "Pioggia intensa"
 
-#: desklet.js:1760
+#: desklet.js:1761
 msgid "Sleet Shower"
 msgstr "Rovesci di nevischio"
 
-#: desklet.js:1762
+#: desklet.js:1763
 msgid "Light Snow Shower"
 msgstr "Rovesci di neve leggeri"
 
-#: desklet.js:1763
+#: desklet.js:1764
 msgid "Light Snow"
 msgstr "Nevicata leggera"
 
-#: desklet.js:1764
+#: desklet.js:1765
 msgid "Heavy Snow Shower"
 msgstr "Rovesci di neve intensi"
 
-#: desklet.js:1765
+#: desklet.js:1766
 msgid "Heavy Snow"
 msgstr "Neve intensa"
 
-#: desklet.js:1766
+#: desklet.js:1767
 msgid "Thundery Shower"
 msgstr "Acquazone accompagnato da tuoni e lampi"
 
-#: desklet.js:1767
+#: desklet.js:1768
 msgid "Thunder Storm"
 msgstr "Temporale"
 
-#: desklet.js:1768
+#: desklet.js:1769
 msgid "Thunderstorm"
 msgstr "Temporale"
 
-#: desklet.js:1769
+#: desklet.js:1770
 msgid "Hazy"
 msgstr "Nebbioso"
 
+#: desklet.js:1771
+#, fuzzy
+msgid "Hail Shower"
+msgstr "Acquazoni"
+
 #. # direction of movement of pressure
-#: desklet.js:1953 desklet.js:2564
+#: desklet.js:1955 desklet.js:2568
 msgid "Steady"
 msgstr "Stazionario"
 
 #. # direction of movement of pressure
-#: desklet.js:1953 desklet.js:2560
+#: desklet.js:1955 desklet.js:2564
 msgid "Rising"
 msgstr "Crescente"
 
 #. # direction of movement of pressure
-#: desklet.js:1953 desklet.js:2562
+#: desklet.js:1955 desklet.js:2566
 msgid "Falling"
 msgstr "Decrescente"
 
@@ -570,9 +576,9 @@ msgstr ""
 msgid "Google"
 msgstr "Google"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Servizio dati"
@@ -1083,9 +1089,9 @@ msgstr "Raggio dell'angolo"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Raggio di arrotondamento del angolo del desklet"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.2)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr "px"

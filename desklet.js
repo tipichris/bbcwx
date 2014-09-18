@@ -2113,7 +2113,9 @@ wxDriverOWM.prototype = {
     'es' : 'es',
     'sv' : 'sv',
     'tr' : 'tr',
-    'uk' : 'uk'
+    'uk' : 'uk',
+    'hr' : 'hr',
+    'ca' : 'ca'
   },
   
   // initialise the driver
@@ -2913,6 +2915,8 @@ wxDriverForecastIo.prototype = {
     'fr' : 'fr',
     'de' : 'de',
     'es' : 'es',
+    'pl' : 'pl',
+    'it' : 'it',
     'tet' : 'tet'
   },
   
