@@ -2917,7 +2917,10 @@ wxDriverForecastIo.prototype = {
     'es' : 'es',
     'pl' : 'pl',
     'it' : 'it',
-    'tet' : 'tet'
+    'tet' : 'tet',
+    'bs' : 'bs',
+    'pt' : 'pt',
+    'ru' : 'ru'
   },
   
   // initialise the driver
