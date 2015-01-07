@@ -1,4 +1,4 @@
-# Polish translation for bbcwx
+# Turkish translation for bbcwx
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the bbcwx package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
@@ -6,88 +6,88 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
-"Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-18 16:13+0100\n"
-"PO-Revision-Date: 2014-11-11 12:33+0000\n"
-"Last-Translator: Piotr <parker-1992@o2.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2014-11-22 01:00+0000\n"
+"Last-Translator: kelebek333 <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2015-01-07 20:32+0000\n"
 "X-Generator: Launchpad (build 17298)\n"
-"Language: pl\n"
+"Language: tr\n"
 
 #. # Days of the week
 #: desklet.js:103
 msgid "Mon"
-msgstr "Pon."
+msgstr "Pzt"
 
 #: desklet.js:103
 msgid "Tue"
-msgstr "Wt."
+msgstr "Sal"
 
 #: desklet.js:103
 msgid "Wed"
-msgstr "Śr."
+msgstr "Çrş"
 
 #: desklet.js:103
 msgid "Thu"
-msgstr "Czw."
+msgstr "Prş"
 
 #: desklet.js:103
 msgid "Fri"
-msgstr "Pt."
+msgstr "Cum"
 
 #: desklet.js:103
 msgid "Sat"
-msgstr "Sob."
+msgstr "Cts"
 
 #: desklet.js:103
 msgid "Sun"
-msgstr "Niedz."
+msgstr "Paz"
 
 #. # The desklet title
 #: desklet.js:177
 msgid "Weather"
-msgstr "Pogoda"
+msgstr "Hava Durumu"
 
 #. # Link to Help file in context menu
 #: desklet.js:185
 msgid "Help"
-msgstr "Pomoc"
+msgstr "Yardım"
 
 #. # Link to information on translating in context menu
 #: desklet.js:189
 msgid "Translate"
-msgstr "Przetłumacz"
+msgstr "Çeviri"
 
 #. # Next five strings are labels for current conditions
 #: desklet.js:323 desklet.js:351
 msgid "Humidity:"
-msgstr "Wilgotność:"
+msgstr "Nem:"
 
 #. # Atmospheric pressure
 #: desklet.js:324 desklet.js:350
 msgid "Pressure:"
-msgstr "Ciśnienie:"
+msgstr "Basınç:"
 
 #: desklet.js:325
 msgid "Wind:"
-msgstr "Wiatr:"
+msgstr "Rüzgar:"
 
 #: desklet.js:326
 msgid "Feels like:"
-msgstr "Temperatura odczuwalna:"
+msgstr "Hissedilen:"
 
 #: desklet.js:327
 msgid "Visibility:"
-msgstr "Widoczność:"
+msgstr "Görüş alanı:"
 
 #. # Maximum temperature
 #: desklet.js:342
 msgid "Max:"
-msgstr "Maks:"
+msgstr "Azm:"
 
 #. # Minimum temperature
 #: desklet.js:344
@@ -97,488 +97,490 @@ msgstr "Min:"
 #. # Wind speed (English translation is "Wind:")
 #: desklet.js:346
 msgid "Wind speed:"
-msgstr "Prędkość wiatru"
+msgstr "Rüzgar hızı"
 
 #. # Wind direction
 #: desklet.js:348
 msgid "Dir:"
-msgstr "Kierunek:"
+msgstr "Yön:"
 
 #. # Credit the data supplier. A link to the data supplier appears to the
 #. right of this string
 #: desklet.js:388
 msgid "Data from "
-msgstr "Dane pochodzą z serwisu "
+msgstr "Veri kaynağı "
 
 #. # Tooltip for refresh button
 #: desklet.js:396
 msgid "Refresh"
-msgstr "Odśwież"
+msgstr "Tazele"
 
 #. # Message if we fail to get weather data
 #: desklet.js:697
 msgid "No data available"
-msgstr "Brak dostępnych danych"
+msgstr "Kullanılabilir veri yok"
 
 #: desklet.js:729 desklet.js:797
 #, python-format
 msgid "Error: %s"
-msgstr "Błąd: %s"
+msgstr "Hata: %s"
 
 #: desklet.js:729 desklet.js:797
 msgid "No data"
-msgstr "Brak danych"
+msgstr "Veri yok"
 
 #. # %s is replaced by place name
 #: desklet.js:832
 #, python-format
 msgid "Click for the full forecast for %s"
-msgstr "Kliknij, aby zobaczyć pełną prognozę pogody dla miejscowości %s"
+msgstr "%s ile ilgili tam hava tahmini için tıklayın"
 
 #. # Units for temperature, degrees Fahrenheit. %f is replaced the value. NB:
 #. English translation uses unicode character u+2109
 #: desklet.js:1074
 #, python-format
 msgid "%fF"
-msgstr "%f°F"
+msgstr "%fF"
 
 #. # Units for temperature, degrees Celsius. %f is replaced the value. NB:
 #. English translation uses unicode character u+2103
 #: desklet.js:1076
 #, python-format
 msgid "%fC"
-msgstr "%f°C"
+msgstr "%fC"
 
 #. # wind speed, miles per hour. %f is replaced by the value
 #: desklet.js:1097
 #, python-format
 msgid "%fmph"
-msgstr "%fmph"
+msgstr "%fm/s"
 
 #. # wind speed, knots. %f is replaced by the value
 #: desklet.js:1099
 #, python-format
 msgid "%fkn"
-msgstr "%fwęzły"
+msgstr "%fkn"
 
 #. # wind speed, kilometers per hour. %f is replaced by the value
 #: desklet.js:1101
 #, python-format
 msgid "%fkm/h"
-msgstr "%fkm/h"
+msgstr "%fkm/s"
 
 #. # wind speed, meters per second. %f is replaced by the value
 #: desklet.js:1103
 #, python-format
 msgid "%fm/s"
-msgstr "%f m/s"
+msgstr "%fm/s"
 
 #. # pressure, millbars. %f is replaced by the value
 #: desklet.js:1137
 #, python-format
 msgid "%fmb"
-msgstr "%f hPa"
+msgstr "%fmb"
 
 #. # pressure, inches of mercury. %f is replaced by the value
 #: desklet.js:1139
 #, python-format
 msgid "%fin"
-msgstr "%f inHg"
+msgstr ""
 
 #. # pressure, mm of mercury. %f is replaced by the value
 #: desklet.js:1141
 #, python-format
 msgid "%fmm"
-msgstr "%f mmHg"
+msgstr ""
 
 #. # pressure, kilopascals. %f is replaced by the value
 #: desklet.js:1143
 #, python-format
 msgid "%fkPa"
-msgstr "%f kPa"
+msgstr ""
 
 #. # visibility, miles. %f is replaced by the value
 #: desklet.js:1194
 #, python-format
 msgid "%fmi"
-msgstr "%f mi"
+msgstr ""
 
 #. # visibility, nautical miles. %f is replaced by the value
 #: desklet.js:1196
 #, python-format
 msgid "%fnmi"
-msgstr "%f Mm"
+msgstr ""
 
 #. # visibility, kilometers. %f is replaced by the value
 #: desklet.js:1198
 #, python-format
 msgid "%fkm"
-msgstr "%f km"
+msgstr ""
 
 #. # Next 16 strings are for wind direction, compass points
 #: desklet.js:1421
 msgid "N"
-msgstr "płn."
+msgstr "K"
 
 #: desklet.js:1421
 msgid "NNE"
-msgstr "pn. pn.-wsch."
+msgstr "KKD"
 
 #: desklet.js:1421
 msgid "NE"
-msgstr "płn.-wsch."
+msgstr "KD"
 
 #: desklet.js:1421
 msgid "ENE"
-msgstr "wsch. pn.-wsch."
+msgstr "DKD"
 
 #: desklet.js:1421
 msgid "E"
-msgstr "wsch."
+msgstr "D"
 
 #: desklet.js:1421
 msgid "ESE"
-msgstr "wsch. pd.-wsch."
+msgstr "DGD"
 
 #: desklet.js:1421
 msgid "SE"
-msgstr "pd.-wsch."
+msgstr "GD"
 
 #: desklet.js:1421
 msgid "SSE"
-msgstr "pd. pd.-wsch."
+msgstr "GGD"
 
 #: desklet.js:1421
 msgid "S"
-msgstr "pd."
+msgstr "G"
 
 #: desklet.js:1421
 msgid "SSW"
-msgstr "pd. pd.-zach."
+msgstr "GGB"
 
 #: desklet.js:1421
 msgid "SW"
-msgstr "pd.-zach."
+msgstr "GB"
 
 #: desklet.js:1421
 msgid "WSW"
-msgstr "zach. pd.-zach."
+msgstr "BGB"
 
 #: desklet.js:1421
 msgid "W"
-msgstr "zach."
+msgstr "B"
 
 #: desklet.js:1421
 msgid "WNW"
-msgstr "zach. pn.-zach."
+msgstr "BKB"
 
 #: desklet.js:1421
 msgid "NW"
-msgstr "płn.-zach."
+msgstr "KB"
 
 #: desklet.js:1421
 msgid "NNW"
-msgstr "pn. pn.-zach."
+msgstr "KKB"
 
 #: desklet.js:1454
 msgid "Tornado"
-msgstr "Trąba powietrzna"
+msgstr "Bora"
 
 #: desklet.js:1455
 msgid "Tropical storm"
-msgstr "Cyklon tropikalny"
+msgstr "Tropik Fırtına"
 
 #: desklet.js:1456
 msgid "Hurricane"
-msgstr "Huragan"
+msgstr "Kasırga"
 
 #: desklet.js:1457
 msgid "Severe thunderstorms"
-msgstr "Silne burze"
+msgstr "Şiddetli fırtına"
 
 #: desklet.js:1458
 msgid "Thunderstorms"
-msgstr "Burze"
+msgstr "Gök gürültülü"
 
 #: desklet.js:1459
 msgid "Mixed rain and snow"
-msgstr "Deszcz ze śniegiem"
+msgstr "Karla karışık yağmur"
 
 #: desklet.js:1460
 msgid "Mixed rain and sleet"
-msgstr "Deszcz i deszcz ze śniegiem"
+msgstr "Yağmur ve sulu kar"
 
 #: desklet.js:1461
 msgid "Mixed snow and sleet"
-msgstr "Deszcz i deszcz ze śniegiem"
+msgstr "Kar ve sulu kar"
 
 #: desklet.js:1462
 msgid "Freezing drizzle"
-msgstr "Zamarzająca mżawka"
+msgstr "Dondurucu çiseleme"
 
 #: desklet.js:1463 desklet.js:1757
 msgid "Drizzle"
-msgstr "Mżawka"
+msgstr "Çiseleme"
 
 #: desklet.js:1464
 msgid "Freezing rain"
-msgstr "Zamarzający deszcz"
+msgstr "Dolu yağışlı"
 
 #: desklet.js:1465 desklet.js:1466
 msgid "Showers"
-msgstr "Ulewy"
+msgstr "Sağanak"
 
 #: desklet.js:1467
 msgid "Snow flurries"
-msgstr "Przelotne opady śniegu"
+msgstr "Kar fırtınası"
 
 #: desklet.js:1468
 msgid "Light snow showers"
-msgstr "Lekkie, przelotne opady śniegu"
+msgstr "Hafif kar yağışı"
 
 #: desklet.js:1469
 msgid "Blowing snow"
-msgstr "Zamieć śnieżna"
+msgstr "Tipi"
 
 #: desklet.js:1470
 msgid "Snow"
-msgstr "Opady śniegu"
+msgstr "Kar"
 
 #: desklet.js:1471
 msgid "Hail"
-msgstr "Grad"
+msgstr "Dolu"
 
 #: desklet.js:1472 desklet.js:1762
 msgid "Sleet"
-msgstr "Deszcz ze śniegiem"
+msgstr "Karla karışık yağmur"
 
 #: desklet.js:1473
 msgid "Dust"
-msgstr "Tumany kurzu lub pyłu"
+msgstr "Tozlu"
 
 #: desklet.js:1474
 msgid "Foggy"
-msgstr "Mgliście"
+msgstr "Sisli"
 
 #: desklet.js:1475
 msgid "Haze"
-msgstr "Zamglenia"
+msgstr "Puslu"
 
 #: desklet.js:1476
 msgid "Smoky"
-msgstr "Zadymienie"
+msgstr "Dumanlı"
 
 #: desklet.js:1477
 msgid "Blustery"
-msgstr "Porywisty wiatr"
+msgstr "Fırtınalı"
 
 #: desklet.js:1478
 msgid "Windy"
-msgstr "Wietrznie"
+msgstr "Rüzgarlı"
 
 #: desklet.js:1479
 msgid "Cold"
-msgstr "Zimno"
+msgstr "Soğuk"
 
 #: desklet.js:1480
 msgid "Cloudy"
-msgstr "Pochmurno"
+msgstr "Bulutlu"
 
 #: desklet.js:1481 desklet.js:1482
 msgid "Mostly cloudy"
-msgstr "Przewaga chmur"
+msgstr "Çok bulutlu"
 
 #: desklet.js:1483 desklet.js:1484 desklet.js:1498
 msgid "Partly cloudy"
-msgstr "Częściowe zachmurzenie"
+msgstr "Parçalı bulutlu"
 
 #: desklet.js:1485
 msgid "Clear"
-msgstr "Bezchmurnie"
+msgstr "Temiz"
 
 #: desklet.js:1486 desklet.js:1746
 msgid "Sunny"
-msgstr "Słonecznie"
+msgstr "Güneşli"
 
 #: desklet.js:1487 desklet.js:1488
 msgid "Fair"
-msgstr "Dobry"
+msgstr "Açık"
 
 #: desklet.js:1489
 msgid "Mixed rain and hail"
-msgstr "Deszcz z gradem"
+msgstr "Yağmurla karışık dolu"
 
 #: desklet.js:1490
 msgid "Hot"
-msgstr "Upał"
+msgstr "Sıcak"
 
 #: desklet.js:1491
 msgid "Isolated thunderstorms"
-msgstr "Lokalne burze"
+msgstr "Gökgürültülü sağanak yağış"
 
 #: desklet.js:1492
 msgid "Scattered thunderstorms"
-msgstr "Przelotne burze z piorunami"
+msgstr "Yer yer gökgürültülü yağış"
 
 #: desklet.js:1493 desklet.js:1494
 msgid "Scattered showers"
-msgstr "Przelotne deszcze"
+msgstr "Yer yer yağmurlu"
 
 #: desklet.js:1495 desklet.js:1497
 msgid "Heavy snow"
-msgstr "Obfite opady śniegu"
+msgstr "Ağır kar yağışı"
 
 #: desklet.js:1496
 msgid "Scattered snow showers"
-msgstr "Sporadyczne opady śniegu"
+msgstr "Dağınık kar yağışı"
 
 #: desklet.js:1499
 msgid "Thundershowers"
-msgstr "Burze z przelotnymi opadami deszczu"
+msgstr "Gök gürültülü sağanak"
 
 #: desklet.js:1500
 msgid "Snow showers"
-msgstr "Przelotne opady śniegu"
+msgstr "Sağanak kar"
 
 #: desklet.js:1501
 msgid "Isolated thundershowers"
-msgstr "Lokalne burze z przelotnymi opadami deszczu"
+msgstr "Bölgesel gök gürültülü ve yağmurlu"
 
 #: desklet.js:1502
 msgid "Not available"
-msgstr "Niedostępne"
+msgstr "Kullanılabilir değil"
 
 #: desklet.js:1745
 msgid "Clear Sky"
-msgstr "Czyste niebo"
+msgstr "Açık Gökyüzü"
 
 #: desklet.js:1747
 msgid "Partly Cloudy"
-msgstr "Częściowe zachmurzenie"
+msgstr "Parçalı Bulutlu"
 
 #: desklet.js:1748
 msgid "Sunny Intervals"
-msgstr "Przejaśnienia"
+msgstr "Parçalı güneşli"
 
 #: desklet.js:1749
 msgid "Sand Storm"
-msgstr "Burza piaskowa"
+msgstr "Kum Fırtınası"
 
 #: desklet.js:1750
 msgid "Mist"
-msgstr "Mgiełka"
+msgstr "Buğulu"
 
 #: desklet.js:1751
 msgid "Fog"
-msgstr "Mgła"
+msgstr "Sisli"
 
 #: desklet.js:1752
 msgid "White Cloud"
-msgstr "Jasne chmury"
+msgstr "Beyaz bulutlu"
 
 #: desklet.js:1753
 msgid "Light Cloud"
-msgstr "Chmury warstwowe"
+msgstr "Hafif bulutlu"
 
 #: desklet.js:1754
 msgid "Grey Cloud"
-msgstr "Szare chmury"
+msgstr "Gri bulutlu"
 
 #: desklet.js:1755
 msgid "Thick Cloud"
-msgstr "Chmury kłębiaste"
+msgstr "Kalın bulutlu"
 
 #: desklet.js:1756
 msgid "Light Rain Shower"
-msgstr "Lekka ulewa"
+msgstr "Hafif Sağanak Yağmur"
 
 #: desklet.js:1758
 msgid "Light Rain"
-msgstr "Lekki przelotny deszcz"
+msgstr "Hafif Yağmur"
 
 #: desklet.js:1759
 msgid "Heavy Rain Shower"
-msgstr "Silny przelotny descz"
+msgstr "Şiddetli parçalı yağmur"
 
 #: desklet.js:1760
 msgid "Heavy Rain"
-msgstr "Silne opady deszczu"
+msgstr "Şiddetli Yağmur"
 
 #: desklet.js:1761
 msgid "Sleet Shower"
-msgstr "Przelotny deszcz ze śniegiem"
+msgstr "Karla  karışık yağmurlu sağanak"
 
 #: desklet.js:1763
 msgid "Light Snow Shower"
-msgstr "Lekkie przelotne opady śniegu"
+msgstr "Hafif kar sağanağı"
 
 #: desklet.js:1764
 msgid "Light Snow"
-msgstr "Lekkie opady śniegu"
+msgstr "Hafif Kar"
 
 #: desklet.js:1765
 msgid "Heavy Snow Shower"
-msgstr "Silne przelotne opady śniegu"
+msgstr "Şidetli parçalı kar yağışı"
 
 #: desklet.js:1766
 msgid "Heavy Snow"
-msgstr "Intensywne opady śniegu"
+msgstr "Şiddetli Kar"
 
 #: desklet.js:1767
 msgid "Thundery Shower"
-msgstr "Przelotne burze z deszczem"
+msgstr "Gök gürültülü sağanak"
 
 #: desklet.js:1768
 msgid "Thunder Storm"
-msgstr "Burza"
+msgstr "Gök Gürültülü Fırtına"
 
 #: desklet.js:1769
 msgid "Thunderstorm"
-msgstr "Burza"
+msgstr "Gökgürültülü Fırtınalı"
 
 #: desklet.js:1770
 msgid "Hazy"
-msgstr "Zamglenia"
+msgstr "Puslu"
 
 #: desklet.js:1771
 msgid "Hail Shower"
-msgstr ""
+msgstr "Dolu sağanağı"
 
 #. # direction of movement of pressure
 #: desklet.js:1955 desklet.js:2568
 msgid "Steady"
-msgstr "Niezmienne"
+msgstr "Sabit"
 
 #. # direction of movement of pressure
 #: desklet.js:1955 desklet.js:2564
 msgid "Rising"
-msgstr "Rośnie"
+msgstr "Yükselen"
 
 #. # direction of movement of pressure
 #: desklet.js:1955 desklet.js:2566
 msgid "Falling"
-msgstr "Spada"
+msgstr "Düşen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->description
 msgid "Get displayed location from"
-msgstr ""
+msgstr "Görünen konumu buradan al"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->tooltip
 msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
 msgstr ""
+"Mevcut konumu görüntüleme metninin kaynağı. Yahoo! ve Google şehir ismini "
+"bir başka dilde sunabilir."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
-msgstr "Serwis pogodowy"
+msgstr "Veri servisi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Yahoo!"
@@ -587,213 +589,210 @@ msgstr "Yahoo!"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->experimental_enabled->description
 msgid "Enable experimental features"
-msgstr "Uruchom funkcje eksperymentalne"
+msgstr "Deneysel özellikleri etkinleştir"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
-msgstr ""
-"Zaznacz, aby włączyć funkcje eksperymentalne, które mogą posiadać błędy."
+msgstr "Deneysel ve beta özellikleri etkinleştirmek için bunu işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
 msgid "Current humidity"
-msgstr "Aktualna wilgoność"
+msgstr "Geçerli nem"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__humidity->tooltip
 msgid "Check to display the current humidity"
-msgstr "Zaznacz, aby wyświetlić aktualną wilgoność"
+msgstr "Geçerli nemi görüntülemek için işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->description
 msgid "Refresh forecast every"
-msgstr "Odświeżaj prognozę co"
+msgstr "Tahmin yenileme süresi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->tooltip
 msgid ""
 "Period between refreshing forecasts. Note that not all services support "
 "lower refresh times"
 msgstr ""
-"Okres pomiędzy kolejnymi odświeżeniami prognozy pogody. Nie wszystkie "
-"serwisy pogodowe obsługują krótsze czasy odświeżeń."
+"Hava tahminini yenileme süresi. Tüm servislerin düşük yenileme desteği "
+"sunduğunu unutmayın."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->units
 msgid "minutes"
-msgstr "minuty"
+msgstr "dakika"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->description
 msgid "Manually override displayed location"
-msgstr ""
+msgstr "Görünen konum üstüne elle yazın"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
-msgstr ""
+msgstr "Şehir ismini elle girin"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->description
 msgid "Current wind"
-msgstr "Kierunek wiatru"
+msgstr "Geçerli rüzgar"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->tooltip
 msgid "Check to display the current wind"
-msgstr "Zaznacz, aby wyświetlić kierunek wiatru"
+msgstr "Geçerli rüzgarı görüntülemek için işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->description
 msgid "Temperature measurement unit"
-msgstr "Jednostka temperatury"
+msgstr "Sıcaklık ölçü birimi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->tooltip
 msgid "Measurement units used to display temperature"
-msgstr "Jednostka miary używana przy wyświetlaniu temperatury"
+msgstr "Sıcaklık görüntüleme için kullanılan ölçü birimi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->options
 msgid "Fahrenheit"
-msgstr "Fahrenheit"
+msgstr "Fahrenayt"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->options
 msgid "Celsius"
-msgstr "Stopień Celsjusza"
+msgstr "Santigrad"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->textcolor->description
 msgid "Text color"
-msgstr "Kolor tekstu"
+msgstr "Metin rengi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->textcolor->tooltip
 msgid "Click the button to select a new text color"
-msgstr "Kliknij przycisk, aby wybrać nowy kolor tekstu"
+msgstr "Yeni bir metin rengi seçmek için düğmeye tıklayınız"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->border->description
 msgid "Show border"
-msgstr "Pokaż ramkę"
+msgstr "Kenarlık göster"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->border->tooltip
 msgid "Check this to turn border on/off"
-msgstr "Zaznacz aby włączyć lub wyłączyć tę opcję"
+msgstr "Kenarlığın durumunu kapalı/açık yapmak için bunu işaretleyin"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->description
 msgid "Layout"
-msgstr "Układ elementów"
+msgstr "Düzen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->tooltip
 msgid "Set the overall layout of the desklet"
-msgstr "Wybierz układ deskletu"
+msgstr "Masaüstü uygulamacığı genel düzenini ayarla"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->options
 msgid "Horizontal"
-msgstr "Poziomy"
+msgstr "Yatay"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->options
 msgid "Vertical"
-msgstr "Pionowy"
+msgstr "Dikey"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bgcolor->description
 msgid "Background color"
-msgstr "Kolor tła"
+msgstr "Arkaplan rengi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bgcolor->tooltip
 msgid "Click the button to select a new background color"
-msgstr "Kliknij przycisk, aby wybrać nowy kolor tła"
+msgstr "Yeni bir arkaplan rengi için düğmeye tıklayın"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->description
 msgid "Anchor desklet by"
-msgstr "Zakotwicz desklet do"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->tooltip
 msgid ""
 "Select the point on the desklet to which it is anchored. This point will "
 "remain static as the desklet grows and shrinks"
 msgstr ""
-"Wybierz punkt w którym ma być zakotwiczony desklet. Pozostanie on niezmienny "
-"nawet jak desklet będzie zmniejszany i zwiększany."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom center"
-msgstr "Dół"
+msgstr "Alt orta"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Default"
-msgstr "Domyślny"
+msgstr "Varsayılan"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Left center"
-msgstr "Lewo"
+msgstr "Sol orta"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Top right"
-msgstr "Góra po prawej"
+msgstr "Üst sağ"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom left"
-msgstr "Dół po lewej"
+msgstr "Alt sol"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Top left"
-msgstr "Góra po lewej"
+msgstr "Üst sol"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Right center"
-msgstr "Prawo"
+msgstr "Sağ orta"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom right"
-msgstr "Dół po prawej"
+msgstr "Alt sağ"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Top center"
-msgstr "Góra"
+msgstr "Üst orta"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->top->description
 msgid "Weather configuration"
-msgstr "Ustawienia prognozy pogody"
+msgstr "Havadurumu yapılandırması"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->description
 msgid "Pressure measurement unit"
-msgstr "Jednostka miary ciśnienia"
+msgstr "Basınç ölçü birimi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->tooltip
 msgid "Measurement units used to display atmospheric pressure"
-msgstr "Jednostki miary używane do wyświetlania wartości ciśnienia"
+msgstr "Atmosfer basıncını görüntüleme için kullanılan ölçü birimi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "in (Hg)"
-msgstr "inHg"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "mm (Hg)"
-msgstr "mmHg"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "kPa"
-msgstr "kPa"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "mb"
-msgstr "hPa"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->styling->description
 msgid "Desklet style"
-msgstr "Styl deskletu"
+msgstr "Masaüstü uygulamacığı tarzı"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->description
 msgid "Forecast maximum"
-msgstr "Temperatura maksymalna"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->tooltip
 msgid "Check to display the forecast maximum temperature"
-msgstr "Zaznacz, aby wyświetlić temperaturę maksymalną"
+msgstr "Azami sıcaklık tahminini görüntülemek için işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->description
 msgid "Wind speed measurement unit"
-msgstr "Jednostka miary prędkości wiatru"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->tooltip
 msgid "Measurement units used to display wind speed"
-msgstr "Jednostka miary używana do wyświetlania prędkości wiatru"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "knots"
-msgstr "węzły"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "m/s"
@@ -801,142 +800,140 @@ msgstr "m/s"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "km/h"
-msgstr "km/h"
+msgstr "km/s"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->options
 msgid "mph"
-msgstr "mile/h"
+msgstr "mil/s"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__meta__country->description
 msgid "Country"
-msgstr "Kraj"
+msgstr "Ülke"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__meta__country->tooltip
 msgid "Check to display the country"
-msgstr "Zaznacz, aby wyświetlić kraj"
+msgstr "Ülkeyi görüntülemek için işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__pressure->description
 msgid "Current pressure"
-msgstr "Obecne ciśnienie atmosferyczne"
+msgstr "Güncel basınç"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__pressure->tooltip
 msgid "Check to display the current pressure"
-msgstr "Zaznacz, aby wyświetlić obecne ciśnienie atmosferyczne"
+msgstr "Güncel basıncı görüntülemek için işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->description
 msgid "Forecast wind direction"
-msgstr "Przewidywany kierunek wiatru"
+msgstr "Rüzgar yönü tahmini"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->tooltip
 msgid "Check to display the forecast wind direction"
-msgstr "Zaznacz, aby wyświetlić przewidywany kierunek wiatru"
+msgstr "Rüzgar yönü tahminini görüntülemek için işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__feelslike->description
 msgid "Current 'feels like'"
-msgstr "Obecna temperatura odczuwalna"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__feelslike->tooltip
 msgid "Check to display the current apparent temperature"
-msgstr "Zaznacz, aby wyświetlić obecną temperaturę odczuwalną"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->description
 msgid "Forecast humidity"
-msgstr "Przewidywana wilgotność"
+msgstr "Nem tahmini"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->tooltip
 msgid "Check to display the forecast humidity"
-msgstr "Zaznacz, aby wyświetlić przewidywaną wilgotność"
+msgstr "Nem tahminini görüntülemek için işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->description
 msgid "Show forecast for"
-msgstr "Pokaż prognozę na"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->tooltip
 msgid ""
 "The number of days of forecast to display. Note that not all services "
 "support all values"
 msgstr ""
-"Liczba dni na które ma być wyświetlana prognoza pogody. Nie wszystkie "
-"serwisy pogodowe obsługują wszystkie wartości."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->units
 msgid "days"
-msgstr "dni"
+msgstr "gün"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bordercolor->description
 msgid "Border color"
-msgstr "Kolor ramki"
+msgstr "Kenarlık rengi"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bordercolor->tooltip
 msgid ""
 "Select the color for the border. Only available if the 'Border' checkbox is "
 "enabled"
-msgstr "Wybierz kolor ramki. Dostępne tylko wtedy, gdy ramka jest włączona."
+msgstr ""
+"Kenarlık için renk seçin. 'Kenarlık' onay kutusu etkinse kullanılabilir"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_speed->description
 msgid "Forecast wind speed"
-msgstr "Przewidywana prędkość wiatru"
+msgstr "Rüzgar hızı tahmini"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_speed->tooltip
 msgid "Check to display the forecast wind speed"
-msgstr "Zaznacz, aby wyświetlić przewidywaną prędkość wiatru"
+msgstr "Rüzgar hızı tahminini görüntülemek için işaretle"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__weather->description
 msgid "Current weather and icon"
-msgstr "Obecna pogoda i ikona"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__weather->tooltip
 msgid "Check to display the current weather and large icon"
-msgstr "Zaznacz, aby wyświetlić obecną pogodę i dużą ikonę"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
-msgstr "Zastąp motyw pulpitu (włącza poniższe opcje)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->tooltip
 msgid ""
 "Check this to override the desktop theme and configure the appearance "
 "manually"
 msgstr ""
-"Zaznacz, aby zastąpić motyw pulpitu i samodzielnie dostosować wygląd deskletu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->description
 msgid "Bold city name"
-msgstr "Pogrubienie nazwy miasta"
+msgstr "Şehir ismi kalın"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->tooltip
 msgid "Check to display the city name in bold"
-msgstr "Zaznacz, aby pogrubić nazwę miasta"
+msgstr "Şehir ismini kalın göstermek için işaretleyin"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->description
 msgid "Current visibility"
-msgstr "Obecna widoczność"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->tooltip
 msgid "Check to display the current visibility"
-msgstr "Zaznacz, aby wyświetlić obecną widoczność"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->description
 msgid "Forecast minimum"
-msgstr "Temperatura minimalna"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->tooltip
 msgid "Check to display the forecast minimum temperature"
-msgstr "Zaznacz, aby wyświetlić przewidywaną temperaturę minimalną"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locationlookups->description
 msgid "Location display settings"
@@ -944,26 +941,24 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->apikey->description
 msgid "API key"
-msgstr "Klucz API"
+msgstr "API anahtarı"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->apikey->tooltip
 msgid ""
 "Required for some services only. Enter your API key for your chosen service"
 msgstr ""
-"Wymagany przy pobieraniu danych z niektórych serwisów. Wpisz swój klucz API "
-"dla wybranego serwisu pogodowego."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->tooltip
 msgid "Select the data service you wish to use"
-msgstr "Wybierz serwis pogodowy z którego chcesz pobierać dane pogodowe"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Forecast.io (requires API key)"
-msgstr "Forecast.io (wymaga klucza API)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Wunderground (requires API key)"
-msgstr "Wunderground (wymaga klucza API)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -975,49 +970,49 @@ msgstr "Yahoo"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "weather.com (deprecated)"
-msgstr "weather.com (przestarzały)"
+msgstr "weather.com (önerilmez)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "World Weather Online (requires API key)"
-msgstr "World Weather Online (wymaga klucza API)"
+msgstr "World Weather Online (API anahtarı gerektirir)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Open Weather Map"
-msgstr "Open Weather Map"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__pressure->description
 msgid "Forecast pressure"
-msgstr "Przewidywane ciśnienie"
+msgstr "Basınç tahmini"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__pressure->tooltip
 msgid "Check to display the forecast pressure"
-msgstr "Zaznacz, aby wyświetlić przewidywane ciśnienie"
+msgstr "Basınç tahiminini görüntülemek için işaretleyin"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->description
 msgid "Zoom by"
-msgstr "Powiększ desklet"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->tooltip
 msgid "Change the size of the desklet"
-msgstr "Zmienia rozmiar deskletu"
+msgstr "Masaüstü uygulamacığının boyutunu değiştir"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->units
 msgid "times"
-msgstr "razy"
+msgstr "kez"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->description
 msgid "Icon style"
-msgstr "Styl ikon"
+msgstr "Simge tarzı"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->tooltip
 msgid "Select the style for the weather icons"
-msgstr "Wybierz styl ikon pogody"
+msgstr "Hava durumu simgelerinin tarzını seçin"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat white"
-msgstr "Flat white"
+msgstr "Düz beyaz"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Novacon"
@@ -1029,11 +1024,11 @@ msgstr "VClouds"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Colorful"
-msgstr "Kolorowe"
+msgstr "Rengarenk"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Light"
-msgstr "Lekkie"
+msgstr "Açık"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 2"
@@ -1041,27 +1036,27 @@ msgstr "Meteocons 2"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat black"
-msgstr "Płaskie czarne"
+msgstr "Düz siyah"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 1"
-msgstr "Meteokons 1"
+msgstr "Meteocons 1"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Dark"
-msgstr "Ciemne"
+msgstr "Koyu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Sketchy"
-msgstr "Szkicowe"
+msgstr "Eskiz"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat colorful"
-msgstr "Płaskie kolorowe"
+msgstr "Düz renkli"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "User defined"
-msgstr "Zdefiniowane przez użytkownika"
+msgstr "Kullanıcı tanımlı"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Weezle"
@@ -1069,52 +1064,51 @@ msgstr "Weezle"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->stationID->description
 msgid "Location"
-msgstr "Lokalizacja"
+msgstr "Konum"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->stationID->tooltip
 msgid "Set your location here"
-msgstr "Wybierz swoją lokalizację"
+msgstr "Buraya konumuzu ayarlayabilirsiniz"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->description
 msgid "Corner radius"
-msgstr "Promień narożnika"
+msgstr "Köşe yarıçapı"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->tooltip
 msgid "Radius for rounding the desklet's corners"
-msgstr "Promień zaokrąglania narożników deskletu"
+msgstr ""
 
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.3)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
-msgstr "px"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->transparency->description
 msgid "Transparency"
-msgstr "Przezroczystość"
+msgstr "Şeffaflık"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->transparency->tooltip
 msgid "Set the transparency of the desklet"
-msgstr "Ustaw przezroczystość deskletu"
+msgstr "Masaüstü uygulamacığı şefaflığını ayarla"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display->description
 msgid ""
 "Optional items to display (not all options are supported by all services)"
 msgstr ""
-"Opcjonalne elementy do wyświetlenia (nie wszystkie opcje są wspierane przez "
-"wszystkie serwisy pogodowe)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental->description
 msgid "Experimental and buggy features (read documentation!!)"
-msgstr "Eksperymentalne i niestabilne funkcje (przeczytaj dokumentację)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->description
 msgid "Border width"
-msgstr "Szerokość ramki"
+msgstr "Kenarlık kalınlığı"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->tooltip
 msgid ""
 "Select the width of the border. Only available if the 'Border' checkbox is "
 "enabled"
-msgstr "Wybierz grubość ramki. Dostępne tylko wtedy, gdy włączona jest ramka"
+msgstr ""
+"Kenarlık kalınlığını seçiniz. 'Kenarlık' onay kutusu etkinse kullanılabilir"

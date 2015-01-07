@@ -9,14 +9,15 @@ msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.8.1\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2014-09-18 16:13+0100\n"
-"PO-Revision-Date: 2014-07-26 22:00-0300\n"
-"Last-Translator: Charles <charles@xtrem-pc>\n"
+"PO-Revision-Date: 2014-11-19 19:39+0000\n"
+"Last-Translator: Caio Amaral Nakao <caionakao@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Launchpad-Export-Date: 2015-01-07 20:32+0000\n"
+"X-Generator: Launchpad (build 17298)\n"
+"Language: pt_BR\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -65,7 +66,7 @@ msgstr "Tradução"
 #. # Next five strings are labels for current conditions
 #: desklet.js:323 desklet.js:351
 msgid "Humidity:"
-msgstr "Humidade"
+msgstr "umidade"
 
 #. # Atmospheric pressure
 #: desklet.js:324 desklet.js:350
@@ -78,7 +79,7 @@ msgstr "Vento"
 
 #: desklet.js:326
 msgid "Feels like:"
-msgstr "Parece@@"
+msgstr "Sensação térmica:"
 
 #: desklet.js:327
 msgid "Visibility:"
@@ -414,7 +415,7 @@ msgstr "Quente"
 
 #: desklet.js:1491
 msgid "Isolated thunderstorms"
-msgstr "Trovoadas isoladas "
+msgstr "Trovoadas isoladas"
 
 #: desklet.js:1492
 msgid "Scattered thunderstorms"
@@ -498,7 +499,7 @@ msgstr "Chuva fina"
 
 #: desklet.js:1759
 msgid "Heavy Rain Shower"
-msgstr "Chuva forte "
+msgstr "Chuva forte"
 
 #: desklet.js:1760
 msgid "Heavy Rain"
@@ -541,9 +542,8 @@ msgid "Hazy"
 msgstr "Nebuloso"
 
 #: desklet.js:1771
-#, fuzzy
 msgid "Hail Shower"
-msgstr "Chuva forte "
+msgstr "Chuva de granizo"
 
 #. # direction of movement of pressure
 #: desklet.js:1955 desklet.js:2568
@@ -607,7 +607,7 @@ msgstr "Verifique para exibir a umidade atual"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->description
 msgid "Refresh forecast every"
-msgstr "Atualizar previsão "
+msgstr "Atualizar previsão"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->tooltip
 msgid ""
@@ -704,6 +704,8 @@ msgid ""
 "Select the point on the desklet to which it is anchored. This point will "
 "remain static as the desklet grows and shrinks"
 msgstr ""
+"Selecione o ponto no desklet ao qual está ancorado. Este ponto vai "
+"permanecer estático conforme o desklet cresce e encolhe"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom center"
@@ -823,7 +825,7 @@ msgstr "Pressão atual"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__pressure->tooltip
 msgid "Check to display the current pressure"
-msgstr "Verifique para exibir a pressão atual "
+msgstr "Verifique para exibir a pressão atual"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->description
@@ -838,7 +840,7 @@ msgstr "Verifique para exibir a direção previsão de vento"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__feelslike->description
 msgid "Current 'feels like'"
-msgstr "Como esta atualmente"
+msgstr "Sensação térmica"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__feelslike->tooltip
 msgid "Check to display the current apparent temperature"
@@ -933,7 +935,7 @@ msgstr "Verificar para exibir a visibilidade atual"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->description
 msgid "Forecast minimum"
-msgstr "Previsao Mínima "
+msgstr "Previsao Mínima"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->tooltip
