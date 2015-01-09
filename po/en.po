@@ -540,9 +540,8 @@ msgid "Hazy"
 msgstr "Hazy"
 
 #: desklet.js:1771
-#, fuzzy
 msgid "Hail Shower"
-msgstr "Heavy Rain Shower"
+msgstr "Hail Shower"
 
 #. # direction of movement of pressure
 #: desklet.js:1955 desklet.js:2568
