@@ -2678,6 +2678,7 @@ wxDriverWWO.prototype = {
     'jv' : 'jv',
     'ko' : 'ko',
     'mr' : 'mr',
+    'pa' : 'pa',
     'pl' : 'pl',
     'pt' : 'pt',
     'ro' : 'ro',
