@@ -3033,18 +3033,19 @@ wxDriverForecastIo.prototype = {
     }      
   },
   
+  // Ensure units returned by driver are SI
   _getSI: function(val, type) {
     if (this.units != "us") {
       return val;
     }
+    if (isNaN(val)) return val;
     if (type == "temp") {
       return ((val + 40) / 1.8) - 40;
     }
     if (type == "press") {
       return val;
     }    
-    if (type == "viz") {
-      if (isNaN(val)) return val;
+    if (type == "viz") {   
       return val*1.60923;
     }
     if (type == "windspd") {
