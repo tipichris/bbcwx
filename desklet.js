@@ -2939,6 +2939,8 @@ wxDriverForecastIo.prototype = {
     this._emptyData();
     this.linkURL = 'http://forecast.io';
     
+    this.units = (deskletObj.tunits=='F')?'us':'ca';
+    
     // check the stationID looks valid before going further
     if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
       let latlon = this.stationID.split(',')
@@ -2946,7 +2948,7 @@ wxDriverForecastIo.prototype = {
       //this.data.wgs84.lon = latlon[1];
       //this.linkURL = 'http://forecast.io/#/f/' + this.stationID;
       
-      let apiurl = this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=ca&exclude=minutely,hourly,alerts,flags';
+      let apiurl = this._baseURL + encodeURIComponent(this.apikey) + '/' + encodeURIComponent(this.stationID) + '?units=' + this.units + '&exclude=minutely,hourly,alerts,flags';
       this.langcode = this.getLangCode();
       if (this.langcode) apiurl += '&lang=' + this.langcode;
       
@@ -2990,31 +2992,31 @@ wxDriverForecastIo.prototype = {
       for (let i=0; i<days.length; i++) {
         let day = new Object();
         day.day = this._getDayName(new Date(days[i].time * 1000).toLocaleFormat("%w"));
-        day.minimum_temperature = days[i].temperatureMin;
-        day.maximum_temperature = days[i].temperatureMax;
-        day.minimum_feelslike = days[i].apparentTemperatureMin;
-        day.maximum_feelslike = days[i].apparentTemperatureMax;
-        day.pressure = days[i].pressure;
+        day.minimum_temperature = this._getSI(days[i].temperatureMin, 'temp');
+        day.maximum_temperature = this._getSI(days[i].temperatureMax, 'temp');
+        day.minimum_feelslike = this._getSI(days[i].apparentTemperatureMin, 'temp');
+        day.maximum_feelslike = this._getSI(days[i].apparentTemperatureMax, 'temp');
+        day.pressure = this._getSI(days[i].pressure, 'press');
         day.humidity = days[i].humidity*100;
-        day.wind_speed = days[i].windSpeed;
+        day.wind_speed = this._getSI(days[i].windSpeed, 'windspd');
         day.wind_direction = this.compassDirection(days[i].windBearing);
         day.weathertext = days[i].summary;
         day.icon = this._mapicon(days[i].icon);
-        day.visibility = days[i].visibility;
+        day.visibility = this._getSI(days[i].visibility, 'viz');
 
         this.data.days[i] = day;
       }
       let cc = json.currently;
 
       this.data.cc.humidity = cc.humidity*100;
-      this.data.cc.temperature = cc.temperature;
-      this.data.cc.pressure = cc.pressure;
-      this.data.cc.wind_speed = cc.windSpeed;
+      this.data.cc.temperature = this._getSI(cc.temperature, 'temp');
+      this.data.cc.pressure = this._getSI(cc.pressure, 'press');
+      this.data.cc.wind_speed = this._getSI(cc.windSpeed, 'windspd');
       this.data.cc.wind_direction = this.compassDirection(cc.windBearing);
       this.data.cc.weathertext = cc.summary;
       this.data.cc.icon = this._mapicon(cc.icon);
-      this.data.cc.visibility = cc.visibility;
-      this.data.cc.feelslike = cc.apparentTemperature;
+      this.data.cc.visibility = this._getSI(cc.visibility, 'viz');
+      this.data.cc.feelslike = this._getSI(cc.apparentTemperature, 'temp');
       
       this.data.wgs84.lat = json.latitude;
       this.data.wgs84.lon = json.longitude;
@@ -3029,6 +3031,25 @@ wxDriverForecastIo.prototype = {
       //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
     }      
+  },
+  
+  _getSI: function(val, type) {
+    if (this.units != "us") {
+      return val;
+    }
+    if (type == "temp") {
+      return ((val + 40) / 1.8) - 40;
+    }
+    if (type == "press") {
+      return val;
+    }    
+    if (type == "viz") {
+      if (isNaN(val)) return val;
+      return val*1.60923;
+    }
+    if (type == "windspd") {
+      return val*1.60923;
+    }
   },
   
   _mapicon: function(iconcode) {
