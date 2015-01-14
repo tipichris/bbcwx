@@ -116,10 +116,12 @@ MyDesklet.prototype = {
       Desklet.Desklet.prototype._init.call(this, metadata);
       //#########################binding configuration file################
       this.settings = new Settings.DeskletSettings(this, UUID, this.desklet_id);  
+      // temperature unit change may require refetching forecast if service includes units in text summaries
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"tunits","tunits",this.onTempUnitChange,null);
+      // these require only a redisplay
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this.onUnitChange,null);
+      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"punits","punits",this.onUnitChange,null);
       // these changes require only a change to the styling of the desklet:
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"tunits","tunits",this.updateStyle,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"wunits","wunits",this.updateStyle,null);
-      this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"punits","punits",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"overrideTheme","overrideTheme",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"transparency","transparency",this.updateStyle,null);
       this.settings.bindProperty(Settings.BindingDirection.ONE_WAY,"textcolor","textcolor",this.updateStyle,null);
@@ -526,6 +528,23 @@ MyDesklet.prototype = {
     this.displayMeta();
   },
   
+  ////////////////////////////////////////////////////////////////////////////
+  // Called when units are changed
+  onUnitChange: function() {
+    this.displayForecast();
+    this.displayCurrent();    
+  },
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Called when temperature units are updated. If service text summaries include
+  // units we must refetch forecast, otherwise just refresh display
+  onTempUnitChange: function() {
+    this.onUnitChange();
+    if(this.service.unitsInSummaries) {
+      this.updateForecast();
+    }
+  },
+   
   ////////////////////////////////////////////////////////////////////////////
   // Does the bulk of the work of updating style
   _update_style: function() {
@@ -1301,6 +1320,7 @@ wxDriver.prototype = {
     
     this.data=new Object();
     this._emptyData();
+    this.unitsInSummaries = false;
   },
   
   ////////////////////////////////////////////////////////////////////////////
@@ -2932,6 +2952,9 @@ wxDriverForecastIo.prototype = {
     this.capabilities.cc.obstime = false;
     //this.capabilities.meta.country = false;
     //this._geocache = new Object();
+    
+    //forecast.io sometime includes units in summaries
+    this.unitsInSummaries = true;
   },
   
   refreshData: function(deskletObj) {
@@ -2939,6 +2962,11 @@ wxDriverForecastIo.prototype = {
     this._emptyData();
     this.linkURL = 'http://forecast.io';
     
+    // forecast.io sometimes includes temp and snow accumulations in 
+    // text summaries. To get these in imperial units we have to request
+    // all responses be imperial using 'us'. Do this if user opts for 
+    // Fahrenheit temperatures. Individual data points will have to be
+    // converted back later using _getSI().
     this.units = (deskletObj.tunits=='F')?'us':'ca';
     
     // check the stationID looks valid before going further
@@ -3033,21 +3061,27 @@ wxDriverForecastIo.prototype = {
     }      
   },
   
-  // Ensure units returned by driver are SI
+  // Ensure units returned by driver are SI, even when requesting imperial ('us')
+  // units to get imperial in the summary text
   _getSI: function(val, type) {
+    // If units weren't 'us', return as is
     if (this.units != "us") {
       return val;
     }
+    // Don't try to convert non numbers
     if (isNaN(val)) return val;
+    // F to C
     if (type == "temp") {
       return ((val + 40) / 1.8) - 40;
     }
     if (type == "press") {
       return val;
-    }    
+    }
+    // miles to km
     if (type == "viz") {   
       return val*1.60923;
     }
+    // mph to km/h
     if (type == "windspd") {
       return val*1.60923;
     }
