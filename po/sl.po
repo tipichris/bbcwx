@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.8\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2015-01-11 20:55+0000\n"
+"POT-Creation-Date: 2015-01-17 21:41+0000\n"
 "PO-Revision-Date: 2014-09-09 12:53+0000\n"
 "Last-Translator: Damir Jerovšek <Unknown>\n"
 "Language-Team: Slovenian\n"
@@ -48,515 +48,515 @@ msgid "Sun"
 msgstr "Ned"
 
 #. # The desklet title
-#: desklet.js:177
+#: desklet.js:179
 msgid "Weather"
 msgstr "Vreme"
 
 #. # Link to Help file in context menu
-#: desklet.js:185
+#: desklet.js:187
 msgid "Help"
 msgstr "Pomoč"
 
 #. # Link to information on translating in context menu
-#: desklet.js:189
+#: desklet.js:191
 msgid "Translate"
 msgstr "Prevajanje"
 
 #. # Next five strings are labels for current conditions
-#: desklet.js:323 desklet.js:351
+#: desklet.js:325 desklet.js:353
 msgid "Humidity:"
 msgstr "Vlažnost:"
 
 #. # Atmospheric pressure
-#: desklet.js:324 desklet.js:350
+#: desklet.js:326 desklet.js:352
 msgid "Pressure:"
 msgstr "Tlak:"
 
-#: desklet.js:325
+#: desklet.js:327
 msgid "Wind:"
 msgstr "Veter:"
 
-#: desklet.js:326
+#: desklet.js:328
 msgid "Feels like:"
 msgstr "Občuti se kot:"
 
-#: desklet.js:327
+#: desklet.js:329
 msgid "Visibility:"
 msgstr "Vidljivost:"
 
 #. # Maximum temperature
-#: desklet.js:342
+#: desklet.js:344
 msgid "Max:"
 msgstr "Najvišja:"
 
 #. # Minimum temperature
-#: desklet.js:344
+#: desklet.js:346
 msgid "Min:"
 msgstr "Najmanj:"
 
 #. # Wind speed (English translation is "Wind:")
-#: desklet.js:346
+#: desklet.js:348
 msgid "Wind speed:"
 msgstr "Hitrost vetra:"
 
 #. # Wind direction
-#: desklet.js:348
+#: desklet.js:350
 msgid "Dir:"
 msgstr "Smer:"
 
 #. # Credit the data supplier. A link to the data supplier appears to the
 #. right of this string
-#: desklet.js:388
+#: desklet.js:390
 msgid "Data from "
 msgstr "Podatki iz "
 
 #. # Tooltip for refresh button
-#: desklet.js:396
+#: desklet.js:398
 msgid "Refresh"
 msgstr "Osveži"
 
 #. # Message if we fail to get weather data
-#: desklet.js:697
+#: desklet.js:716
 msgid "No data available"
 msgstr "Podatkov ni na voljo"
 
-#: desklet.js:729 desklet.js:797
+#: desklet.js:748 desklet.js:816
 #, python-format
 msgid "Error: %s"
 msgstr "Napaka: %s"
 
-#: desklet.js:729 desklet.js:797
+#: desklet.js:748 desklet.js:816
 msgid "No data"
 msgstr "Ni podatka"
 
 #. # %s is replaced by place name
-#: desklet.js:832
+#: desklet.js:851
 #, python-format
 msgid "Click for the full forecast for %s"
 msgstr "Kliknite za celotno napoved za %s"
 
 #. # Units for temperature, degrees Fahrenheit. %f is replaced the value. NB:
 #. English translation uses unicode character u+2109
-#: desklet.js:1074
+#: desklet.js:1093
 #, python-format
 msgid "%fF"
 msgstr "%fF"
 
 #. # Units for temperature, degrees Celsius. %f is replaced the value. NB:
 #. English translation uses unicode character u+2103
-#: desklet.js:1076
+#: desklet.js:1095
 #, python-format
 msgid "%fC"
 msgstr "%f°C"
 
 #. # wind speed, miles per hour. %f is replaced by the value
-#: desklet.js:1097
+#: desklet.js:1116
 #, python-format
 msgid "%fmph"
 msgstr "%fmph"
 
 #. # wind speed, knots. %f is replaced by the value
-#: desklet.js:1099
+#: desklet.js:1118
 #, python-format
 msgid "%fkn"
 msgstr "%fkn"
 
 #. # wind speed, kilometers per hour. %f is replaced by the value
-#: desklet.js:1101
+#: desklet.js:1120
 #, python-format
 msgid "%fkm/h"
 msgstr "%fkm/h"
 
 #. # wind speed, meters per second. %f is replaced by the value
-#: desklet.js:1103
+#: desklet.js:1122
 #, python-format
 msgid "%fm/s"
 msgstr "%fm/s"
 
 #. # pressure, millbars. %f is replaced by the value
-#: desklet.js:1137
+#: desklet.js:1156
 #, python-format
 msgid "%fmb"
 msgstr "%fmb"
 
 #. # pressure, inches of mercury. %f is replaced by the value
-#: desklet.js:1139
+#: desklet.js:1158
 #, python-format
 msgid "%fin"
 msgstr "%fin"
 
 #. # pressure, mm of mercury. %f is replaced by the value
-#: desklet.js:1141
+#: desklet.js:1160
 #, python-format
 msgid "%fmm"
 msgstr "%fmm"
 
 #. # pressure, kilopascals. %f is replaced by the value
-#: desklet.js:1143
+#: desklet.js:1162
 #, python-format
 msgid "%fkPa"
 msgstr "%fkPa"
 
 #. # visibility, miles. %f is replaced by the value
-#: desklet.js:1194
+#: desklet.js:1213
 #, python-format
 msgid "%fmi"
 msgstr "%fmi"
 
 #. # visibility, nautical miles. %f is replaced by the value
-#: desklet.js:1196
+#: desklet.js:1215
 #, python-format
 msgid "%fnmi"
 msgstr "%fnmi"
 
 #. # visibility, kilometers. %f is replaced by the value
-#: desklet.js:1198
+#: desklet.js:1217
 #, python-format
 msgid "%fkm"
 msgstr "%fkm"
 
 #. # Next 16 strings are for wind direction, compass points
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "N"
 msgstr "S"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "NNE"
 msgstr "SSV"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "NE"
 msgstr "SV"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "ENE"
 msgstr "VSV"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "E"
 msgstr "V"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "ESE"
 msgstr "VJV"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "SE"
 msgstr "JV"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "SSE"
 msgstr "JJV"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "S"
 msgstr "J"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "SSW"
 msgstr "JJZ"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "SW"
 msgstr "JZ"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "WSW"
 msgstr "ZJZ"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "W"
 msgstr "Z"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "WNW"
 msgstr "ZSZ"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "NW"
 msgstr "SZ"
 
-#: desklet.js:1421
+#: desklet.js:1441
 msgid "NNW"
 msgstr "SSZ"
 
-#: desklet.js:1454
+#: desklet.js:1474
 msgid "Tornado"
 msgstr "Tornado"
 
-#: desklet.js:1455
+#: desklet.js:1475
 msgid "Tropical storm"
 msgstr "Tropska nevihta"
 
-#: desklet.js:1456
+#: desklet.js:1476
 msgid "Hurricane"
 msgstr "Orkan"
 
-#: desklet.js:1457
+#: desklet.js:1477
 msgid "Severe thunderstorms"
 msgstr "Hude nevihte"
 
-#: desklet.js:1458
+#: desklet.js:1478
 msgid "Thunderstorms"
 msgstr "Nevihte"
 
-#: desklet.js:1459
+#: desklet.js:1479
 msgid "Mixed rain and snow"
 msgstr "Dež s snegom"
 
-#: desklet.js:1460
+#: desklet.js:1480
 msgid "Mixed rain and sleet"
 msgstr "Dež s sodro"
 
-#: desklet.js:1461
+#: desklet.js:1481
 msgid "Mixed snow and sleet"
 msgstr "Sneg s sodro"
 
-#: desklet.js:1462
+#: desklet.js:1482
 msgid "Freezing drizzle"
 msgstr "Ledeno rosenje"
 
-#: desklet.js:1463 desklet.js:1757
+#: desklet.js:1483 desklet.js:1777
 msgid "Drizzle"
 msgstr "Pršenje"
 
-#: desklet.js:1464
+#: desklet.js:1484
 msgid "Freezing rain"
 msgstr "Ledeni dež"
 
-#: desklet.js:1465 desklet.js:1466
+#: desklet.js:1485 desklet.js:1486
 msgid "Showers"
 msgstr "Plohe"
 
-#: desklet.js:1467
+#: desklet.js:1487
 msgid "Snow flurries"
 msgstr "Snežni sunki vetra"
 
-#: desklet.js:1468
+#: desklet.js:1488
 msgid "Light snow showers"
 msgstr "Lahke snežne plohe"
 
-#: desklet.js:1469
+#: desklet.js:1489
 msgid "Blowing snow"
 msgstr "Snežni vihar"
 
-#: desklet.js:1470
+#: desklet.js:1490
 msgid "Snow"
 msgstr "Sneg"
 
-#: desklet.js:1471
+#: desklet.js:1491
 msgid "Hail"
 msgstr "Toča"
 
-#: desklet.js:1472 desklet.js:1762
+#: desklet.js:1492 desklet.js:1782
 msgid "Sleet"
 msgstr "Sodra"
 
-#: desklet.js:1473
+#: desklet.js:1493
 msgid "Dust"
 msgstr "Prah"
 
-#: desklet.js:1474
+#: desklet.js:1494
 msgid "Foggy"
 msgstr "Megleno"
 
-#: desklet.js:1475
+#: desklet.js:1495
 msgid "Haze"
 msgstr "Meglica"
 
-#: desklet.js:1476
+#: desklet.js:1496
 msgid "Smoky"
 msgstr "Megleno"
 
-#: desklet.js:1477
+#: desklet.js:1497
 msgid "Blustery"
 msgstr "Močni sunki vetra"
 
-#: desklet.js:1478
+#: desklet.js:1498
 msgid "Windy"
 msgstr "Vetrovno"
 
-#: desklet.js:1479
+#: desklet.js:1499
 msgid "Cold"
 msgstr "Hladno"
 
-#: desklet.js:1480
+#: desklet.js:1500
 msgid "Cloudy"
 msgstr "Oblačno"
 
-#: desklet.js:1481 desklet.js:1482
+#: desklet.js:1501 desklet.js:1502
 msgid "Mostly cloudy"
 msgstr "Pretežno oblačno"
 
-#: desklet.js:1483 desklet.js:1484 desklet.js:1498
+#: desklet.js:1503 desklet.js:1504 desklet.js:1518
 msgid "Partly cloudy"
 msgstr "Delno oblačno"
 
-#: desklet.js:1485
+#: desklet.js:1505
 msgid "Clear"
 msgstr "Jasno"
 
-#: desklet.js:1486 desklet.js:1746
+#: desklet.js:1506 desklet.js:1766
 msgid "Sunny"
 msgstr "Sončno"
 
-#: desklet.js:1487 desklet.js:1488
+#: desklet.js:1507 desklet.js:1508
 msgid "Fair"
 msgstr "Normalno"
 
-#: desklet.js:1489
+#: desklet.js:1509
 msgid "Mixed rain and hail"
 msgstr "Dež s točo"
 
-#: desklet.js:1490
+#: desklet.js:1510
 msgid "Hot"
 msgstr "Vroče"
 
-#: desklet.js:1491
+#: desklet.js:1511
 msgid "Isolated thunderstorms"
 msgstr "Krajevne nevihte"
 
-#: desklet.js:1492
+#: desklet.js:1512
 msgid "Scattered thunderstorms"
 msgstr "Razširjene nevihte"
 
-#: desklet.js:1493 desklet.js:1494
+#: desklet.js:1513 desklet.js:1514
 msgid "Scattered showers"
 msgstr "Razširjene plohe"
 
-#: desklet.js:1495 desklet.js:1497
+#: desklet.js:1515 desklet.js:1517
 msgid "Heavy snow"
 msgstr "Močno sneženje"
 
-#: desklet.js:1496
+#: desklet.js:1516
 msgid "Scattered snow showers"
 msgstr "Razširjene snežne plohe"
 
-#: desklet.js:1499
+#: desklet.js:1519
 msgid "Thundershowers"
 msgstr "Plohe z grmenjem"
 
-#: desklet.js:1500
+#: desklet.js:1520
 msgid "Snow showers"
 msgstr "Snežne plohe"
 
-#: desklet.js:1501
+#: desklet.js:1521
 msgid "Isolated thundershowers"
 msgstr "Krajevne plohe z grmenjem"
 
-#: desklet.js:1502
+#: desklet.js:1522
 msgid "Not available"
 msgstr "Ni na voljo"
 
-#: desklet.js:1745
+#: desklet.js:1765
 msgid "Clear Sky"
 msgstr "Jasno nebo"
 
-#: desklet.js:1747
+#: desklet.js:1767
 msgid "Partly Cloudy"
 msgstr "Delno oblačno"
 
-#: desklet.js:1748
+#: desklet.js:1768
 msgid "Sunny Intervals"
 msgstr "Sončni dnevi"
 
-#: desklet.js:1749
+#: desklet.js:1769
 msgid "Sand Storm"
 msgstr "Peščeni vihar"
 
-#: desklet.js:1750
+#: desklet.js:1770
 msgid "Mist"
 msgstr "Meglica"
 
-#: desklet.js:1751
+#: desklet.js:1771
 msgid "Fog"
 msgstr "Megla"
 
-#: desklet.js:1752
+#: desklet.js:1772
 msgid "White Cloud"
 msgstr "Beli oblak"
 
-#: desklet.js:1753
+#: desklet.js:1773
 msgid "Light Cloud"
 msgstr "Svetli oblaki"
 
-#: desklet.js:1754
+#: desklet.js:1774
 msgid "Grey Cloud"
 msgstr "Sivi oblaki"
 
-#: desklet.js:1755
+#: desklet.js:1775
 msgid "Thick Cloud"
 msgstr "Gosti oblaki"
 
-#: desklet.js:1756
+#: desklet.js:1776
 msgid "Light Rain Shower"
 msgstr "Rahla ploha"
 
-#: desklet.js:1758
+#: desklet.js:1778
 msgid "Light Rain"
 msgstr "Rahel dež"
 
-#: desklet.js:1759
+#: desklet.js:1779
 msgid "Heavy Rain Shower"
 msgstr "Močna ploha"
 
-#: desklet.js:1760
+#: desklet.js:1780
 msgid "Heavy Rain"
 msgstr "Močan dež"
 
-#: desklet.js:1761
+#: desklet.js:1781
 msgid "Sleet Shower"
 msgstr "Ledeni dež"
 
-#: desklet.js:1763
+#: desklet.js:1783
 msgid "Light Snow Shower"
 msgstr "Rahle snežne plohe"
 
-#: desklet.js:1764
+#: desklet.js:1784
 msgid "Light Snow"
 msgstr "Rahlo sneženje"
 
-#: desklet.js:1765
+#: desklet.js:1785
 msgid "Heavy Snow Shower"
 msgstr "Močne snežne plohe"
 
-#: desklet.js:1766
+#: desklet.js:1786
 msgid "Heavy Snow"
 msgstr "Močno sneženje"
 
-#: desklet.js:1767
+#: desklet.js:1787
 msgid "Thundery Shower"
 msgstr "Plohe z bliskanjem in grmenjem"
 
-#: desklet.js:1768
+#: desklet.js:1788
 msgid "Thunder Storm"
 msgstr "Nevihta"
 
-#: desklet.js:1769
+#: desklet.js:1789
 msgid "Thunderstorm"
 msgstr "Nevihte"
 
-#: desklet.js:1770
+#: desklet.js:1790
 msgid "Hazy"
 msgstr "Megleno"
 
-#: desklet.js:1771
+#: desklet.js:1791
 #, fuzzy
 msgid "Hail Shower"
 msgstr "Močna ploha"
 
 #. # direction of movement of pressure
-#: desklet.js:1955 desklet.js:2568
+#: desklet.js:1975 desklet.js:2588
 msgid "Steady"
 msgstr "Enakomerno"
 
 #. # direction of movement of pressure
-#: desklet.js:1955 desklet.js:2564
+#: desklet.js:1975 desklet.js:2584
 msgid "Rising"
 msgstr "Narašča"
 
 #. # direction of movement of pressure
-#: desklet.js:1955 desklet.js:2566
+#: desklet.js:1975 desklet.js:2586
 msgid "Falling"
 msgstr "Pada"
 
@@ -576,9 +576,9 @@ msgstr ""
 msgid "Google"
 msgstr "Google"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.5)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.5)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Podatkovne storitve"
@@ -1092,9 +1092,9 @@ msgstr "Zaobljenost kota"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Stopinje za zaobljanje kotov apleta namizja"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.5)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.5)  #-#-#-#-#
+#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr "točk"
