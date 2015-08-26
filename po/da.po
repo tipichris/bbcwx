@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-17 21:41+0000\n"
+"Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
+"POT-Creation-Date: 2015-08-26 21:26+0100\n"
 "PO-Revision-Date: 2015-01-25 18:44+0000\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <da@li.org>\n"
@@ -545,17 +545,17 @@ msgid "Hail Shower"
 msgstr "Haglbyge"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2588
+#: desklet.js:1975 desklet.js:2589
 msgid "Steady"
 msgstr "Stabil"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2584
+#: desklet.js:1975 desklet.js:2585
 msgid "Rising"
 msgstr "Stigende"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2586
+#: desklet.js:1975 desklet.js:2587
 msgid "Falling"
 msgstr "Faldende"
 
@@ -575,9 +575,7 @@ msgstr ""
 msgid "Google"
 msgstr "Google"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Datatjeneste"
@@ -593,8 +591,7 @@ msgstr "Tillad eksperimentelle funktioner"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
-msgstr ""
-"Markér denne for at aktivere eksperimentelle og fejlfyldte funktioner"
+msgstr "Markér denne for at aktivere eksperimentelle og fejlfyldte funktioner"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
@@ -1085,9 +1082,7 @@ msgstr "Hjørneradius"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Radius for rundingen på skrivebordsprogrammets hjørner"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr "px"
@@ -1122,3 +1117,12 @@ msgid ""
 msgstr ""
 "Angiv rammens bredde. Kun tilgængelig hvis afkrydsningsfeltet \"Vis ramme\" "
 "er markeret"
+
+#. bbcwx@oak-wood.co.uk->metadata.json->name
+#, fuzzy
+msgid "Weather Desklet"
+msgstr "Vejr"
+
+#. bbcwx@oak-wood.co.uk->metadata.json->description
+msgid "Display the weather from several web services on your desktop"
+msgstr ""

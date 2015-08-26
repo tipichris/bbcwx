@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.7.1\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2015-01-17 21:41+0000\n"
+"POT-Creation-Date: 2015-08-26 21:26+0100\n"
 "PO-Revision-Date: 2015-01-07 06:53+0000\n"
 "Last-Translator: argenclic <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -546,17 +546,17 @@ msgid "Hail Shower"
 msgstr "Granizo"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2588
+#: desklet.js:1975 desklet.js:2589
 msgid "Steady"
 msgstr "Estable"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2584
+#: desklet.js:1975 desklet.js:2585
 msgid "Rising"
 msgstr "Creciente"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2586
+#: desklet.js:1975 desklet.js:2587
 msgid "Falling"
 msgstr "Descendente"
 
@@ -576,9 +576,7 @@ msgstr ""
 msgid "Google"
 msgstr "Google"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Servicio de datos"
@@ -1088,9 +1086,7 @@ msgstr "Radio de la esquina"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Radio para redondear las esquinas de la desklet"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr "px"
@@ -1126,3 +1122,12 @@ msgid ""
 msgstr ""
 "Seleccione el ancho del borde. Sólo está disponible si la casilla de "
 "verificación 'Borde' está habilitado"
+
+#. bbcwx@oak-wood.co.uk->metadata.json->name
+#, fuzzy
+msgid "Weather Desklet"
+msgstr "Clima"
+
+#. bbcwx@oak-wood.co.uk->metadata.json->description
+msgid "Display the weather from several web services on your desktop"
+msgstr ""

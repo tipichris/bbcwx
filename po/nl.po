@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2015-01-17 21:41+0000\n"
+"POT-Creation-Date: 2015-08-26 21:26+0100\n"
 "PO-Revision-Date: 2015-03-14 10:44+0000\n"
 "Last-Translator: lander <lander.saerens@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2015-08-26 19:20+0000\n"
 "X-Generator: Launchpad (build 17690)\n"
-"Language: nl\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -545,17 +545,17 @@ msgid "Hail Shower"
 msgstr ""
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2588
+#: desklet.js:1975 desklet.js:2589
 msgid "Steady"
 msgstr "Constant"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2584
+#: desklet.js:1975 desklet.js:2585
 msgid "Rising"
 msgstr "Toenemend"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2586
+#: desklet.js:1975 desklet.js:2587
 msgid "Falling"
 msgstr "Afnemend"
 
@@ -575,9 +575,7 @@ msgstr ""
 msgid "Google"
 msgstr "Google"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Gegevensdienst"
@@ -593,8 +591,7 @@ msgstr "Schakel experimentele functies in"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
-msgstr ""
-"Inschakelen om experimentele en instabiele functies mogelijk te maken."
+msgstr "Inschakelen om experimentele en instabiele functies mogelijk te maken."
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
@@ -900,8 +897,7 @@ msgstr "Actuele weer en pictogram"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__weather->tooltip
 msgid "Check to display the current weather and large icon"
-msgstr ""
-"Het tonen van het actuele weer en een groot pictogram in-/uitschakelen"
+msgstr "Het tonen van het actuele weer en een groot pictogram in-/uitschakelen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
@@ -1090,9 +1086,7 @@ msgstr "Kromming hoek"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Kromming van de hoeken van de desklet"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr "px"
@@ -1124,5 +1118,13 @@ msgstr "Randdikte"
 msgid ""
 "Select the width of the border. Only available if the 'Border' checkbox is "
 "enabled"
+msgstr "Kies de dikte van de rand. Alleen beschikbaar als 'Rand' is aangevinkt"
+
+#. bbcwx@oak-wood.co.uk->metadata.json->name
+#, fuzzy
+msgid "Weather Desklet"
+msgstr "Het weer"
+
+#. bbcwx@oak-wood.co.uk->metadata.json->description
+msgid "Display the weather from several web services on your desktop"
 msgstr ""
-"Kies de dikte van de rand. Alleen beschikbaar als 'Rand' is aangevinkt"

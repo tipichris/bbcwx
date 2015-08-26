@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2015-01-17 21:41+0000\n"
+"POT-Creation-Date: 2015-08-26 21:26+0100\n"
 "PO-Revision-Date: 2015-04-03 14:46+0000\n"
 "Last-Translator: rafael cordano <rafael.cordano@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2015-08-26 19:20+0000\n"
 "X-Generator: Launchpad (build 17690)\n"
-"Language: it\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -545,17 +545,17 @@ msgid "Hail Shower"
 msgstr "Grandinare"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2588
+#: desklet.js:1975 desklet.js:2589
 msgid "Steady"
 msgstr "Stazionario"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2584
+#: desklet.js:1975 desklet.js:2585
 msgid "Rising"
 msgstr "Crescente"
 
 #. # direction of movement of pressure
-#: desklet.js:1975 desklet.js:2586
+#: desklet.js:1975 desklet.js:2587
 msgid "Falling"
 msgstr "Decrescente"
 
@@ -575,9 +575,7 @@ msgstr ""
 msgid "Google"
 msgstr "Google"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
 msgid "Data service"
 msgstr "Servizio dati"
@@ -1088,9 +1086,7 @@ msgstr "Raggio dell'angolo"
 msgid "Radius for rounding the desklet's corners"
 msgstr "Raggio di arrotondamento del angolo del desklet"
 
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
-#. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
 msgstr "px"
@@ -1125,3 +1121,12 @@ msgid ""
 msgstr ""
 "Seleziona la larghezza del bordo. Disponibile solo se la casella 'Bordo' è "
 "selezionata"
+
+#. bbcwx@oak-wood.co.uk->metadata.json->name
+#, fuzzy
+msgid "Weather Desklet"
+msgstr "Meteo"
+
+#. bbcwx@oak-wood.co.uk->metadata.json->description
+msgid "Display the weather from several web services on your desktop"
+msgstr ""
