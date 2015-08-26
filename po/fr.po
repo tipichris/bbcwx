@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-01-17 21:41+0000\n"
-"PO-Revision-Date: 2014-09-19 11:05+0000\n"
-"Last-Translator: perco <Unknown>\n"
+"PO-Revision-Date: 2015-05-28 13:11+0000\n"
+"Last-Translator: Yosha872 <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-20 11:28+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-08-26 19:20+0000\n"
+"X-Generator: Launchpad (build 17690)\n"
+"Language: fr\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -458,7 +458,7 @@ msgstr "Partiellement nuageux"
 
 #: desklet.js:1768
 msgid "Sunny Intervals"
-msgstr "Eéclaircies intermitantes"
+msgstr "Éclaircies intermittentes"
 
 #: desklet.js:1769
 msgid "Sand Storm"
@@ -692,7 +692,8 @@ msgstr "Couleur d’arrière-plan"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bgcolor->tooltip
 msgid "Click the button to select a new background color"
-msgstr "Cliquer sur le bouton pour choisir une nouvelle couleur d'arrière plan"
+msgstr ""
+"Cliquer sur le bouton pour choisir une nouvelle couleur d'arrière plan"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->description
 msgid "Anchor desklet by"
@@ -752,7 +753,8 @@ msgstr "Unité de mesure de pression"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->tooltip
 msgid "Measurement units used to display atmospheric pressure"
-msgstr "Unité de mesure utilisée pour l'affichage de la pression atmosphérique"
+msgstr ""
+"Unité de mesure utilisée pour l'affichage de la pression atmosphérique"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "in (Hg)"
@@ -925,12 +927,12 @@ msgstr "Cocher pour afficher le nom de la ville en gras"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->description
 msgid "Current visibility"
-msgstr "visibilité courante"
+msgstr "Visibilité"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->tooltip
 msgid "Check to display the current visibility"
-msgstr "Cocher pour afficher la visibilité courante"
+msgstr "Cocher pour afficher la visibilité"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->description
@@ -1057,7 +1059,7 @@ msgstr "Sombre"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Sketchy"
-msgstr "Vague"
+msgstr "Croquis"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat colorful"

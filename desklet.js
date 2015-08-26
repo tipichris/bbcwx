@@ -2423,6 +2423,7 @@ wxDriverWU.prototype = {
       'gl' : 'GZ',
       'de' : 'DL',
       'de_ch' : 'CH',
+      'ka' : 'KA',
       'el' : 'GR',
       'gu' : 'GU',
       'ht' : 'HT',
@@ -2941,7 +2942,14 @@ wxDriverForecastIo.prototype = {
     'tet' : 'tet',
     'bs' : 'bs',
     'pt' : 'pt',
-    'ru' : 'ru'
+    'ru' : 'ru',
+    'sv' : 'sv',
+    'tr' : 'tr',
+    'zh' : 'zh',
+    'ar' : 'ar',
+    'sk' : 'sk',
+    'uk' : 'uk',
+    
   },
   
   // initialise the driver

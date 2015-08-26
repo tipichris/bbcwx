@@ -8,13 +8,15 @@ msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.8.3\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-01-17 21:41+0000\n"
-"PO-Revision-Date: 2015-01-07 19:39+0000\n"
-"Last-Translator: tage279@gmail.com\n"
+"PO-Revision-Date: 2015-03-13 15:39+0000\n"
+"Last-Translator: gringo <sgg200g@gmail.com>\n"
 "Language-Team: Russian\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-08-26 19:20+0000\n"
+"X-Generator: Launchpad (build 17690)\n"
+"Language: ru\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -48,7 +50,7 @@ msgstr "Вс"
 #. # The desklet title
 #: desklet.js:179
 msgid "Weather"
-msgstr "Прогноз погоды"
+msgstr "Погода"
 
 #. # Link to Help file in context menu
 #: desklet.js:187
@@ -116,7 +118,7 @@ msgstr "Обновить"
 #. # Message if we fail to get weather data
 #: desklet.js:716
 msgid "No data available"
-msgstr "Нет доступных данных"
+msgstr "Данные недоступны"
 
 #: desklet.js:748 desklet.js:816
 #, python-format
@@ -316,7 +318,7 @@ msgstr "Изморось"
 
 #: desklet.js:1483 desklet.js:1777
 msgid "Drizzle"
-msgstr "Мелкий дождь  "
+msgstr "Мелкий дождь"
 
 #: desklet.js:1484
 msgid "Freezing rain"
@@ -344,7 +346,7 @@ msgstr "Снег"
 
 #: desklet.js:1491
 msgid "Hail"
-msgstr "Град "
+msgstr "Град"
 
 #: desklet.js:1492 desklet.js:1782
 msgid "Sleet"
@@ -452,7 +454,7 @@ msgstr "Безоблачное небо"
 
 #: desklet.js:1767
 msgid "Partly Cloudy"
-msgstr "Hебольшая облачность "
+msgstr "Hебольшая облачность"
 
 #: desklet.js:1768
 msgid "Sunny Intervals"
@@ -539,14 +541,13 @@ msgid "Hazy"
 msgstr "Дымка"
 
 #: desklet.js:1791
-#, fuzzy
 msgid "Hail Shower"
-msgstr "Сильный ливень"
+msgstr "Ливень с градом"
 
 #. # direction of movement of pressure
 #: desklet.js:1975 desklet.js:2588
 msgid "Steady"
-msgstr "Неизменное "
+msgstr "Неизменное"
 
 #. # direction of movement of pressure
 #: desklet.js:1975 desklet.js:2584
@@ -572,7 +573,7 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
@@ -583,7 +584,7 @@ msgstr "Источник данных"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Yahoo!"
-msgstr ""
+msgstr "Yahoo!"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->experimental_enabled->description
@@ -601,11 +602,11 @@ msgstr "Текущая влажность"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__humidity->tooltip
 msgid "Check to display the current humidity"
-msgstr "Включить отображение текущей влажности "
+msgstr "Включить отображение текущей влажности"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->description
 msgid "Refresh forecast every"
-msgstr "Обновить прогноз каждый "
+msgstr "Обновить прогноз каждый"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->tooltip
 msgid ""
@@ -621,7 +622,7 @@ msgstr "минут"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->description
 msgid "Manually override displayed location"
-msgstr "Настроить местоположение вручную "
+msgstr "Настроить местоположение вручную"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
@@ -675,7 +676,8 @@ msgstr "Компоновка"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->tooltip
 msgid "Set the overall layout of the desklet"
-msgstr "Установка способа размещения (горизонтально или вертикально) десклета "
+msgstr ""
+"Установка способа размещения (горизонтально или вертикально) десклета"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->options
 msgid "Horizontal"
@@ -785,7 +787,7 @@ msgstr "Включить отображение прогноза максима�
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->description
 msgid "Wind speed measurement unit"
-msgstr "Единица измерения скорости ветра "
+msgstr "Единица измерения скорости ветра"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->tooltip
 msgid "Measurement units used to display wind speed"
@@ -864,7 +866,7 @@ msgid ""
 "support all values"
 msgstr ""
 "Количество дней прогноз для отображения. Обратите внимание, что не все "
-"услуги поддерживают все значения  "
+"услуги поддерживают все значения"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->units
 msgid "days"
@@ -897,7 +899,7 @@ msgstr "Текущия погода и иконка"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__weather->tooltip
 msgid "Check to display the current weather and large icon"
-msgstr "Включить отображение текущей погоды и большую иконку  "
+msgstr "Включить отображение текущей погоды и большую иконку"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
@@ -960,31 +962,31 @@ msgstr "Выбрать источник данных"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Forecast.io (requires API key)"
-msgstr ""
+msgstr "Forecast.io (требуется API ключ)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Wunderground (requires API key)"
-msgstr ""
+msgstr "Wunderground (требуется API ключ)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
-msgstr ""
+msgstr "BBC"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Yahoo"
-msgstr ""
+msgstr "Yahoo"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "weather.com (deprecated)"
-msgstr ""
+msgstr "weather.com (не рекомендуется)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "World Weather Online (requires API key)"
-msgstr ""
+msgstr "World Weather Online (требуется API ключ)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "Open Weather Map"
-msgstr ""
+msgstr "Open Weather Map"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__pressure->description
@@ -1018,55 +1020,55 @@ msgstr "Выберите стиль иконок погоды"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat white"
-msgstr ""
+msgstr "Плоский белый"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Novacon"
-msgstr ""
+msgstr "Novacon"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "VClouds"
-msgstr ""
+msgstr "Объемные облака"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Colorful"
-msgstr ""
+msgstr "Цветной"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Light"
-msgstr ""
+msgstr "Светлый"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 2"
-msgstr ""
+msgstr "Meteocons 2"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat black"
-msgstr ""
+msgstr "Плоский черный"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 1"
-msgstr ""
+msgstr "Meteocons 1"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Dark"
-msgstr ""
+msgstr "Тёмный"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Sketchy"
-msgstr ""
+msgstr "Эскизы"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat colorful"
-msgstr ""
+msgstr "Плоский цветной"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "User defined"
-msgstr ""
+msgstr "Определяемый пользователем"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Weezle"
-msgstr ""
+msgstr "Weezle"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->stationID->description
 msgid "Location"
@@ -1082,14 +1084,14 @@ msgstr "Закругленность углов"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->tooltip
 msgid "Radius for rounding the desklet's corners"
-msgstr "Радиус закругления углов десклета "
+msgstr "Радиус закругления углов десклета"
 
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
 #. #-#-#-#-#  temp.pot (Cinnamon Weather Desklet - bbcwx 2.8.6)  #-#-#-#-#
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
 msgid "px"
-msgstr "пиксель  "
+msgstr "пиксель"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->transparency->description
 msgid "Transparency"

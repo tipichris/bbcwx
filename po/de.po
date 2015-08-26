@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-01-17 21:41+0000\n"
-"PO-Revision-Date: 2014-12-16 21:13+0000\n"
-"Last-Translator: Dennis Baudys <Unknown>\n"
+"PO-Revision-Date: 2015-05-22 12:52+0000\n"
+"Last-Translator: Tobias Bannert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-07 20:32+0000\n"
-"X-Generator: Launchpad (build 17298)\n"
+"X-Launchpad-Export-Date: 2015-08-26 19:20+0000\n"
+"X-Generator: Launchpad (build 17690)\n"
+"Language: de\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -65,7 +65,7 @@ msgstr "Übersetzen"
 #. # Next five strings are labels for current conditions
 #: desklet.js:325 desklet.js:353
 msgid "Humidity:"
-msgstr "Luftfeuchte:"
+msgstr "Luftfeuchtigkeit:"
 
 #. # Atmospheric pressure
 #: desklet.js:326 desklet.js:352
@@ -82,17 +82,17 @@ msgstr "Gefühlt:"
 
 #: desklet.js:329
 msgid "Visibility:"
-msgstr "Sicht:"
+msgstr "Sichtbarkeit:"
 
 #. # Maximum temperature
 #: desklet.js:344
 msgid "Max:"
-msgstr "Max:"
+msgstr "Max.:"
 
 #. # Minimum temperature
 #: desklet.js:346
 msgid "Min:"
-msgstr "Min:"
+msgstr "Min.:"
 
 #. # Wind speed (English translation is "Wind:")
 #: desklet.js:348
@@ -478,7 +478,7 @@ msgstr "Weiße Wolke"
 
 #: desklet.js:1773
 msgid "Light Cloud"
-msgstr "Dünne Wolke"
+msgstr "Teilweise bewölkt"
 
 #: desklet.js:1774
 msgid "Grey Cloud"
@@ -486,7 +486,7 @@ msgstr "Graue Wolke"
 
 #: desklet.js:1775
 msgid "Thick Cloud"
-msgstr "Dicke Wolke"
+msgstr "Stark bewölkt"
 
 #: desklet.js:1776
 msgid "Light Rain Shower"
@@ -600,7 +600,7 @@ msgstr ""
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
 msgid "Current humidity"
-msgstr "Aktuelle Luftfeuchte"
+msgstr "Aktuelle Luftfeuchtigkeit"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__humidity->tooltip
 msgid "Check to display the current humidity"
@@ -850,12 +850,12 @@ msgstr "Aktivieren, um die gefühlte Temperatur anzuzeigen"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->description
 msgid "Forecast humidity"
-msgstr "Luftfeuchtevorhersage"
+msgstr "Luftfeuchtigkeitvorhersage"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->tooltip
 msgid "Check to display the forecast humidity"
-msgstr "Aktivieren, um die Luftfeuchtevorhersage anzuzeigen"
+msgstr "Aktivieren, um die Luftfeuchtigkeitvorhersage anzuzeigen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->description
 msgid "Show forecast for"
@@ -906,7 +906,8 @@ msgstr "Aktivieren, um das aktuelle Wetter und ein großes Symbol anzuzeigen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
-msgstr "Schreibtischthema überschreiben (aktiviert die unteren Einstellungen)"
+msgstr ""
+"Schreibtischthema überschreiben (aktiviert die unteren Einstellungen)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->tooltip
 msgid ""
@@ -1023,7 +1024,7 @@ msgstr "Wählen Sie den Stil der Wettersymbole aus"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat white"
-msgstr "Flach weiß"
+msgstr "Flachweiß"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Novacon"
@@ -1047,7 +1048,7 @@ msgstr "Meteocons 2"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat black"
-msgstr "Flach schwarz"
+msgstr "Flachschwarz"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 1"
@@ -1063,7 +1064,7 @@ msgstr "Skizzenhaft"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat colorful"
-msgstr "Flach farbenfroh"
+msgstr "Flach & farbenfroh"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "User defined"
