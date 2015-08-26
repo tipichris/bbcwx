@@ -741,7 +741,7 @@ MyDesklet.prototype = {
     
     if (this.humidity) this.humidity.text= this._formatHumidity(cc.humidity);
     if (this.pressure) this.pressure.text=this._formatPressure(cc.pressure, cc.pressure_direction, true);
-    if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? cc.wind_direction + ", " : '') + this._formatWindspeed(cc.wind_speed, true);      
+    if (this.windspeed) this.windspeed.text=((cc.wind_direction) ? cc.wind_direction : '') + ((cc.wind_direction && cc.wind_speed) ? ', ' : '' ) + this._formatWindspeed(cc.wind_speed, true);
     if (this.feelslike) this.feelslike.text=this._formatTemperature(cc.feelslike, true);
     if (this.visibility) this.visibility.text=this._formatVisibility(cc.visibility, true);
     if (this.service.data.status.cc != BBCWX_SERVICE_STATUS_OK && this.weathertext) {
