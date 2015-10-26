@@ -620,12 +620,12 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
-msgstr ""
+msgstr "Nastav svoje mesto manuálne"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->description
 msgid "Current wind"
-msgstr ""
+msgstr "Aktuálny vietor"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->tooltip
@@ -634,11 +634,11 @@ msgstr "Vybrať pre zobrazenie aktuálneho vetra"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->description
 msgid "Temperature measurement unit"
-msgstr ""
+msgstr "Merné jednotky teploty"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->tooltip
 msgid "Measurement units used to display temperature"
-msgstr ""
+msgstr "Merné jednotky použité na zobrazenie teploty"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->tunits->options
 msgid "Fahrenheit"
@@ -662,7 +662,7 @@ msgstr "Zobraziť hranice"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->border->tooltip
 msgid "Check this to turn border on/off"
-msgstr ""
+msgstr "Odklikni na zobrazenie orámovania zapnuté/vypnuté"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->description
 msgid "Layout"
@@ -670,7 +670,7 @@ msgstr "Rozloženie"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->tooltip
 msgid "Set the overall layout of the desklet"
-msgstr ""
+msgstr "Nastaviť celkové rozloženie deskletu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->layout->options
 msgid "Horizontal"
@@ -686,11 +686,11 @@ msgstr "Farba pozadia"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bgcolor->tooltip
 msgid "Click the button to select a new background color"
-msgstr ""
+msgstr "Klikni na tlačidlo pre vybranie novej farby pozadia"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->description
 msgid "Anchor desklet by"
-msgstr ""
+msgstr "Ukotviť desklet"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->tooltip
 msgid ""
@@ -738,7 +738,7 @@ msgstr "Hore v strede"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->top->description
 msgid "Weather configuration"
-msgstr ""
+msgstr "Konfigurácia počasia"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->description
 msgid "Pressure measurement unit"
@@ -746,7 +746,7 @@ msgstr "Merná jednotka tlaku"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->tooltip
 msgid "Measurement units used to display atmospheric pressure"
-msgstr ""
+msgstr "Merné jednotky použité na zobrazenie atmosférického tlaku"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "in (Hg)"
@@ -766,21 +766,21 @@ msgstr "milibarov"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->styling->description
 msgid "Desklet style"
-msgstr ""
+msgstr "Štýl deskletu"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->description
 msgid "Forecast maximum"
-msgstr ""
+msgstr "Najvyššia"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__maximum_temperature->tooltip
 msgid "Check to display the forecast maximum temperature"
-msgstr ""
+msgstr "Odklikni na zobrazenie najvyššej teploty"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->description
 msgid "Wind speed measurement unit"
-msgstr ""
+msgstr "Merná jednotka na meranie rýchlosti vetra"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->wunits->tooltip
 msgid "Measurement units used to display wind speed"
@@ -809,55 +809,57 @@ msgstr "Krajina"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__meta__country->tooltip
 msgid "Check to display the country"
-msgstr ""
+msgstr "Odklikni na zobrazenie krajiny"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__pressure->description
 msgid "Current pressure"
-msgstr ""
+msgstr "Aktuálny tlak"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__pressure->tooltip
 msgid "Check to display the current pressure"
-msgstr ""
+msgstr "Odklikni na zobrazenie aktuálneho tlaku"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->description
 msgid "Forecast wind direction"
-msgstr ""
+msgstr "Predpoveď smeru vetra"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_direction->tooltip
 msgid "Check to display the forecast wind direction"
-msgstr ""
+msgstr "Odklikni na zobrazenie predpovede smeru vetra"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__feelslike->description
 msgid "Current 'feels like'"
-msgstr ""
+msgstr "Aktuálna pocitová"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__feelslike->tooltip
 msgid "Check to display the current apparent temperature"
-msgstr ""
+msgstr "Odklikni na zobrazenie aktuálnej zdanlivej teploty"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->description
 msgid "Forecast humidity"
-msgstr ""
+msgstr "Predpoveď vľhkosti"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->tooltip
 msgid "Check to display the forecast humidity"
-msgstr ""
+msgstr "Odklikni na zobrazenie vľhkosti"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->description
 msgid "Show forecast for"
-msgstr ""
+msgstr "Zobraz predpoveď pre"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->tooltip
 msgid ""
 "The number of days of forecast to display. Note that not all services "
 "support all values"
 msgstr ""
+"Počet dní na zobrazenie predpovede. Poznámka nie pre všetky služby"
+"dustupné všetky možnosti"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->units
 msgid "days"
@@ -865,74 +867,78 @@ msgstr "dni"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bordercolor->description
 msgid "Border color"
-msgstr ""
+msgstr "Farba ohraničenia"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bordercolor->tooltip
 msgid ""
 "Select the color for the border. Only available if the 'Border' checkbox is "
 "enabled"
 msgstr ""
+"Označ farbu ohraničenia. Dostupné iba ak 'Ohraničenie' je "
+"zapnuté"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_speed->description
 msgid "Forecast wind speed"
-msgstr ""
+msgstr "Predpoveď rýchlosti vetra"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__wind_speed->tooltip
 msgid "Check to display the forecast wind speed"
-msgstr ""
+msgstr "Odklikni na zobrazenie rýchlosti vetra"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__weather->description
 msgid "Current weather and icon"
-msgstr ""
+msgstr "Aktuálne počasie a ikona"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__weather->tooltip
 msgid "Check to display the current weather and large icon"
-msgstr ""
+msgstr "Odklikni na zobrazenie aktuálneho počasia a veľkej ikony"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
-msgstr ""
+msgstr "Prepíš desktopvú tému (spustí nastavenia podtýmto)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->tooltip
 msgid ""
 "Check this to override the desktop theme and configure the appearance "
 "manually"
 msgstr ""
+"Odklikni na prepísanie desktopvej témy a konfigurovanie vzhľadu"
+"manuálne"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->description
 msgid "Bold city name"
-msgstr ""
+msgstr "Tučný názov mesta"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->tooltip
 msgid "Check to display the city name in bold"
-msgstr ""
+msgstr "Odklikni na zobrazenie názvu mesta tučno"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->description
 msgid "Current visibility"
-msgstr ""
+msgstr "Aktuálna viditeľnosť"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__visibility->tooltip
 msgid "Check to display the current visibility"
-msgstr ""
+msgstr "Odklikni na zobrazenie aktuálnej vyditeľnosti"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->description
 msgid "Forecast minimum"
-msgstr ""
+msgstr "Najnižšia"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->tooltip
 msgid "Check to display the forecast minimum temperature"
-msgstr ""
+msgstr "Odklikni na zobrazenie najnižšej teploty"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locationlookups->description
 msgid "Location display settings"
-msgstr ""
+msgstr "Nastavenie zobrazenia lokality"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->apikey->description
 msgid "API key"
@@ -978,20 +984,20 @@ msgstr "Otvoriť mapu počasia"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__pressure->description
 msgid "Forecast pressure"
-msgstr ""
+msgstr "Predpoveď tlaku"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__pressure->tooltip
 msgid "Check to display the forecast pressure"
-msgstr ""
+msgstr "Odklikni na zobrazenie tlaku"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->description
 msgid "Zoom by"
-msgstr ""
+msgstr "Priblíž o"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->tooltip
 msgid "Change the size of the desklet"
-msgstr ""
+msgstr "Zmeň velkosť deskletu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->units
 msgid "times"
@@ -999,15 +1005,15 @@ msgstr "krát"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->description
 msgid "Icon style"
-msgstr ""
+msgstr "Štýl ikon"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->tooltip
 msgid "Select the style for the weather icons"
-msgstr ""
+msgstr "Vyber štýl pre ikony počasia"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat white"
-msgstr ""
+msgstr "Plochý biely"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Novacon"
@@ -1019,11 +1025,11 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Colorful"
-msgstr ""
+msgstr "Farebný"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Light"
-msgstr ""
+msgstr "Svetlý"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 2"
@@ -1031,7 +1037,7 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat black"
-msgstr ""
+msgstr "Plochý čierny"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Meteocons 1"
@@ -1039,7 +1045,7 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Dark"
-msgstr ""
+msgstr "Tmavý"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Sketchy"
@@ -1063,15 +1069,15 @@ msgstr "Poloha"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->stationID->tooltip
 msgid "Set your location here"
-msgstr ""
+msgstr "Nastav svoju lokalitu tu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->description
 msgid "Corner radius"
-msgstr ""
+msgstr "Rohový polomer"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->tooltip
 msgid "Radius for rounding the desklet's corners"
-msgstr ""
+msgstr "Polomer pre zakrivenia rohov deskletu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->cornerradius->units
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->units
@@ -1084,26 +1090,29 @@ msgstr "Priehľadnosť"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->transparency->tooltip
 msgid "Set the transparency of the desklet"
-msgstr ""
+msgstr "Nastav priehľadnosť deskletu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display->description
 msgid ""
 "Optional items to display (not all options are supported by all services)"
 msgstr ""
+"Voliteľné veci na zobrazenie (nie všetky možnosti sú podporované pre všetky služby)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental->description
 msgid "Experimental and buggy features (read documentation!!)"
-msgstr ""
+msgstr "Experimentálne a bugové možnosti (prečítaj si dokumentáciu!)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->description
 msgid "Border width"
-msgstr ""
+msgstr "Šírka orámovanie"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->tooltip
 msgid ""
 "Select the width of the border. Only available if the 'Border' checkbox is "
 "enabled"
 msgstr ""
+"Vyber šírku orámovania. Jedine dostupné ak 'Orámovanie' je"
+"Spustené"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
 #, fuzzy
@@ -1112,4 +1121,4 @@ msgstr "Počasie"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"
-msgstr ""
+msgstr "Zobraz počasie z rôznych webových služieb na tvojej ploche"
