@@ -133,7 +133,7 @@ msgstr "Žiadne údaje"
 #: desklet.js:851
 #, python-format
 msgid "Click for the full forecast for %s"
-msgstr ""
+msgstr "Klikni pre plnú predpoveď %s"
 
 #. # Units for temperature, degrees Fahrenheit. %f is replaced the value. NB:
 #. English translation uses unicode character u+2109
@@ -306,11 +306,11 @@ msgstr "Dážď so snehom"
 
 #: desklet.js:1480
 msgid "Mixed rain and sleet"
-msgstr ""
+msgstr "Dážď s čľapkanicou"
 
 #: desklet.js:1481
 msgid "Mixed snow and sleet"
-msgstr ""
+msgstr "Sned s čľapkanicou"
 
 #: desklet.js:1482
 msgid "Freezing drizzle"
@@ -330,11 +330,11 @@ msgstr "Prehánky"
 
 #: desklet.js:1487
 msgid "Snow flurries"
-msgstr ""
+msgstr "ľahké snehové prehánky"
 
 #: desklet.js:1488
 msgid "Light snow showers"
-msgstr ""
+msgstr "Slabé sneženie"
 
 #: desklet.js:1489
 msgid "Blowing snow"
@@ -366,11 +366,11 @@ msgstr "Opar"
 
 #: desklet.js:1496
 msgid "Smoky"
-msgstr ""
+msgstr "Sparno"
 
 #: desklet.js:1497
 msgid "Blustery"
-msgstr ""
+msgstr "Silný vietor"
 
 #: desklet.js:1498
 msgid "Windy"
@@ -386,7 +386,7 @@ msgstr "Oblačno"
 
 #: desklet.js:1501 desklet.js:1502
 msgid "Mostly cloudy"
-msgstr ""
+msgstr "Prevažne oblačno"
 
 #: desklet.js:1503 desklet.js:1504 desklet.js:1518
 msgid "Partly cloudy"
@@ -402,7 +402,7 @@ msgstr "Slnečno"
 
 #: desklet.js:1507 desklet.js:1508
 msgid "Fair"
-msgstr ""
+msgstr "Vykuklo slniečko"
 
 #: desklet.js:1509
 msgid "Mixed rain and hail"
@@ -442,7 +442,7 @@ msgstr "Snehové prehánky"
 
 #: desklet.js:1521
 msgid "Isolated thundershowers"
-msgstr ""
+msgstr "Izolované búrky"
 
 #: desklet.js:1522
 msgid "Not available"
@@ -458,7 +458,7 @@ msgstr "Polooblačno"
 
 #: desklet.js:1768
 msgid "Sunny Intervals"
-msgstr ""
+msgstr "Striedavo Slnečno"
 
 #: desklet.js:1769
 msgid "Sand Storm"
@@ -466,7 +466,7 @@ msgstr "Piesočná búrka"
 
 #: desklet.js:1770
 msgid "Mist"
-msgstr ""
+msgstr "Rosa"
 
 #: desklet.js:1771
 msgid "Fog"
@@ -474,23 +474,23 @@ msgstr "Hmla"
 
 #: desklet.js:1772
 msgid "White Cloud"
-msgstr ""
+msgstr "Mierna Oblačnosť"
 
 #: desklet.js:1773
 msgid "Light Cloud"
-msgstr ""
+msgstr "Slabá oblačnosť"
 
 #: desklet.js:1774
 msgid "Grey Cloud"
-msgstr ""
+msgstr "Stredná oblačnosť"
 
 #: desklet.js:1775
 msgid "Thick Cloud"
-msgstr ""
+msgstr "Silná oblačnosť"
 
 #: desklet.js:1776
 msgid "Light Rain Shower"
-msgstr ""
+msgstr "Slabé prehánky"
 
 #: desklet.js:1778
 msgid "Light Rain"
@@ -498,7 +498,7 @@ msgstr "Slabý dážď"
 
 #: desklet.js:1779
 msgid "Heavy Rain Shower"
-msgstr ""
+msgstr "Silné prehánky"
 
 #: desklet.js:1780
 msgid "Heavy Rain"
@@ -506,11 +506,11 @@ msgstr "Silný dážď"
 
 #: desklet.js:1781
 msgid "Sleet Shower"
-msgstr ""
+msgstr "prehánky s čľapkanicou"
 
 #: desklet.js:1783
 msgid "Light Snow Shower"
-msgstr ""
+msgstr "Slabé snehové prehánky"
 
 #: desklet.js:1784
 msgid "Light Snow"
@@ -518,7 +518,7 @@ msgstr "Slabé sneženie"
 
 #: desklet.js:1785
 msgid "Heavy Snow Shower"
-msgstr ""
+msgstr "Silné snehové prehánky"
 
 #: desklet.js:1786
 msgid "Heavy Snow"
@@ -526,7 +526,7 @@ msgstr "Silné sneženie"
 
 #: desklet.js:1787
 msgid "Thundery Shower"
-msgstr ""
+msgstr "Letná búrka"
 
 #: desklet.js:1788
 msgid "Thunder Storm"
@@ -542,32 +542,33 @@ msgstr "Hmlisto"
 
 #: desklet.js:1791
 msgid "Hail Shower"
-msgstr ""
+msgstr "slabý ľadovec"
 
 #. # direction of movement of pressure
 #: desklet.js:1975 desklet.js:2589
 msgid "Steady"
-msgstr ""
+msgstr "Stály tlak"
 
 #. # direction of movement of pressure
 #: desklet.js:1975 desklet.js:2585
 msgid "Rising"
-msgstr ""
+msgstr "Stúpajúci tlak"
 
 #. # direction of movement of pressure
 #: desklet.js:1975 desklet.js:2587
 msgid "Falling"
-msgstr ""
+msgstr "Klesajúci tlak"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->description
 msgid "Get displayed location from"
-msgstr ""
+msgstr "Zobrazujem polohu z"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->tooltip
 msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
-msgstr ""
+msgstr "Zdroj zobrazujúci polohu. Yahho! a Google"
+"môže ponúkať názvy miest v iných jazykoch
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Google"
@@ -594,29 +595,29 @@ msgstr "Vyberte túto možnosť pre zobrazenie skúšobných a zabugovaných fun
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
 msgid "Current humidity"
-msgstr ""
+msgstr "Aktuálny vlhkosť"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__humidity->tooltip
 msgid "Check to display the current humidity"
-msgstr ""
+msgstr "Skontrolovať pre zobrazenie aktuálnej vlhkosti"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->description
 msgid "Refresh forecast every"
-msgstr ""
+msgstr "Obnoviť predpoveď každých"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->tooltip
 msgid ""
 "Period between refreshing forecasts. Note that not all services support "
 "lower refresh times"
-msgstr ""
+msgstr "Čas medzi obnovovaním predovede. Poznámka: Niektoré služby nepodporujú krátky čas pre obnovu "
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->units
 msgid "minutes"
-msgstr ""
+msgstr "minúty"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->description
 msgid "Manually override displayed location"
-msgstr ""
+msgstr "Manuálne prepísať zobrazovanú polohu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
