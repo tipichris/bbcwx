@@ -568,7 +568,7 @@ msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
 msgstr "Zdroj zobrazujúci polohu. Yahho! a Google"
-"môže ponúkať názvy miest v iných jazykoch
+"môže ponúkať názvy miest v iných jazykoch"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Google"
