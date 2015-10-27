@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-08-26 21:26+0100\n"
 "PO-Revision-Date: 2014-08-11 15:52+0000\n"
-"Last-Translator: Rastislav Čapák <rastislavcsapak@gmail.com>\n"
+"Last-Translator: Peter Kudeláš <peterkudelas@gmail.com> Marek Tamaškovič <tamaskovic.marek@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
@@ -310,7 +310,7 @@ msgstr "Dážď s čľapkanicou"
 
 #: desklet.js:1481
 msgid "Mixed snow and sleet"
-msgstr "Sned s čľapkanicou"
+msgstr "Sneh s čľapkanicou"
 
 #: desklet.js:1482
 msgid "Freezing drizzle"
@@ -330,7 +330,7 @@ msgstr "Prehánky"
 
 #: desklet.js:1487
 msgid "Snow flurries"
-msgstr "ľahké snehové prehánky"
+msgstr "Ľahké snehové prehánky"
 
 #: desklet.js:1488
 msgid "Light snow showers"
@@ -338,7 +338,7 @@ msgstr "Slabé sneženie"
 
 #: desklet.js:1489
 msgid "Blowing snow"
-msgstr ""
+msgstr "Fujavica"
 
 #: desklet.js:1490
 msgid "Snow"
@@ -506,7 +506,7 @@ msgstr "Silný dážď"
 
 #: desklet.js:1781
 msgid "Sleet Shower"
-msgstr "prehánky s čľapkanicou"
+msgstr "Čľapkanicová prehánka"
 
 #: desklet.js:1783
 msgid "Light Snow Shower"
@@ -542,7 +542,7 @@ msgstr "Hmlisto"
 
 #: desklet.js:1791
 msgid "Hail Shower"
-msgstr "slabý ľadovec"
+msgstr "Slabá ľadovcová prehánka"
 
 #. # direction of movement of pressure
 #: desklet.js:1975 desklet.js:2589
@@ -567,7 +567,7 @@ msgstr "Zobrazujem polohu z"
 msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
-msgstr "Zdroj zobrazujúci polohu. Yahho! a Google"
+msgstr "Zdroj zobrazujúci polohu. Yahho! a Google "
 "môže ponúkať názvy miest v iných jazykoch"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
@@ -609,7 +609,8 @@ msgstr "Obnoviť predpoveď každých"
 msgid ""
 "Period between refreshing forecasts. Note that not all services support "
 "lower refresh times"
-msgstr "Čas medzi obnovovaním predovede. Poznámka: Niektoré služby nepodporujú krátky čas pre obnovu "
+msgstr "Čas medzi obnovovaním predovede. Pozn.: Niektoré služby potrebujú "
+"dlhší čas pre obnovu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->units
 msgid "minutes"
