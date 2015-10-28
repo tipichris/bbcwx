@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.8.1\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-08-26 21:26+0100\n"
-"PO-Revision-Date: 2015-06-13 13:53+0000\n"
-"Last-Translator: Caio Amaral Nakao <caionakao@gmail.com>\n"
+"PO-Revision-Date: 2015-10-05 21:00+0000\n"
+"Last-Translator: Luís Lima <liqen@liqensoft.com>\n"
 "Language-Team: Brazilian Portuguese\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-08-26 19:20+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-10-28 19:52+0000\n"
+"X-Generator: Launchpad (build 17837)\n"
+"Language: pt\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -327,7 +327,7 @@ msgstr "Chuva de gelo"
 
 #: desklet.js:1485 desklet.js:1486
 msgid "Showers"
-msgstr "Showers"
+msgstr "Aguaceiros"
 
 #: desklet.js:1487
 msgid "Snow flurries"
@@ -359,7 +359,7 @@ msgstr "Poeira"
 
 #: desklet.js:1494
 msgid "Foggy"
-msgstr "Febuloso"
+msgstr "Nevoeiro"
 
 #: desklet.js:1495
 msgid "Haze"
@@ -403,7 +403,7 @@ msgstr "Ensolarado"
 
 #: desklet.js:1507 desklet.js:1508
 msgid "Fair"
-msgstr "Feira"
+msgstr "Razoável"
 
 #: desklet.js:1509
 msgid "Mixed rain and hail"
@@ -471,7 +471,7 @@ msgstr "Névoa"
 
 #: desklet.js:1771
 msgid "Fog"
-msgstr "Nevoeiro"
+msgstr "Nebelina"
 
 #: desklet.js:1772
 msgid "White Cloud"
@@ -1122,10 +1122,9 @@ msgstr ""
 "estiverativado"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Meteorologia"
+msgstr "Desklet Meterologia"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"
-msgstr ""
+msgstr "Mostrar a meterologia de vários serviços da web no seu desktop"

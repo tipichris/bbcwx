@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-08-26 21:26+0100\n"
-"PO-Revision-Date: 2014-09-16 17:53+0000\n"
+"PO-Revision-Date: 2015-09-09 18:56+0000\n"
 "Last-Translator: Asier Iturralde Sarasola <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
-"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-18 13:52+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-10-28 19:52+0000\n"
+"X-Generator: Launchpad (build 17837)\n"
+"Language: eu\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -442,7 +442,7 @@ msgstr "Elur-zaparradak"
 
 #: desklet.js:1521
 msgid "Isolated thundershowers"
-msgstr "Zaparrada ekaiztsu sakabanatuak"
+msgstr "Zaparrada ekaiztsu isolatuak"
 
 #: desklet.js:1522
 msgid "Not available"
@@ -498,7 +498,7 @@ msgstr "Euri arina"
 
 #: desklet.js:1779
 msgid "Heavy Rain Shower"
-msgstr "Euri-zaparrada gogorra"
+msgstr "Euri-zaparrada gogorrak"
 
 #: desklet.js:1780
 msgid "Heavy Rain"
@@ -506,11 +506,11 @@ msgstr "Euri mardula"
 
 #: desklet.js:1781
 msgid "Sleet Shower"
-msgstr "Elurbusti-zaparrada"
+msgstr "Elurbusti-zaparradak"
 
 #: desklet.js:1783
 msgid "Light Snow Shower"
-msgstr "Elur arin-zaparrada"
+msgstr "Elur arin-zaparradak"
 
 #: desklet.js:1784
 msgid "Light Snow"
@@ -518,7 +518,7 @@ msgstr "Elur arina"
 
 #: desklet.js:1785
 msgid "Heavy Snow Shower"
-msgstr "Euri-zaparrada gogorra"
+msgstr "Elur-zaparrada gogorrak"
 
 #: desklet.js:1786
 msgid "Heavy Snow"
@@ -526,7 +526,7 @@ msgstr "Elur mardula"
 
 #: desklet.js:1787
 msgid "Thundery Shower"
-msgstr "Zaparrada trumoitsua"
+msgstr "Zaparrada trumoitsuak"
 
 #: desklet.js:1788
 msgid "Thunder Storm"
@@ -541,9 +541,8 @@ msgid "Hazy"
 msgstr "Lainotsua"
 
 #: desklet.js:1791
-#, fuzzy
 msgid "Hail Shower"
-msgstr "Euri-zaparrada gogorra"
+msgstr "Kazkabar-zaparradak"
 
 #. # direction of movement of pressure
 #: desklet.js:1975 desklet.js:2589
@@ -593,6 +592,7 @@ msgstr "Gaitu ezaugarri esperimentalak"
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
 msgstr ""
+"Hautatu hau ezaugarri esperimentalak gaitzeko (akatsak izan ditzakete)"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
@@ -612,6 +612,8 @@ msgid ""
 "Period between refreshing forecasts. Note that not all services support "
 "lower refresh times"
 msgstr ""
+"Iragarpenak freskatzeko maiztasuna. Kontutan izan zerbitzu guztiek ez "
+"dituztela freskatze-denbora baxuak onartzen."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->units
 msgid "minutes"
@@ -619,7 +621,7 @@ msgstr "minuturo"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->description
 msgid "Manually override displayed location"
-msgstr ""
+msgstr "Eskuz gainidatzi bistaratutako kokapena"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
@@ -901,13 +903,14 @@ msgstr "Hautatu uneko eguraldia eta ikono handia bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
-msgstr ""
+msgstr "Baliogabetu mahaigaineko gaia (beheko ezarpenak gaitzen ditu)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->tooltip
 msgid ""
 "Check this to override the desktop theme and configure the appearance "
 "manually"
 msgstr ""
+"Hautatu hau mahaigaineko gaia baliogabetu eta itxura eskuz konfiguratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->citystyle->description
 msgid "Bold city name"
@@ -974,7 +977,7 @@ msgstr "Yahoo"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "weather.com (deprecated)"
-msgstr ""
+msgstr "weather.com (baztertzekoa)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "World Weather Online (requires API key)"
@@ -996,7 +999,7 @@ msgstr "Hautatu presioaren aurrikuspena bistaratzeko"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->description
 msgid "Zoom by"
-msgstr ""
+msgstr "Zooma:"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->zoom->tooltip
 msgid "Change the size of the desklet"
@@ -1052,7 +1055,7 @@ msgstr "Iluna"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Sketchy"
-msgstr ""
+msgstr "Sketchy"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Flat colorful"
@@ -1064,7 +1067,7 @@ msgstr "Erabiltzaileak definitua"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->iconstyle->options
 msgid "Weezle"
-msgstr ""
+msgstr "Weezle"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->stationID->description
 msgid "Location"
@@ -1105,6 +1108,7 @@ msgstr ""
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental->description
 msgid "Experimental and buggy features (read documentation!!)"
 msgstr ""
+"Ezaugarri esperimentalak (akatsak izan ditzakete, irakurri dokumentazioa!!)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->borderwidth->description
 msgid "Border width"
@@ -1119,10 +1123,9 @@ msgstr ""
 "erabilgarri"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Eguraldia"
+msgstr "Eguraldia desklet-a"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"
-msgstr ""
+msgstr "Bistaratu zenbait web zerbitzutako eguraldia zure mahaigainean"

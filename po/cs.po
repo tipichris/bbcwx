@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: Cinnamon Weather Desklet - bbcwx 2.8.3\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-08-26 21:26+0100\n"
-"PO-Revision-Date: 2015-01-09 03:24+0100\n"
-"Last-Translator: hatrSon <hatrson@gmail.com>\n"
+"PO-Revision-Date: 2015-09-01 09:19+0000\n"
+"Last-Translator: cabi <Unknown>\n"
 "Language-Team: Czech\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2015-10-28 19:52+0000\n"
+"X-Generator: Launchpad (build 17837)\n"
+"Language: cs\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -285,7 +286,7 @@ msgstr "Tornádo"
 
 #: desklet.js:1475
 msgid "Tropical storm"
-msgstr "Tropická cyklóna"
+msgstr "Tropická bouře"
 
 #: desklet.js:1476
 msgid "Hurricane"
@@ -313,7 +314,7 @@ msgstr "Sněžení s kroupami"
 
 #: desklet.js:1482
 msgid "Freezing drizzle"
-msgstr "Mrazivé mrholení"
+msgstr "Mrznoucí mrholení"
 
 #: desklet.js:1483 desklet.js:1777
 msgid "Drizzle"
@@ -361,7 +362,7 @@ msgstr "Mlha"
 
 #: desklet.js:1495
 msgid "Haze"
-msgstr "Kouřmo"
+msgstr "Mlhavo"
 
 #: desklet.js:1496
 msgid "Smoky"
@@ -369,11 +370,11 @@ msgstr "Kouř"
 
 #: desklet.js:1497
 msgid "Blustery"
-msgstr "Nárazová vítr"
+msgstr "Nárazový vítr"
 
 #: desklet.js:1498
 msgid "Windy"
-msgstr "Vítr"
+msgstr "Větrno"
 
 #: desklet.js:1499
 msgid "Cold"
@@ -417,11 +418,11 @@ msgstr "Místní bouře"
 
 #: desklet.js:1512
 msgid "Scattered thunderstorms"
-msgstr "Příležitostné bouře"
+msgstr "Ojedinělé bouřky"
 
 #: desklet.js:1513 desklet.js:1514
 msgid "Scattered showers"
-msgstr "Příležitostné dešťové přeháňky"
+msgstr "Ojedinělé přeháňky"
 
 #: desklet.js:1515 desklet.js:1517
 msgid "Heavy snow"
@@ -429,11 +430,11 @@ msgstr "Silné sněžení"
 
 #: desklet.js:1516
 msgid "Scattered snow showers"
-msgstr "Příležitostné sněhové přeháňky"
+msgstr "Rozptýlené sněhové přeháňky"
 
 #: desklet.js:1519
 msgid "Thundershowers"
-msgstr "Dešťová bouře"
+msgstr "Krátké bouřky"
 
 #: desklet.js:1520
 msgid "Snow showers"
@@ -445,7 +446,7 @@ msgstr "Místní dešťové bouře"
 
 #: desklet.js:1522
 msgid "Not available"
-msgstr "Nedostupné"
+msgstr "Není k dispozici"
 
 #: desklet.js:1765
 msgid "Clear Sky"
@@ -1103,9 +1104,8 @@ msgid ""
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Počasí"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"
