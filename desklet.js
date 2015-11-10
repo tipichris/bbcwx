@@ -2949,6 +2949,9 @@ wxDriverForecastIo.prototype = {
     'ar' : 'ar',
     'sk' : 'sk',
     'uk' : 'uk',
+    'el' : 'el',
+    'zh_tw': 'zh-tw',
+    'hr' : 'hr',
     
   },
   
