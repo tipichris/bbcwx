@@ -15,7 +15,8 @@
         "Wunderground (requires API key)": "wunderground",
         "World Weather Online (requires API key)": "wwo",
         "Forecast.io (requires API key)" : "forecast",
-        "weather.com (deprecated)" : "twc"
+        "weather.com (deprecated)" : "twc",
+        "meteoblue (requires API key)" : "meteoblue"
     },
     "tooltip" : "Select the data service you wish to use"
   },

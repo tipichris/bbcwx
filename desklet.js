@@ -228,6 +228,9 @@ MyDesklet.prototype = {
       case 'twc':
         this.service = new wxDriverTWC(this.stationID);
         break;
+      case 'meteoblue':
+        this.service = new wxDriverMeteoBlue(this.stationID, this.apikey);
+        break;
       default:
         this.service = new wxDriverBBC(this.stationID);
     }
@@ -715,6 +718,7 @@ MyDesklet.prototype = {
       //## Message if we fail to get weather data
       this.wxtooltip[f].set_text(((day.weathertext) ? _(day.weathertext) : _('No data available')));
       if(this.max[f]) this.max[f].text=this._formatTemperature(day.maximum_temperature, true);
+      //if(this.max[f]) { this.max[f].text=this._formatTemperature(day.maximum_temperature, true); } else { this.max[f].text=''}
       if(this.min[f]) this.min[f].text=this._formatTemperature(day.minimum_temperature, true);
       if(this.winds[f]) this.winds[f].text=this._formatWindspeed(day.wind_speed, true);
       if(this.windd[f]) this.windd[f].text= ((day.wind_direction) ? day.wind_direction : '');   
@@ -1084,7 +1088,7 @@ MyDesklet.prototype = {
   // Append unit string if units is true
   _formatTemperature: function(temp, units) {
     units = typeof units !== 'undefined' ? units : false;
-    if (typeof temp === 'undefined') return '';
+    if (typeof temp === 'undefined' || temp === null) return '';
     if (!temp.toString().length) return ''; 
     let celsius = 1*temp;
     let fahr = ((celsius + 40) * 1.8) - 40;
@@ -1104,7 +1108,7 @@ MyDesklet.prototype = {
   // units. Append unit string if units is true
   _formatWindspeed: function(wind, units) {
     units = typeof units !== 'undefined' ? units : false;
-    if (typeof wind === 'undefined') return '';
+    if (typeof wind === 'undefined' || wind === null) return '';
     if (!wind.toString().length) return '';
     let conversion = {
       'mph': 0.621,
@@ -1144,7 +1148,7 @@ MyDesklet.prototype = {
   _formatPressure: function(pressure, direction, units) {
     units = typeof units !== 'undefined' ? units : false;
     direction = typeof direction !== 'undefined' ? direction : '';
-    if (typeof pressure === 'undefined') return '';
+    if (typeof pressure === 'undefined' || pressure === null) return '';
     if (!pressure.toString().length) return '';
     let conversion = {
       'mb': 1,
@@ -1199,7 +1203,7 @@ MyDesklet.prototype = {
   // as such, numbers (assumed km) are converted. Append unit string if units is true
   _formatVisibility: function(vis, units) {
     units = typeof units !== 'undefined' ? units : false;
-    if (typeof vis === 'undefined') return '';
+    if (typeof vis === 'undefined' || vis === null) return '';
     if (!vis.toString().length) return '';
     if (isNaN(vis)) return _(vis);
     // we infer the desired units from windspeed units
@@ -3334,6 +3338,199 @@ wxDriverTWC.prototype = {
     return icon_name;
   },
   
+};  
+
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for MeteoBlue
+function wxDriverMeteoBlue(stationID, apikey) {
+  this._meteoblueinit(stationID, apikey);
+};
+
+wxDriverMeteoBlue.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'meteoblue',
+  maxDays: 7, 
+  linkText: 'meteoblue',
+  
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'https://www.meteoblue.com',
+  
+  _baseURL: 'http://my.meteoblue.com/dataApi/dispatch.pl',
+  
+  lang_map: {
+  },
+  
+  // initialise the driver
+  _meteoblueinit: function(stationID, apikey) {
+    this._init(stationID, apikey);
+    this.capabilities.cc.humidity = false;
+    this.capabilities.cc.pressure = false;
+    this.capabilities.cc.wind_direction = false;
+    this.capabilities.cc.visibility = false;
+    this.capabilities.cc.feelslike = false;
+    this.capabilities.cc.pressure_direction =  false;
+    this.capabilities.cc.obstime = false;
+    this.capabilities.forecast.pressure_direction =  false;
+    this.capabilities.forecast.visibility =  false;
+    this.capabilities.forecast.uv_risk =  false;
+
+  },
+  
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkURL = 'https://www.meteoblue.com';
+    
+    
+    // check the stationID looks valid before going further
+    if (this.stationID.search(/^\-?\d+(\.\d+)?,\-?\d+(\.\d+)?$/) == 0) {
+      let latlon = this.stationID.split(',')
+      let apiurl = this._baseURL + '?apikey=' + encodeURIComponent(this.apikey) + '&mac=feed&type=json_7day_3h_firstday&lat=' + latlon[0] + '&lon=' + latlon[1];
+
+      // process the forecast
+      let a = this._getWeather(apiurl, function(weather) {
+        if (weather) {
+          this._load_forecast(weather);
+        }
+        // get the main object to update the display
+        deskletObj.displayForecast();
+        deskletObj.displayCurrent();   
+        deskletObj.displayMeta(); 
+      });
+
+    } else {
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.lasterror = "Invalid location";
+      deskletObj.displayMeta(); 
+      deskletObj.displayForecast();
+      deskletObj.displayCurrent();
+    }
+    
+  },
+  
+  // process the data for a multi day forecast and populate this.data
+  _load_forecast: function (data) {
+    if (!data) {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+   
+    let json = JSON.parse(data);
+    
+    if (typeof json.error_message !== 'undefined') {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;  
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.lasterror = json.error_message;
+      global.logWarning("Error from World Weather Online: " + json.error_message);
+      return;
+    }
+    
+    try {
+      let days = json.forecast;
+
+      for (let i=0; i<days.length; i++) {
+        let day = new Object();
+        day.day = day.day = this._getDayName(new Date(days[i].date).toLocaleFormat("%w"));
+        day.minimum_temperature = days[i].temperature_min;
+        day.maximum_temperature = days[i].temperature_max;
+        day.pressure = days[i].pressure_hpa;
+        day.humidity = days[i].relative_humidity_avg;
+        day.wind_speed = days[i].wind_speed_max;
+        day.wind_direction = days[i].wind_direction_dominant;
+        day.weathertext = this._getWxTxt(days[i].pictocode_day);
+        day.icon = this._mapicon(days[i].pictocode_day, true);
+
+        this.data.days[i] = day;
+      }
+      let cc = json.current;
+
+      this.data.cc.temperature = cc.temperature;
+      this.data.cc.weathertext = this._getWxTxt(cc.pictocode);
+      this.data.cc.wind_speed = cc.wind_speed;
+      this.data.cc.icon = this._mapicon(cc.pictocode, cc.is_daylight);
+      
+      this.data.wgs84.lat = json.meta.lat;
+      this.data.wgs84.lon = json.meta.lon;
+      https://www.meteoblue.com/weather/forecast/week/52.275N-1.597E
+      this.linkURL = 'https://www.meteoblue.com/weather/forecast/week/' + json.latitude + 'N' + json.longitude + 'E';
+      
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      //this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
+    }      
+  },
+  
+  _getWxTxt: function(pictcode) {
+    return 'code ' + pictcode;
+  },
+
+  _mapicon: function(iconcode, isDay) {
+    let icon_name = 'na';
+    let iconmapday = {
+      '1' : '32',
+      '2' : '34',
+      '3' : '30',
+      '4' : '26',
+      '5' : '20',
+      '6' : '12',
+      '7' : '39',
+      '8' : '37',
+      '9' : '14',
+      '10' : '41',
+      '11' : '05',
+      '12' : '11',
+      '13' : '13',
+      '14' : '12',
+      '15' : '14',
+      '16' : '11',
+      '17' : '13'
+    };
+    
+    let iconmapnight = {
+      '1' : '31',
+      '2' : '32',
+      '3' : '29',
+      '4' : '26',
+      '5' : '20',
+      '6' : '12',
+      '7' : '45',
+      '8' : '47',
+      '9' : '14',
+      '10' : '46',
+      '11' : '05',
+      '12' : '11',
+      '13' : '13',
+      '14' : '12',
+      '15' : '14',
+      '16' : '11',
+      '17' : '13'
+    };
+    
+    if (isDay) {
+      if (iconcode && (typeof iconmapday[iconcode] !== "undefined")) {
+        icon_name = iconmapday[iconcode];
+      }
+    } else {
+      if (iconcode && (typeof iconmapnight[iconcode] !== "undefined")) {
+        icon_name = iconmapnight[iconcode];
+      }
+    }
+
+    return icon_name;
+  }, 
+
 };  
 
 
