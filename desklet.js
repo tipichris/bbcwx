@@ -3472,8 +3472,8 @@ wxDriverMeteoBlue.prototype = {
     }      
   },
   
-  // translate meteoblue pictcode into text string. We use phrases that we
-  // have existing translations for. Meteoblue suggested text given in comments
+  // translate meteoblue pictocode into text string. We use phrases that we
+  // have in existing translations for. Meteoblue suggested text given in comments
   // TODO 'Heavy Rain' is a poor match for 6 and 14. Probably better to use 
   // 'Rain', but we don't have that in the existing translations
   // see https://content.meteoblue.com/en/help/standards/symbols-and-pictograms
