@@ -386,12 +386,18 @@ MyDesklet.prototype = {
       if(this.fhumidity[f]) {this.fwtable.add(this.fhumidity[f],{row:row,col:f+1}); row++}
     }
     
+    this.buttoncontainer = new St.BoxLayout({vertical: true, x_align: 2, y_align: 2});
+    
     this.but.set_child(this.iconbutton);
     this.but.connect('clicked', Lang.bind(this, this.updateForecast));
     // seems we have to use a button for bannerpre to get the vertical alignment :(
     //## Credit the data supplier. A link to the data supplier appears to the right of this string
     this.bannerpre=new St.Button({label: _('Data from ')});
     this.banner=new St.Button({ 
+      reactive: true,
+      track_hover: true,
+      style_class: 'bbcwx-link'});
+    this.bannericon=new St.Button({ 
       reactive: true,
       track_hover: true,
       style_class: 'bbcwx-link'});
@@ -402,13 +408,15 @@ MyDesklet.prototype = {
     this.buttons.add_actor(this.bannerpre);
     this.buttons.add_actor(this.banner);
     this.buttons.add_actor(this.but);
+    this.buttoncontainer.add_actor(this.bannericon);
+    this.buttoncontainer.add_actor(this.buttons);
     this.container.add_actor(this.ctemp);  
     this.container.add_actor(this._separatorArea);
     this.container.add_actor(this.fwtable); 
     this.cweather.add_actor(this.city);
     if (this.cwicon) this.cweather.add_actor(this.cwicon);
     if (this.weathertext) this.cweather.add_actor(this.weathertext);
-    this.container.add_actor(this.buttons);
+    this.container.add_actor(this.buttoncontainer);
     this.window.add_actor(this.cweather);
     this.window.add_actor(this.container);
     
@@ -793,13 +801,12 @@ MyDesklet.prototype = {
     this._updateLocationDisplay();
     
     if (this.service.linkIcon) {
-      this.banner.label = '';
       let bannericonimage = this._getIconImage(this.service.linkIcon.file, this.service.linkIcon.height*this.zoom, this.service.linkIcon.width*this.zoom, false);
       //bannericonimage.set_size(this.service.linkIcon.width*this.zoom, this.service.linkIcon.height*this.zoom);
-      this.banner.set_child(bannericonimage); 
-    } else {
-      this.banner.label = this.service.linkText;
+      this.bannericon.set_child(bannericonimage); 
     }
+    this.banner.label = this.service.linkText;
+
        
     try {
       if (this.bannersig) this.banner.disconnect(this.bannersig);
@@ -3356,6 +3363,11 @@ wxDriverMeteoBlue.prototype = {
   
   // these will be dynamically reset when data is loaded
   linkURL: 'https://www.meteoblue.com',
+  linkIcon: {
+    file: 'meteoblue',
+    width: 67,
+    height: 20,
+  },
   
   _baseURL: 'http://my.meteoblue.com/dataApi/dispatch.pl',
   
