@@ -3473,7 +3473,32 @@ wxDriverMeteoBlue.prototype = {
   },
   
   _getWxTxt: function(pictcode) {
-    return 'code ' + pictcode;
+    let wxtext = '';
+    let textmap = {
+      '1' : _('Clear Sky'),
+      '2' : _('Fair'),
+      '3' : _('Partly Cloudy'),
+      '4' : _('Cloudy'),
+      '5' :  _('Fog'),
+      '6' : _('Heavy Rain'),
+      '7' : _('Showers'),
+      '8' :  _('Thundery Shower'),
+      '9' : _('Snow'),
+      '10' : _('Snow showers'),
+      '11' : _('Mixed rain and snow'),
+      '12' : _('Light Rain'),
+      '13' : _('Light Snow'),
+      '14' : _('Heavy Rain'),
+      '15' : _('Snow'),
+      '16' : _('Light Rain'),
+      '17' : _('Light Snow')
+    };
+    
+    if (pictcode && (typeof textmap[pictcode] !== "undefined")) {
+      wxtext = textmap[pictcode];
+    }
+    
+    return wxtext;
   },
 
   _mapicon: function(iconcode, isDay) {
