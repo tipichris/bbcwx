@@ -3472,26 +3472,30 @@ wxDriverMeteoBlue.prototype = {
     }      
   },
   
+  // translate meteoblue pictcode into text string. We use phrases that we
+  // have existing translations for. Meteoblue suggested text given in comments
+  // TODO 'Heavy Rain' is a poor match for 6 and 14. Probably better to use 
+  // 'Rain', but we don't have that in the existing translations
   _getWxTxt: function(pictcode) {
     let wxtext = '';
     let textmap = {
-      '1' : _('Clear Sky'),
-      '2' : _('Fair'),
-      '3' : _('Partly Cloudy'),
-      '4' : _('Cloudy'),
-      '5' :  _('Fog'),
-      '6' : _('Heavy Rain'),
-      '7' : _('Showers'),
-      '8' :  _('Thundery Shower'),
-      '9' : _('Snow'),
-      '10' : _('Snow showers'),
-      '11' : _('Mixed rain and snow'),
-      '12' : _('Light Rain'),
-      '13' : _('Light Snow'),
-      '14' : _('Heavy Rain'),
-      '15' : _('Snow'),
-      '16' : _('Light Rain'),
-      '17' : _('Light Snow')
+      '1' : _('Clear Sky'),             //Sunny, cloudless sky 
+      '2' : _('Fair'),                  //Sunny and few clouds 
+      '3' : _('Partly Cloudy'),         //Partly cloudy 
+      '4' : _('Cloudy'),                //Overcast 
+      '5' :  _('Fog'),                  //Fog 
+      '6' : _('Heavy Rain'),            //Overcast with rain 
+      '7' : _('Showers'),               //Mixed with showers 
+      '8' :  _('Thundery Shower'),      //Showers, thunderstorms likely 
+      '9' : _('Snow'),                  //Overcast with snow 
+      '10' : _('Snow showers'),         //Mixed with snow showers 
+      '11' : _('Mixed rain and snow'),  //Mostly cloudy with a mixture of snow and rain 
+      '12' : _('Light Rain'),           //Overcast with light rain 
+      '13' : _('Light Snow'),           //Overcast with light snow 
+      '14' : _('Heavy Rain'),           //Mostly cloudy with rain 
+      '15' : _('Snow'),                 //Mostly cloudy with snow 
+      '16' : _('Light Rain'),           //Mostly cloudy with light rain 
+      '17' : _('Light Snow')            //Mostly cloudy with light snow 
     };
     
     if (pictcode && (typeof textmap[pictcode] !== "undefined")) {
