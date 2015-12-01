@@ -1799,7 +1799,8 @@ wxDriverBBC.prototype = {
       _('Thunder Storm'),
       _('Thunderstorm'),
       _('Hazy'),
-      _('Hail Shower')
+      _('Hail Shower'),
+      _('Rain')             // not currently used;
     ];
   }
 
