@@ -3364,8 +3364,8 @@ wxDriverMeteoBlue.prototype = {
   // these will be dynamically reset when data is loaded
   linkURL: 'https://www.meteoblue.com',
   linkIcon: {
-    file: 'meteoblue',
-    width: 67,
+    file: 'meteoblue2',
+    width: 59,
     height: 20,
   },
   
