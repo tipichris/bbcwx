@@ -3472,7 +3472,7 @@ wxDriverMeteoBlue.prototype = {
       this.data.wgs84.lat = json.meta.lat;
       this.data.wgs84.lon = json.meta.lon;
       https://www.meteoblue.com/weather/forecast/week/52.275N-1.597E
-      this.linkURL = 'https://www.meteoblue.com/weather/forecast/week/' + json.latitude + 'N' + json.longitude + 'E';
+      this.linkURL = 'https://www.meteoblue.com/weather/forecast/week/' + json.meta.lat + 'N' + json.meta.lon + 'E';
       
       this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
       this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
