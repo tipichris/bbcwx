@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2015-03-14 10:44+0000\n"
 "Last-Translator: lander <lander.saerens@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-08-26 19:20+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+"Language: nl\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -595,7 +595,8 @@ msgstr "Schakel experimentele functies in"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
-msgstr "Inschakelen om experimentele en instabiele functies mogelijk te maken."
+msgstr ""
+"Inschakelen om experimentele en instabiele functies mogelijk te maken."
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
@@ -901,7 +902,8 @@ msgstr "Actuele weer en pictogram"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__weather->tooltip
 msgid "Check to display the current weather and large icon"
-msgstr "Het tonen van het actuele weer en een groot pictogram in-/uitschakelen"
+msgstr ""
+"Het tonen van het actuele weer en een groot pictogram in-/uitschakelen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
@@ -973,9 +975,8 @@ msgid "Wunderground (requires API key)"
 msgstr "Wunderground (vereist API-sleutel)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
-#, fuzzy
 msgid "meteoblue (requires API key)"
-msgstr "Forecast.io (vereist API-sleutel)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -1127,12 +1128,12 @@ msgstr "Randdikte"
 msgid ""
 "Select the width of the border. Only available if the 'Border' checkbox is "
 "enabled"
-msgstr "Kies de dikte van de rand. Alleen beschikbaar als 'Rand' is aangevinkt"
+msgstr ""
+"Kies de dikte van de rand. Alleen beschikbaar als 'Rand' is aangevinkt"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Het weer"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"

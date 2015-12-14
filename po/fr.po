@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-12-01 21:50+0000\n"
-"PO-Revision-Date: 2015-10-18 12:41+0000\n"
-"Last-Translator: perco <Unknown>\n"
+"PO-Revision-Date: 2015-11-29 22:26+0000\n"
+"Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-10-28 19:52+0000\n"
-"X-Generator: Launchpad (build 17837)\n"
+"X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+"Language: fr\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -694,7 +694,8 @@ msgstr "Couleur d’arrière-plan"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bgcolor->tooltip
 msgid "Click the button to select a new background color"
-msgstr "Cliquer sur le bouton pour choisir une nouvelle couleur d'arrière plan"
+msgstr ""
+"Cliquer sur le bouton pour choisir une nouvelle couleur d'arrière plan"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->description
 msgid "Anchor desklet by"
@@ -754,7 +755,8 @@ msgstr "Unité de mesure de pression"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->tooltip
 msgid "Measurement units used to display atmospheric pressure"
-msgstr "Unité de mesure utilisée pour l'affichage de la pression atmosphérique"
+msgstr ""
+"Unité de mesure utilisée pour l'affichage de la pression atmosphérique"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->punits->options
 msgid "in (Hg)"
@@ -875,7 +877,7 @@ msgstr "Jours"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bordercolor->description
 msgid "Border color"
-msgstr "Couleur du bordure"
+msgstr "Couleur de la bordure"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->bordercolor->tooltip
 msgid ""
@@ -972,9 +974,8 @@ msgid "Wunderground (requires API key)"
 msgstr "Wunderground (clé API requise)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
-#, fuzzy
 msgid "meteoblue (requires API key)"
-msgstr "Forecast.io (clé API requise)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"

@@ -12,12 +12,12 @@ msgstr ""
 "PO-Revision-Date: 2015-04-21 14:06+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic <is@li.org>\n"
-"Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-08-26 19:20+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+"Language: is\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -967,9 +967,8 @@ msgid "Wunderground (requires API key)"
 msgstr "Wunderground (krefst API lykils)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
-#, fuzzy
 msgid "meteoblue (requires API key)"
-msgstr "Forecast.io (krefst API lykils)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -1124,9 +1123,8 @@ msgid ""
 msgstr ""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Veður"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"

@@ -8,16 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-12-01 21:50+0000\n"
-"PO-Revision-Date: 2014-08-11 15:52+0000\n"
-"Last-Translator: Peter Kudeláš <peterkudelas@gmail.com> Marek Tamaškovič "
-"<tamaskovic.marek@gmail.com>\n"
+"PO-Revision-Date: 2015-10-28 16:39+0000\n"
+"Last-Translator: Peter <peterkudelas@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
-"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-17 21:16+0000\n"
-"X-Generator: Launchpad (build 17304)\n"
+"X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+"Language: sk\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -88,12 +87,12 @@ msgstr "Viditeľnosť:"
 #. # Maximum temperature
 #: desklet.js:347
 msgid "Max:"
-msgstr ""
+msgstr "Najvyššia teplota:"
 
 #. # Minimum temperature
 #: desklet.js:349
 msgid "Min:"
-msgstr ""
+msgstr "Najnižšia teplota:"
 
 #. # Wind speed (English translation is "Wind:")
 #: desklet.js:351
@@ -311,7 +310,7 @@ msgstr "Dážď s čľapkanicou"
 
 #: desklet.js:1492
 msgid "Mixed snow and sleet"
-msgstr "Sneh s čľapkanicou"
+msgstr "Sned s čľapkanicou"
 
 #: desklet.js:1493
 msgid "Freezing drizzle"
@@ -331,7 +330,7 @@ msgstr "Prehánky"
 
 #: desklet.js:1498
 msgid "Snow flurries"
-msgstr "Ľahké snehové prehánky"
+msgstr "ľahké snehové prehánky"
 
 #: desklet.js:1499
 msgid "Light snow showers"
@@ -507,7 +506,7 @@ msgstr "Silný dážď"
 
 #: desklet.js:1792
 msgid "Sleet Shower"
-msgstr "Čľapkanicová prehánka"
+msgstr "prehánky s čľapkanicou"
 
 #: desklet.js:1794
 msgid "Light Snow Shower"
@@ -543,7 +542,7 @@ msgstr "Hmlisto"
 
 #: desklet.js:1802
 msgid "Hail Shower"
-msgstr "Slabá ľadovcová prehánka"
+msgstr "slabý ľadovec"
 
 #: desklet.js:1803
 msgid "Rain"
@@ -573,7 +572,7 @@ msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
 msgstr ""
-"Zdroj zobrazujúci polohu. Yahho! a Google môže ponúkať názvy miest v iných "
+"Zdroj zobrazujúci polohu. Yahho! a Googlemôže ponúkať názvy miest v iných "
 "jazykoch"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
@@ -596,7 +595,8 @@ msgstr "Zapnúť skúšobné funkcie"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
-msgstr "Vyberte túto možnosť pre zobrazenie skúšobných a zabugovaných funkcii"
+msgstr ""
+"Vyberte túto možnosť pre zobrazenie skúšobných a zabugovaných funkcii"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
@@ -616,8 +616,8 @@ msgid ""
 "Period between refreshing forecasts. Note that not all services support "
 "lower refresh times"
 msgstr ""
-"Čas medzi obnovovaním predovede. Pozn.: Niektoré služby potrebujú dlhší čas "
-"pre obnovu"
+"Čas medzi obnovovaním predovede. Poznámka: Niektoré služby nepodporujú "
+"krátky čas pre obnovu"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->units
 msgid "minutes"
@@ -968,9 +968,8 @@ msgid "Wunderground (requires API key)"
 msgstr "Wunderground (vyžaduje API kľúč)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
-#, fuzzy
 msgid "meteoblue (requires API key)"
-msgstr "forecast.io (vyžaduje API kľúč)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -1125,9 +1124,8 @@ msgid ""
 msgstr "Vyber šírku orámovania. Jedine dostupné ak 'Orámovanie' jeSpustené"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Počasie"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"

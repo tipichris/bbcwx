@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-12-01 21:50+0000\n"
-"PO-Revision-Date: 2015-02-01 20:01+0000\n"
+"PO-Revision-Date: 2015-02-01 22:01+0000\n"
 "Last-Translator: Đỗ Xuân Quyết <quyet.doxuan@gmail.com>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-01 21:00+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+"Language: vi\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -572,8 +572,8 @@ msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
 msgstr ""
-"Nguồn dữ liệu của vị trí hiện thời. Yahoo! và Google có thễ hiện thị tên "
-"thành phố trong cả các ngôn ngữ khác"
+"Nguồn dữ liệu của vị trí hiện thời. Yahoo! và Google có thễ hiện "
+"thị tên thành phố trong cả các ngôn ngữ khác"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Google"
@@ -614,7 +614,8 @@ msgstr "Cập nhật dự báo mỗi"
 msgid ""
 "Period between refreshing forecasts. Note that not all services support "
 "lower refresh times"
-msgstr "Khoảng thời gian giữa 2 lần cập nhật. Không nên đặt số quá nhỏ"
+msgstr ""
+"Khoảng thời gian giữa 2 lần cập nhật. Không nên đặt số quá nhỏ"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->units
 msgid "minutes"
@@ -702,7 +703,9 @@ msgstr "Đặt bảng bằng"
 msgid ""
 "Select the point on the desklet to which it is anchored. This point will "
 "remain static as the desklet grows and shrinks"
-msgstr "Chọn điểm đặt bảng. Điểm đó là cố định khi bảng phóng to hay thu nhỏ"
+msgstr ""
+"Chọn điểm đặt bảng. Điểm đó là cố định khi bảng phóng to hay thu "
+"nhỏ"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->gravity->options
 msgid "Bottom center"
@@ -862,8 +865,8 @@ msgid ""
 "The number of days of forecast to display. Note that not all services "
 "support all values"
 msgstr ""
-"Dự báo trong bao nhiêu ngày tới, phụ thuộc vào khả năng dự đoán của từng đài "
-"khí tượng."
+"Dự báo trong bao nhiêu ngày tới, phụ thuộc vào khả năng dự đoán "
+"của từng đài khí tượng."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->userno->units
 msgid "days"
@@ -900,7 +903,8 @@ msgstr "Tịch để hiện thời tiết hiện tại và biểu tượ
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->description
 msgid "Override desktop theme (enables the settings below)"
-msgstr "Cài đè giao diện hệ thống (cho phép thiết lập các mục bên dưới)"
+msgstr ""
+"Cài đè giao diện hệ thống (cho phép thiết lập các mục bên dưới)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->overrideTheme->tooltip
 msgid ""
@@ -947,7 +951,9 @@ msgstr "API key"
 #. bbcwx@oak-wood.co.uk->settings-schema.json->apikey->tooltip
 msgid ""
 "Required for some services only. Enter your API key for your chosen service"
-msgstr "Yêu cầu bởi một số đài khí tượng. Nhập API key cho nhà đài bạn chọn."
+msgstr ""
+"Yêu cầu bởi một số đài khí tượng. Nhập API key cho nhà đài bạn "
+"chọn."
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->tooltip
 msgid "Select the data service you wish to use"
@@ -962,9 +968,8 @@ msgid "Wunderground (requires API key)"
 msgstr "Wunderground (cần API key)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
-#, fuzzy
 msgid "meteoblue (requires API key)"
-msgstr "Forecast.io (cần API key)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -1100,7 +1105,9 @@ msgstr "Đặt độ trong suốt của bảng"
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display->description
 msgid ""
 "Optional items to display (not all options are supported by all services)"
-msgstr "Các mục hiển thị tùy chọn (một số mục không có từ phía đài khí tượng)"
+msgstr ""
+"Các mục hiển thị tùy chọn (một số mục không có từ phía đài khí "
+"tượng)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental->description
 msgid "Experimental and buggy features (read documentation!!)"
@@ -1117,9 +1124,8 @@ msgid ""
 msgstr "Chọn độ rộng viền"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Thời tiết"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"

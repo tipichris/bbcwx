@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-12-01 21:50+0000\n"
-"PO-Revision-Date: 2015-10-03 08:09+0000\n"
+"PO-Revision-Date: 2015-10-29 03:14+0000\n"
 "Last-Translator: kristian <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-10-28 19:52+0000\n"
-"X-Generator: Launchpad (build 17837)\n"
+"X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+"Language: sv\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -604,7 +604,7 @@ msgstr "Nuvarande luftfuktighet"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__humidity->tooltip
 msgid "Check to display the current humidity"
-msgstr "Markera för att visa nuvarande luftcfuktighet"
+msgstr "Markera för att visa nuvarande luftfuktighet"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->refreshtime->description
 msgid "Refresh forecast every"
@@ -846,8 +846,8 @@ msgstr "Nuvarande 'känns som'"
 #. bbcwx@oak-wood.co.uk->settings-schema.json->display__cc__feelslike->tooltip
 msgid "Check to display the current apparent temperature"
 msgstr ""
-"Markera för att visa temperatur med nuvarande vindavkylningsfaktor ('feels "
-"like')"
+"Markera för att visa temperatur med nuvarande vindavkylningsfaktor ('känns "
+"som')"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__humidity->description
@@ -938,12 +938,12 @@ msgstr "Markera för att visa nuvarande sikt"
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->description
 msgid "Forecast minimum"
-msgstr "Visa"
+msgstr "Visa lägsta förväntade temperatur"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__forecast__minimum_temperature->tooltip
 msgid "Check to display the forecast minimum temperature"
-msgstr "Makera för att visa lägsta förväntade temperatur"
+msgstr "Makera för att visa den lägsta förväntade temperaturen i prognosen"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locationlookups->description
 msgid "Location display settings"
@@ -973,9 +973,8 @@ msgid "Wunderground (requires API key)"
 msgstr "Wunderground (kräver API nyckel)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
-#, fuzzy
 msgid "meteoblue (requires API key)"
-msgstr "Forecast.io (Kräver API nyckel)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"

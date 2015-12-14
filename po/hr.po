@@ -6,17 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
-"Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-12-01 21:50+0000\n"
-"PO-Revision-Date: 2014-07-19 20:47+0000\n"
+"PO-Revision-Date: 2015-11-09 11:36+0000\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-07-19 15:48+0000\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+"Language: hr\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -442,7 +442,7 @@ msgstr "Mećave"
 
 #: desklet.js:1532
 msgid "Isolated thundershowers"
-msgstr "Izolirani grmljavinski pljuskovi"
+msgstr "Lokalni grmljavinski pljuskovi"
 
 #: desklet.js:1533
 msgid "Not available"
@@ -541,9 +541,8 @@ msgid "Hazy"
 msgstr "Maglovito"
 
 #: desklet.js:1802
-#, fuzzy
 msgid "Hail Shower"
-msgstr "Jaka kiša s pljuskovima"
+msgstr "Pljusak s tučom"
 
 #: desklet.js:1803
 msgid "Rain"
@@ -566,17 +565,19 @@ msgstr "Padanje"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->description
 msgid "Get displayed location from"
-msgstr ""
+msgstr "Prikaži lokaciju s"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->tooltip
 msgid ""
 "The source of the text displayed as the current location. Yahoo! and Google "
 "may offer city names in other languages"
 msgstr ""
+"Izvor teksta trenutno prikazane lokacije. Yahoo! i Google mogu prikazati "
+"nazive gradova na različitim jezicima"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locsrc->options
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->description
@@ -594,7 +595,8 @@ msgstr "Omogući ekspreimentalne značajke"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
-msgstr "Odaberite ovo za omogućavanje ekspreimentalnih i nestabilnih značajki"
+msgstr ""
+"Odaberite ovo za omogućavanje ekspreimentalnih i nestabilnih značajki"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
@@ -623,11 +625,11 @@ msgstr "minuta"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->description
 msgid "Manually override displayed location"
-msgstr ""
+msgstr "Ručno upišite prikazanu lokaciju"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
-msgstr ""
+msgstr "Upišite naziv vašeg grada ručno"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->description
@@ -942,7 +944,7 @@ msgstr "Odaberite za prikaz maksimalne temperature prognoze"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->locationlookups->description
 msgid "Location display settings"
-msgstr ""
+msgstr "Postavke prikaza lokacije"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->apikey->description
 msgid "API key"
@@ -967,9 +969,8 @@ msgid "Wunderground (requires API key)"
 msgstr "Wunderground (potreban je API ključ)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
-#, fuzzy
 msgid "meteoblue (requires API key)"
-msgstr "Forecast.io (potreban je API ključ)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -1126,10 +1127,10 @@ msgstr ""
 "omogućena"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Vrijeme"
+msgstr "Desklet vremenske prognoze"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"
 msgstr ""
+"Prikazuje vremensku prognozu pojedinih web usluga na vašoj radnoj površini"

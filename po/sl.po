@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2014-09-09 12:53+0000\n"
 "Last-Translator: Damir Jerovšek <Unknown>\n"
 "Language-Team: Slovenian\n"
-"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-18 13:52+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+"Language: sl\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -541,9 +541,8 @@ msgid "Hazy"
 msgstr "Megleno"
 
 #: desklet.js:1802
-#, fuzzy
 msgid "Hail Shower"
-msgstr "Močna ploha"
+msgstr ""
 
 #: desklet.js:1803
 msgid "Rain"
@@ -970,9 +969,8 @@ msgid "Wunderground (requires API key)"
 msgstr "Wunderground (zahteva API ključ)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
-#, fuzzy
 msgid "meteoblue (requires API key)"
-msgstr "Forecast.io (zahteva API ključ)"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -1130,12 +1128,12 @@ msgstr "Širina obrobe"
 msgid ""
 "Select the width of the border. Only available if the 'Border' checkbox is "
 "enabled"
-msgstr "Izberite širino obrobe. Na voljo le, če je omogočeno polje \"Obroba\""
+msgstr ""
+"Izberite širino obrobe. Na voljo le, če je omogočeno polje \"Obroba\""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
-#, fuzzy
 msgid "Weather Desklet"
-msgstr "Vreme"
+msgstr ""
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"
