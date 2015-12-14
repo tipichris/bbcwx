@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
-"POT-Creation-Date: 2015-12-01 21:50+0000\n"
+"POT-Creation-Date: 2015-12-14 18:52+0000\n"
 "PO-Revision-Date: 2015-03-21 16:28+0000\n"
 "Last-Translator: Ari Ervasti <ari.ervasti87@gmail.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2015-12-04 19:52+0000\n"
 "X-Generator: Launchpad (build 17862)\n"
-"Language: fi\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -595,8 +595,7 @@ msgstr "Ota käyttöön kokeelliset ominaisuudet"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->experimental_enabled->tooltip
 msgid "Check this to enable experimental and buggy features"
-msgstr ""
-"Valitse tämä ottaaksesi käyttöön kokeellisia ja bugisia ominaisuuksia"
+msgstr "Valitse tämä ottaaksesi käyttöön kokeellisia ja bugisia ominaisuuksia"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__humidity->description
