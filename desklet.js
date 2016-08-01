@@ -210,9 +210,9 @@ MyDesklet.prototype = {
       case 'bbc':
         this.service = new wxDriverBBC(this.stationID);
         break;
-      case 'yahoo':
-        this.service = new wxDriverYahoo(this.stationID);
-        break;
+//      case 'yahoo':
+//        this.service = new wxDriverYahoo(this.stationID);
+//        break;
       case 'owm':
         this.service = new wxDriverOWM(this.stationID, this.apikey);
         break;
@@ -778,8 +778,8 @@ MyDesklet.prototype = {
       // if city name from service is empty, use wgs84, or stationID 
       if (!this.service.data.city.toString().length) {
         if (this.service.capabilities.meta.wgs84 && this.service.data.status.meta == BBCWX_SERVICE_STATUS_OK) {
-          // If city name is empty and source is 'service', we'll look it up with Yahoo!
-          if (locsrc == 'service') locsrc = 'yahoo';
+          // If city name is empty and source is 'service', we'll look it up with Google!
+          if (locsrc == 'service') locsrc = 'google';
           this.displaycity=this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
           this.tooltiplocation = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;   
         } else {
@@ -868,6 +868,7 @@ MyDesklet.prototype = {
   // Do async reverse geocode lookups at Yahoo! or Google
   // -> locsrc: which service to use: either 'yahoo' or 'google'
   // -> callback: callback function to process returned results
+  // NB Yahoo service no longer available :(
   _getGeo: function( locsrc, callback) {
     // just use the most preferred language and hope Yahoo! / Google  supports it
     let locale = LangList[0];
@@ -1808,6 +1809,7 @@ wxDriverBBC.prototype = {
 
 ////////////////////////////////////////////////////////////////////////////
 // ### Driver for Yahoo! Weather
+// This driver no longer works - Yahoo now require OAuth
 function wxDriverYahoo(stationID) {
   this._yahooinit(stationID);
 };

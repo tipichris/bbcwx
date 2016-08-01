@@ -10,7 +10,6 @@
     "description" : "Data service",
     "options" : {
         "BBC" : "bbc",
-        "Yahoo" : "yahoo",
         "Open Weather Map": "owm",
         "Wunderground (requires API key)": "wunderground",
         "World Weather Online (requires API key)": "wwo",
@@ -352,7 +351,6 @@
     "description" : "Get displayed location from",
     "options" : {
       "Data service": "service",
-      "Yahoo!": "yahoo",
       "Google": "google"
     },
     "tooltip": "The source of the text displayed as the current location. Yahoo! and Google may offer city names in other languages"

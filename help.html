@@ -26,6 +26,7 @@ td.light {background-color: #666; color: #fff}
 code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B5; } 
 .notice {padding: .8em; margin-bottom: 1em; border: 2px solid #FFD324; background: #FFF6BF; color: #514721;}
 .notice a   { color: #514721; }
+del {text-decoration: line-through;}
 </style>
   <title>Using the Weather Desklet</title>
   </head>
@@ -39,7 +40,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     weather in several locations it supports multiple instances. At present it 
     can work with data from the 
     <a href="http://www.bbc.co.uk/weather">BBC</a>,
-    <a href="http://weather.yahoo.com/">Yahoo! Weather</a>,
+    <a href="http://weather.yahoo.com/"><del>Yahoo! Weather</del></a>,
     <a href="http://openweathermap.org/">Open Weather Map</a>,
     <a href="http://wunderground.com/?apiref=415600fd47df8d55">Weather Underground</a>,
     <a href="http://www.worldweatheronline.com">World Weather Online</a>,
@@ -85,11 +86,11 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     <p>You can also give a latitude and longitude. These 
     should be decimals, separated by a comma, with positive being north or east. For example, for 
     central London, 51.51N, 0.13W, use <code class="loccode">51.51,-0.13</code>.</p>
-    <p>Open Weather Map does not require an API Key, but it is recommended 
-    that you use one. To obtain an API Key for Open Weather Map
-    <a href="http://openweathermap.org/login">register on the Open Weather 
+    <p>Open Weather Map requires an API Key. To obtain an API Key for Open Weather Map
+    <a href="http://openweathermap.org/appid">register on the Open Weather 
     Map website</a>.</p>
     <h3 id="yahoo">Yahoo</h3>
+    <p class="notice">Unfortunately Yahoo! is no longer supported because of an incompatible change to the Yahoo! API</p>
     <p>Visit <a href="http://weather.yahoo.com/">Yahoo! Weather</a> and search
     for your city. The code you need is the numeric part at
     the end of URL for the city's weather. For example, a search for Berlin 
@@ -171,7 +172,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     </p>
     <p>
     By default the text is provided by the weather data service. If the service does not provide
-    translations of city names, using names provided by Yahoo! or Google may do so. As a last resort
+    translations of city names, using names provided by Google may do so. As a last resort
     you can manually enter a city name. 
     </p>
     <h3 id="experimental">Experimental and buggy settings</h3>
@@ -350,8 +351,7 @@ code.loccode {border: 1px #736C62 dotted; padding: 2px; background-color: #B5E2B
     out how to contribute a translation</a>.
    
     <h3 id="othercredits">Other stuff</h3>
-    <p>Alternative city name lookups are provided by 
-    <a href="http://www.yahoo.com">Yahoo!</a> and <a href="https://www.google.com/">Google</a>.</p>
+    <p>Alternative city name lookups are provided by <a href="https://www.google.com/">Google</a>.</p>
 
   </body>
 </html>
