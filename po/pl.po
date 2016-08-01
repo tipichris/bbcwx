@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: bbcwx\n"
 "Report-Msgid-Bugs-To: chris@oak-wood.co.uk\n"
 "POT-Creation-Date: 2015-12-14 18:52+0000\n"
-"PO-Revision-Date: 2015-12-10 12:09+0000\n"
+"PO-Revision-Date: 2016-03-09 08:35+0000\n"
 "Last-Translator: Piotr Strębski <strebski@o2.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
-"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-14 18:16+0000\n"
-"X-Generator: Launchpad (build 17865)\n"
+"X-Launchpad-Export-Date: 2016-08-01 19:04+0000\n"
+"X-Generator: Launchpad (build 18169)\n"
+"Language: pl\n"
 
 #. # Days of the week
 #: desklet.js:103
@@ -542,7 +542,7 @@ msgstr "Zamglenia"
 
 #: desklet.js:1802
 msgid "Hail Shower"
-msgstr ""
+msgstr "Deszcz z gradem"
 
 #: desklet.js:1803
 msgid "Rain"
@@ -627,7 +627,7 @@ msgstr ""
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->manuallocation->tooltip
 msgid "Set your city name manually."
-msgstr ""
+msgstr "Ustaw ręcznie nazwę miasta"
 
 #. bbcwx@oak-wood.co.uk->settings-
 #. schema.json->display__cc__wind_speed->description
@@ -969,7 +969,7 @@ msgstr "Wunderground (wymaga klucza API)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "meteoblue (requires API key)"
-msgstr ""
+msgstr "meteoblue (wymagany klucz API)"
 
 #. bbcwx@oak-wood.co.uk->settings-schema.json->webservice->options
 msgid "BBC"
@@ -1125,8 +1125,8 @@ msgstr "Wybierz grubość ramki. Dostępne tylko wtedy, gdy włączona jest ramk
 
 #. bbcwx@oak-wood.co.uk->metadata.json->name
 msgid "Weather Desklet"
-msgstr ""
+msgstr "Desklet pogody"
 
 #. bbcwx@oak-wood.co.uk->metadata.json->description
 msgid "Display the weather from several web services on your desktop"
-msgstr ""
+msgstr "Wyświetlanie na pulpicie pogody od kilku serwisów internetowych"
