@@ -2966,6 +2966,15 @@ wxDriverForecastIo.prototype = {
     'el' : 'el',
     'zh_tw': 'zh-tw',
     'hr' : 'hr',
+    'az' : 'az',
+    'cs' : 'cs',
+    'hu' : 'hu',
+    'sr' : 'sr',
+    'kw' : 'kw',
+    'is' : 'is',
+    'nb' : 'nb',
+    'be' : 'be',
+    'id' : 'id'
     
   },
   
