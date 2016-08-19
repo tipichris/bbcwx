@@ -221,6 +221,9 @@ MyDesklet.prototype = {
       case 'wwo':
         this.service = new wxDriverWWO(this.stationID, this.apikey);
         break;
+      case 'wwo2':
+        this.service = new wxDriverWWOPremium(this.stationID, this.apikey);
+        break;
       case 'forecast':
         this.service = new wxDriverForecastIo(this.stationID, this.apikey);
         break;
@@ -2924,6 +2927,272 @@ wxDriverWWO.prototype = {
   }, 
 
 };  
+
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for World Weather Online premium
+function wxDriverWWOPremium(stationID, apikey) {
+  this._wwoinit(stationID, apikey);
+};
+
+wxDriverWWOPremium.prototype = {
+  __proto__: wxDriver.prototype,
+  
+  drivertype: 'WWOPremium',
+  maxDays: 7, 
+  linkText: 'World Weather Online',
+  
+  
+  // these will be dynamically reset when data is loaded
+  linkURL: 'http://www.worldweatheronline.com',
+
+  // see http://developer.worldweatheronline.com/free_api_terms_of_use,
+  // point 3
+  minTTL: 3600,
+  
+  _baseURL: 'http://api.worldweatheronline.com/premium/v1/',
+  
+  lang_map: {
+    'ar' : 'ar',
+    'bn' : 'bn',
+    'bg' : 'bg',
+    'zh' : 'zh',
+    'zh_cn' : 'zh',
+    'zh_tw' : 'zh_tw',
+    'zh_cmn' : 'zh_cmn',
+    'zh_wuu' : 'zh_wuu',
+    'zh_hsn' : 'zh_hsn',
+    'zh_yue' : 'zh_yue',
+    'cs' : 'cs',
+    'nl' : 'nl',
+    'fi' : 'fi',
+    'fr' : 'fr',
+    'de' : 'de',
+    'el' : 'el',
+    'hi' : 'hi',
+    'hu' : 'hu',
+    'it' : 'it',
+    'ja' : 'ja',
+    'jv' : 'jv',
+    'ko' : 'ko',
+    'mr' : 'mr',
+    'pa' : 'pa',
+    'pl' : 'pl',
+    'pt' : 'pt',
+    'ro' : 'ro',
+    'ru' : 'ru',
+    'sr' : 'sr',
+    'si' : 'si',
+    'sk' : 'sk',
+    'es' : 'es',
+    'sv' : 'sv',
+    'ta' : 'ta',
+    'te' : 'te',
+    'tr' : 'tr',
+    'uk' : 'uk',
+    'ur' : 'ur',
+    'vi' : 'vi',
+    'zu' : 'zu'    
+  },
+  
+  // initialise the driver
+  _wwoinit: function(stationID, apikey) {
+    this._init(stationID, apikey);
+    //this.capabilities.forecast.pressure = false;
+    this.capabilities.forecast.pressure_direction =  false;
+    this.capabilities.cc.pressure_direction = false;
+    //this.capabilities.cc.feelslike = false;
+    //this.capabilities.forecast.visibility = false;
+    this.capabilities.forecast.uv_risk = false;
+    //this.capabilities.forecast.humidity = false;
+  },
+  
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkURL = 'http://www.worldweatheronline.com';
+    
+    this.langcode = this.getLangCode();
+    this.i18Desc = 'lang_' + this.langcode;
+    
+    let apiurl = this._baseURL + 'weather.ashx?q=' + encodeURIComponent(this.stationID) + '&format=json&tp=24&extra=localObsTime%2CisDayTime&num_of_days=5&includelocation=yes&key=' + encodeURIComponent(this.apikey);
+    if (this.langcode) apiurl += '&lang=' + this.langcode;
+    
+    // process the forecast
+    let a = this._getWeather(apiurl, function(weather) {
+      if (weather) {
+        this._load_forecast(weather);
+      }
+      // get the main object to update the display
+      deskletObj.displayForecast();
+      deskletObj.displayCurrent();   
+      deskletObj.displayMeta(); 
+    });
+    
+  },
+  
+  // process the data for a multi day forecast and populate this.data
+  _load_forecast: function (data) {
+    if (!data) {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }    
+   
+    let json = JSON.parse(data);
+    
+    if (typeof json.data.error !== 'undefined') {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;  
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.lasterror = json.data.error[0].msg;
+      global.logWarning("Error from World Weather Online: " + json.data.error[0].msg);
+      return;
+    }
+    
+    try {
+      let days = json.data.weather;
+
+      for (let i=0; i<days.length; i++) {
+        let day = new Object();
+        day.day = this._getDayName(new Date(days[i].date).toLocaleFormat("%w"));
+        day.minimum_temperature = days[i].mintempC;
+        day.maximum_temperature = days[i].maxtempC;
+        //day.pressure = json.list[i].pressure;
+        //day.humidity = days[i].avehumidity;
+        day.wind_speed = days[i].hourly[0].windspeedKmph;
+        day.wind_direction = days[i].hourly[0].winddir16Point;
+        day.humidity = days[i].hourly[0].humidity;
+        day.visibility = days[i].hourly[0].visibility;
+        day.pressure = days[i].hourly[0].pressure;
+        day.feelslike = days[i].hourly[0].FeelsLikeC;
+        if (typeof days[i].hourly[0][this.i18Desc] !== "undefined" && days[i].hourly[0][this.i18Desc][0].value) {
+          day.weathertext = days[i].hourly[0][this.i18Desc][0].value;
+        } else {
+          day.weathertext = days[i].hourly[0].weatherDesc[0].value;
+        }
+        day.icon = this._mapicon(days[i].hourly[0].weatherCode, days[i].hourly[0].weatherIconUrl[0].value);
+
+        this.data.days[i] = day;
+      }   
+      let cc = json.data.current_condition[0];
+
+      this.data.cc.humidity = cc.humidity;
+      this.data.cc.temperature = cc.temp_C;
+      this.data.cc.pressure = cc.pressure;
+      this.data.cc.wind_speed = cc.windspeedKmph;
+      this.data.cc.feelslike = cc.FeelsLikeC;
+      this.data.cc.wind_direction = cc.winddir16Point;
+      let dt = cc.localObsDateTime.split(/\-|\s/);
+      this.data.cc.obstime = new Date(dt.slice(0,3).join('/')+' '+dt[3]).toLocaleFormat("%H:%M %Z");
+      if (typeof cc[this.i18Desc] !== "undefined" && cc[this.i18Desc][0].value) {
+        this.data.cc.weathertext = cc[this.i18Desc][0].value;
+      } else {
+        this.data.cc.weathertext = cc.weatherDesc[0].value;
+      }
+      this.data.cc.icon = this._mapicon(cc.weatherCode, cc.weatherIconUrl[0].value);
+      // vis is in km
+      this.data.cc.visibility = cc.visibility;
+      
+      let locdata = json.data.nearest_area[0];
+      this.data.city = locdata.areaName[0].value;
+      this.data.country = locdata.country[0].value;
+      this.data.region = locdata.region[0].value;
+      this.data.wgs84.lat = locdata.latitude;
+      this.data.wgs84.lon = locdata.longitude;
+      // we don't reliably get weatherURL in the response :(
+      if (typeof locdata.weatherUrl != 'undefined') {
+        this.linkURL = locdata.weatherUrl[0].value;
+      } else {
+        this.linkURL = 'http://www.worldweatheronline.com/v2/weather.aspx?q=' + encodeURIComponent(this.stationID);
+      }
+      
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;   
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK; 
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;      
+    }      
+  },
+  
+  _mapicon: function(iconcode, recommendedIcon) {
+    // http://www.worldweatheronline.com/feed/wwoConditionCodes.txt
+    let icon_name = 'na';
+    let iconmap = {
+      '395': '16',
+      '392': '13',
+      '389': '04',
+      '386': '37',
+      '377': '18',
+      '374': '18',
+      '371': '16',
+      '368': '13',
+      '365': '18',
+      '362': '18',
+      '359': '39',
+      '356': '39',
+      '353': '39',
+      '350': '18',
+      '338': '16',
+      '335': '16',
+      '332': '14',
+      '329': '14',
+      '326': '13',
+      '323': '13',
+      '320': '06',
+      '317': '06',
+      '314': '10',
+      '311': '08',
+      '308': '12',
+      '305': '12',
+      '302': '11',
+      '299': '11',
+      '296': '09',
+      '293': '09',
+      '284': '08',
+      '281': '08',
+      '266': '09',
+      '263': '09',
+      '260': '20',
+      '248': '20',
+      '230': '15',
+      '227': '15',
+      '200': '38',
+      '185': '08',
+      '182': '06',
+      '179': '13',
+      '176': '39',
+      '143': '20',
+      '122': '26',
+      '119': '26',
+      '116': '30',
+      '113': '32'
+    };
+    let nightmap = {
+      '39' : '45',
+      '41' : '46',
+      '30' : '29',
+      '28' : '27',
+      '32' : '31',
+      '22' : '21',
+      '47' : '38'
+    };
+    
+    if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
+      icon_name = iconmap[iconcode];
+    }
+    // override with nighttime icons
+    if ((recommendedIcon.indexOf('night') > -1) && (typeof nightmap[icon_name] !== "undefined")) {
+      icon_name = nightmap[icon_name];
+    } 
+    return icon_name;
+  }, 
+
+};  
+
 
 ////////////////////////////////////////////////////////////////////////////
 // ### Driver for Forecast.io
