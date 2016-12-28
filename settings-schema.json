@@ -10,7 +10,7 @@
     "description" : "Data service",
     "options" : {
         "BBC" : "bbc",
-        "Open Weather Map": "owm",
+        "Open Weather Map (requires API key)": "owm",
         "Wunderground (requires API key)": "wunderground",
         "World Weather Online (requires API key)": "wwo",
         "Forecast.io (requires API key)" : "forecast",
