@@ -518,7 +518,7 @@ MyDesklet.prototype = {
       global.logError("Failed to parse iconmeta.json for iconset " + this.iconstyle);
     } 
     // set anything missing to default values
-    for (prop in deficonprops) {
+    for (let prop in deficonprops) {
       if (typeof iconprops[prop] === 'undefined') {
         iconprops[prop] = deficonprops[prop];
       }
@@ -3119,6 +3119,7 @@ wxDriverForecastIo.prototype = {
     if (type == "windspd") {
       return val*1.60923;
     }
+    return val;
   },
   
   _mapicon: function(iconcode) {
