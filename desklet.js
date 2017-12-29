@@ -2477,8 +2477,8 @@ wxDriverOWMFree.prototype = {
           days[day_name] = day;
         }
 
-        days[day_name].minimum_temperature.push(json.list[i].main.temp_min);
-        days[day_name].maximum_temperature.push(json.list[i].main.temp_max);
+        days[day_name].minimum_temperature.push(json.list[i].main.temp);
+        days[day_name].maximum_temperature.push(json.list[i].main.temp);
         days[day_name].pressure.push(json.list[i].main.pressure);
         days[day_name].humidity.push(json.list[i].main.humidity);
         days[day_name].wind_speed.push(json.list[i].wind.speed * 3.6);
@@ -2490,8 +2490,8 @@ wxDriverOWMFree.prototype = {
       let today = this._getDayName(new Date().toLocaleFormat( "%w" ));
       this.data.days = [];
       for (day_name in days) {
-        if (day_name == today) continue;
-        let middle = Math.round(days[day_name].icon.length / 2);
+        //if (day_name == today) continue;
+        let middle = Math.floor(days[day_name].icon.length / 2);
         let day = new Object();
         day.day = day_name;
         day.minimum_temperature = this._minArr(days[day_name].minimum_temperature);
@@ -2499,7 +2499,7 @@ wxDriverOWMFree.prototype = {
         day.pressure = this._avgArr(days[day_name].pressure);
         day.humidity = this._avgArr(days[day_name].humidity);
         day.wind_speed = this._avgArr(days[day_name].wind_speed);
-        day.wind_direction = this.compassDirection(this._avgArr(days[day_name].wind_direction));
+        day.wind_direction = this.compassDirection(days[day_name].wind_direction[middle]);
         day.weathertext = days[day_name].weathertext[middle];
         day.icon = days[day_name].icon[middle];
 
