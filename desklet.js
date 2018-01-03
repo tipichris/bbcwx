@@ -2438,7 +2438,7 @@ wxDriverOWMFree.prototype = {
   __proto__: wxDriverOWM.prototype,
 
   drivertype: 'OWMFree',
-  maxDays: 3,
+  maxDays: 5,
 
   // process the 3 days forecast
   _get_apiforecasturl: function() {
@@ -2460,9 +2460,14 @@ wxDriverOWMFree.prototype = {
       this.data.wgs84.lon = json.city.coord.lon;
       this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
 
+      // This is ugly, but to place a forecast in a particular day we need to make an effort to 
+      // interpret the UTC timestamps in the context of the forecast location's timezone, which 
+      // we don't know. So we estimate, based on longitude  
+      let est_tz = Math.round(json.city.coord.lon/15) * 3600;
+
       let days = {};
       for (let i=0; i<json.list.length; i++) {
-        let day_name = this._getDayName(new Date(json.list[i].dt *1000).toLocaleFormat( "%w" ));
+        let day_name = this._getDayName(new Date((json.list[i].dt + est_tz)*1000).getUTCDay());
 
         if (!(day_name in days)) {
           let day = new Object();
@@ -2498,7 +2503,7 @@ wxDriverOWMFree.prototype = {
         day.maximum_temperature = this._maxArr(days[day_name].maximum_temperature);
         day.pressure = this._avgArr(days[day_name].pressure);
         day.humidity = this._avgArr(days[day_name].humidity);
-        day.wind_speed = this._avgArr(days[day_name].wind_speed);
+        day.wind_speed = days[day_name].wind_speed[middle];
         day.wind_direction = this.compassDirection(days[day_name].wind_direction[middle]);
         day.weathertext = days[day_name].weathertext[middle];
         day.icon = days[day_name].icon[middle];
