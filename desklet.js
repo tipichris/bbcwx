@@ -3337,7 +3337,7 @@ wxDriverAPIXU.prototype = {
   __proto__: wxDriver.prototype,
 
   drivertype: 'APIXU',
-  maxDays: 14,
+  maxDays: 7,
   linkText: 'APIXU',
 
 
@@ -3408,7 +3408,7 @@ wxDriverAPIXU.prototype = {
     this.langcode = this.getLangCode();
     this.i18Desc = 'lang_' + this.langcode;
 
-    let apiurl = this._baseURL + 'forecast.json?q=' + encodeURIComponent(this.stationID) + '&days=14&key=' + encodeURIComponent(this.apikey);
+    let apiurl = this._baseURL + 'forecast.json?q=' + encodeURIComponent(this.stationID) + '&days=' + this.maxDays + '&key=' + encodeURIComponent(this.apikey);
     if (this.langcode) apiurl += '&lang=' + this.langcode;
 
     // process the forecast
