@@ -2,7 +2,7 @@
  * bbcwx - a Cinnamon Desklet displaying the weather retrieved
  * from one of several web services.
  *
- * Copyright 2014 - 2017 Chris Hastie. Forked from accudesk@logan; original
+ * Copyright 2014 - 2018 Chris Hastie. Forked from accudesk@logan; original
  * code Copyright 2013 loganj.
  *
  * Includes the marknote library, Copyright 2011 jbulb.org.
