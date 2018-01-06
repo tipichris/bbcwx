@@ -227,6 +227,9 @@ MyDesklet.prototype = {
       case 'wwo2':
         this.service = new wxDriverWWOPremium(this.stationID, this.apikey);
         break;
+      case 'apixu':
+        this.service = new wxDriverAPIXU(this.stationID, this.apikey);
+        break;
       case 'forecast':
         this.service = new wxDriverForecastIo(this.stationID, this.apikey);
         break;
@@ -3317,6 +3320,251 @@ wxDriverWWOPremium.prototype = {
     }
     // override with nighttime icons
     if ((recommendedIcon.indexOf('night') > -1) && (typeof nightmap[icon_name] !== "undefined")) {
+      icon_name = nightmap[icon_name];
+    }
+    return icon_name;
+  },
+
+};
+
+////////////////////////////////////////////////////////////////////////////
+// ### Driver for APIXU
+function wxDriverAPIXU(stationID, apikey) {
+  this._apixuinit(stationID, apikey);
+};
+
+wxDriverAPIXU.prototype = {
+  __proto__: wxDriver.prototype,
+
+  drivertype: 'APIXU',
+  maxDays: 14,
+  linkText: 'APIXU',
+
+
+  // these will be dynamically reset when data is loaded
+  linkURL: 'https://www.apixu.com/weather/',
+
+
+  _baseURL: 'https://api.apixu.com/v1/',
+
+  lang_map: {
+    'ar' : 'ar',
+    'bn' : 'bn',
+    'bg' : 'bg',
+    'zh' : 'zh',
+    'zh_cn' : 'zh',
+    'zh_tw' : 'zh_tw',
+    'zh_cmn' : 'zh_cmn',
+    'zh_wuu' : 'zh_wuu',
+    'zh_hsn' : 'zh_hsn',
+    'zh_yue' : 'zh_yue',
+    'cs' : 'cs',
+    'da' : 'da',
+    'nl' : 'nl',
+    'fi' : 'fi',
+    'fr' : 'fr',
+    'de' : 'de',
+    'el' : 'el',
+    'hi' : 'hi',
+    'hu' : 'hu',
+    'it' : 'it',
+    'ja' : 'ja',
+    'jv' : 'jv',
+    'ko' : 'ko',
+    'mr' : 'mr',
+    'pa' : 'pa',
+    'pl' : 'pl',
+    'pt' : 'pt',
+    'ro' : 'ro',
+    'ru' : 'ru',
+    'sr' : 'sr',
+    'si' : 'si',
+    'sk' : 'sk',
+    'es' : 'es',
+    'sv' : 'sv',
+    'ta' : 'ta',
+    'te' : 'te',
+    'tr' : 'tr',
+    'uk' : 'uk',
+    'ur' : 'ur',
+    'vi' : 'vi',
+    'zu' : 'zu'
+  },
+
+  // initialise the driver
+  _apixuinit: function(stationID, apikey) {
+    this._init(stationID, apikey);
+    this.capabilities.forecast.pressure = false;
+    this.capabilities.forecast.pressure_direction =  false;
+    this.capabilities.cc.pressure_direction = false;
+    this.capabilities.forecast.wind_direction = false;
+  },
+
+  refreshData: function(deskletObj) {
+    // reset the data object
+    this._emptyData();
+    this.linkURL = 'https://www.apixu.com/weather/';
+
+    this.langcode = this.getLangCode();
+    this.i18Desc = 'lang_' + this.langcode;
+
+    let apiurl = this._baseURL + 'forecast.json?q=' + encodeURIComponent(this.stationID) + '&days=14&key=' + encodeURIComponent(this.apikey);
+    if (this.langcode) apiurl += '&lang=' + this.langcode;
+
+    // process the forecast
+    let a = this._getWeather(apiurl, function(weather) {
+      if (weather) {
+        this._load_forecast(weather);
+      }
+      // get the main object to update the display
+      deskletObj.displayForecast();
+      deskletObj.displayCurrent();
+      deskletObj.displayMeta();
+    });
+
+  },
+
+  // process the data for a multi day forecast and populate this.data
+  _load_forecast: function (data) {
+    if (!data) {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      return;
+    }
+
+    let json = JSON.parse(data);
+
+    if (typeof json.error !== 'undefined') {
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.lasterror = json.data.error.msg;
+      global.logWarning("Error from APIXU: " + json.error.msg);
+      return;
+    }
+
+    try {
+      let days = json.forecast.forecastday;
+
+      for (let i=0; i<days.length; i++) {
+        let day = new Object();
+        // APIXU date is a unix epoch that represents the start of the forecast day
+        // as it would be in UTC.
+        day.day = this._getDayName(new Date(days[i].date).getUTCDay());
+        day.minimum_temperature = days[i].day.mintemp_c;
+        day.maximum_temperature = days[i].day.maxtemp_c;
+        //day.pressure = json.list[i].pressure;
+        day.humidity = days[i].day.avghumidity;
+        day.wind_speed = days[i].day.maxwind_kph;
+        day.visibility = days[i].day.avgvis_km;
+        day.weathertext = days[i].day.condition.text;
+        day.icon = this._mapicon(days[i].day.condition.code, 1);
+        day.uv_risk = days[i].day.uv;
+
+        this.data.days[i] = day;
+      }
+      let cc = json.current;
+
+      this.data.cc.humidity = cc.humidity;
+      this.data.cc.temperature = cc.temp_c;
+      this.data.cc.pressure = cc.pressure_mb;
+      this.data.cc.wind_speed = cc.wind_kph;
+      this.data.cc.wind_direction = this.compassDirection(cc.wind_degree);
+      this.data.cc.obstime = new Date(cc.last_updated_epoch * 1000).toLocaleFormat("%H:%M %Z");
+      this.data.cc.weathertext = cc.condition.text;
+      this.data.cc.icon = this._mapicon(cc.condition.code, cc.is_day);
+      // vis is in km
+      this.data.cc.visibility = cc.vis_km;
+      this.data.cc.feelslike = cc.feelslike_c
+
+      let locdata = json.location;
+      this.data.city = locdata.name;
+      this.data.country = locdata.country;
+      this.data.region = locdata.region;
+      this.data.wgs84.lat = locdata.lat;
+      this.data.wgs84.lon = locdata.lon;
+      // we don't get a URL for local forecasts in the response :(
+
+      this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_OK;
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_OK;
+    } catch(e) {
+      global.logError(e);
+      this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.meta = BBCWX_SERVICE_STATUS_ERROR;
+      this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
+    }
+  },
+
+  _mapicon: function(iconcode, isDay) {
+    // http://www.apixu.com/doc/Apixu_weather_conditions.csv
+    let icon_name = 'na';
+    let iconmap = {
+      '1000': '32',
+      '1003': '30',
+      '1006': '26',
+      '1009': '26',
+      '1030': '22',
+      '1063': '39',
+      '1066': '41',
+      '1069': '05',
+      '1072': '08',
+      '1087': '37',
+      '1114': '15',
+      '1117': '15',
+      '1135': '20',
+      '1147': '20',
+      '1150': '39',
+      '1153': '09',
+      '1168': '08',
+      '1171': '10',
+      '1180': '39',
+      '1183': '11',
+      '1186': '39',
+      '1189': '12',
+      '1192': '39',
+      '1195': '12',
+      '1198': '10',
+      '1201': '10',
+      '1204': '18',
+      '1207': '18',
+      '1210': '41',
+      '1213': '13',
+      '1216': '41',
+      '1219': '14',
+      '1222': '41',
+      '1225': '16',
+      '1237': '18',
+      '1240': '11',
+      '1243': '12',
+      '1246': '12',
+      '1249': '18',
+      '1252': '18',
+      '1255': '41',
+      '1258': '41',
+      '1261': '11',
+      '1264': '11',
+      '1273': '37',
+      '1276': '04',
+      '1279': '41',
+      '1282': '16'
+    };
+    let nightmap = {
+      '39' : '45',
+      '41' : '46',
+      '30' : '29',
+      '28' : '27',
+      '32' : '31',
+      '22' : '21',
+      '47' : '38'
+    };
+
+    if (iconcode && (typeof iconmap[iconcode] !== "undefined")) {
+      icon_name = iconmap[iconcode];
+    }
+    // override with nighttime icons
+    if ((isDay != 1) && (typeof nightmap[icon_name] !== "undefined")) {
       icon_name = nightmap[icon_name];
     }
     return icon_name;
