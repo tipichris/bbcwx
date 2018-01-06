@@ -3484,7 +3484,9 @@ wxDriverAPIXU.prototype = {
       this.data.region = locdata.region;
       this.data.wgs84.lat = locdata.lat;
       this.data.wgs84.lon = locdata.lon;
-      // we don't get a URL for local forecasts in the response. Build it from lat / lon
+      // we don't get a URL for local forecasts in the response. Build it from the station ID
+      // (stationID seems OK, but if cases occur where it doesn't work we could normalise by
+      // constructing the query parameters from lat + ',' + lon).
       this.linkURL = 'https://www.apixu.com/weather/?q=' + encodeURIComponent(this.stationID);
 
       this.data.status.meta = BBCWX_SERVICE_STATUS_OK;
@@ -3509,7 +3511,7 @@ wxDriverAPIXU.prototype = {
       '1030': '22',
       '1063': '39',
       '1066': '41',
-      '1069': '05',
+      '1069': '07',
       '1072': '08',
       '1087': '37',
       '1114': '15',
@@ -3537,15 +3539,15 @@ wxDriverAPIXU.prototype = {
       '1222': '41',
       '1225': '16',
       '1237': '18',
-      '1240': '11',
-      '1243': '12',
-      '1246': '12',
+      '1240': '39',
+      '1243': '39',
+      '1246': '39',
       '1249': '18',
       '1252': '18',
       '1255': '41',
       '1258': '41',
-      '1261': '11',
-      '1264': '11',
+      '1261': '18',
+      '1264': '18',
       '1273': '37',
       '1276': '04',
       '1279': '41',
