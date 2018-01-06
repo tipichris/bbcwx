@@ -3934,6 +3934,7 @@ wxDriverTWC.prototype = {
         day.humidity = dayparts[p].getChildElement('hmid').getText();
         var windf = dayparts[p].getChildElement('wind');
         day.wind_speed = windf.getChildElement('s').getText();
+        if(day.wind_speed == 'calm') {day.wind_speed = 0};
         day.wind_direction = windf.getChildElement('t').getText();
         this.data.days[i] = day;
       }
