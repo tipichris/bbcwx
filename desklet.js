@@ -2295,9 +2295,15 @@ wxDriverOWM.prototype = {
     this.data.wgs84.lon = json.city.coord.lon;
     this.linkURL = 'http://openweathermap.org/city/' + json.city.id;
 
+    // This is ugly, but to place a forecast in a particular day we need to make an effort to 
+    // interpret the UTC timestamps in the context of the forecast location's timezone, which 
+    // we don't know. So we estimate, based on longitude  
+    let est_tz = Math.round(json.city.coord.lon/15) * 3600;
+
     for (let i=0; i<json.list.length; i++) {
       let day = new Object();
-      day.day = this._getDayName(new Date(json.list[i].dt *1000).toLocaleFormat( "%w" ));
+      // day.day = this._getDayName(new Date(json.list[i].dt *1000).toLocaleFormat( "%w" ));
+      day.day = this._getDayName(new Date((json.list[i].dt + est_tz)*1000).getUTCDay());
       day.minimum_temperature = json.list[i].temp.min;
       day.maximum_temperature = json.list[i].temp.max;
       day.pressure = json.list[i].pressure;
@@ -2928,7 +2934,7 @@ wxDriverWWO.prototype = {
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
-        day.day = this._getDayName(new Date(days[i].date).toLocaleFormat("%w"));
+        day.day = this._getDayName(new Date(days[i].date).getUTCDay());
         day.minimum_temperature = days[i].tempMinC;
         day.maximum_temperature = days[i].tempMaxC;
         //day.pressure = json.list[i].pressure;
@@ -3189,7 +3195,7 @@ wxDriverWWOPremium.prototype = {
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
-        day.day = this._getDayName(new Date(days[i].date).toLocaleFormat("%w"));
+        day.day = this._getDayName(new Date(days[i].date).getUTCDay());
         day.minimum_temperature = days[i].mintempC;
         day.maximum_temperature = days[i].maxtempC;
         //day.pressure = json.list[i].pressure;
@@ -3708,6 +3714,9 @@ wxDriverForecastIo.prototype = {
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
+        // TODO: this is basically wrong. The time is a UTC timestamp representing the start of the
+        // day locally (midngiht locally). For zones east of Greenwich this means a timestamp which in 
+        // UTC terms is in the previous day. 
         day.day = this._getDayName(new Date(days[i].time * 1000).toLocaleFormat("%w"));
         day.minimum_temperature = this._getSI(days[i].temperatureMin, 'temp');
         day.maximum_temperature = this._getSI(days[i].temperatureMax, 'temp');
@@ -4118,7 +4127,8 @@ wxDriverMeteoBlue.prototype = {
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
-        day.day = day.day = this._getDayName(new Date(days[i].date).toLocaleFormat("%w"));
+        //day.day = this._getDayName(new Date(days[i].date).getUTCDay());
+        day.day = days[i].weekday;
         day.minimum_temperature = days[i].temperature_min;
         day.maximum_temperature = days[i].temperature_max;
         day.pressure = days[i].pressure_hpa;
