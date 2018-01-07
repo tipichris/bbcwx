@@ -1481,6 +1481,9 @@ wxDriver.prototype = {
   },
 
   _getDayName: function(i) {
+    // handle Glib days, which use 1 based numbering starting with Mon
+    // all the same except Sun is 7, not 0
+    if (i == 7) { i = 0; }
     let days = ['Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return days[i];
   },
@@ -3708,16 +3711,16 @@ wxDriverForecastIo.prototype = {
     }
 
     let json = JSON.parse(data);
+    let tz = GLib.TimeZone.new(json.timezone);
 
     try {
       let days = json.daily.data;
 
       for (let i=0; i<days.length; i++) {
         let day = new Object();
-        // TODO: this is basically wrong. The time is a UTC timestamp representing the start of the
-        // day locally (midngiht locally). For zones east of Greenwich this means a timestamp which in 
-        // UTC terms is in the previous day. 
-        day.day = this._getDayName(new Date(days[i].time * 1000).toLocaleFormat("%w"));
+        let dt = GLib.DateTime.new_from_unix_utc(days[i].time);
+        dt = dt.to_timezone(tz);
+        day.day = this._getDayName(dt.get_day_of_week());
         day.minimum_temperature = this._getSI(days[i].temperatureMin, 'temp');
         day.maximum_temperature = this._getSI(days[i].temperatureMax, 'temp');
         day.minimum_feelslike = this._getSI(days[i].apparentTemperatureMin, 'temp');
@@ -4104,6 +4107,7 @@ wxDriverMeteoBlue.prototype = {
 
   // process the data for a multi day forecast and populate this.data
   _load_forecast: function (data) {
+    this.data.city = '';
     if (!data) {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
@@ -4149,7 +4153,7 @@ wxDriverMeteoBlue.prototype = {
 
       this.data.wgs84.lat = json.meta.lat;
       this.data.wgs84.lon = json.meta.lon;
-      https://www.meteoblue.com/weather/forecast/week/52.275N-1.597E
+      //https://www.meteoblue.com/weather/forecast/week/52.275N-1.597E
       this.linkURL = 'https://www.meteoblue.com/weather/forecast/week/' + json.meta.lat + 'N' + json.meta.lon + 'E';
 
       this.data.status.cc = BBCWX_SERVICE_STATUS_OK;
