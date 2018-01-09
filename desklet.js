@@ -839,7 +839,7 @@ MyDesklet.prototype = {
     else if (this.service.capabilities.meta.wgs84 && (locsrc == 'yahoo' || locsrc == 'google')) {
       let latlon = this.service.data.wgs84.lat + ',' + this.service.data.wgs84.lon;
       // check the cache
-      if (typeof this._geocache[locsrc][latlon] === 'object') {
+      if (typeof this._geocache[locsrc][latlon] === 'object' && typeof this._geocache[locsrc][latlon].city !== 'undefined') {
         // debugging
         //global.log ("bbcwx: geocache hit for " + latlon + ", " + locsrc + ": " + this._geocache[locsrc][latlon].city);
         this.displaycity = this._geocache[locsrc][latlon].city;
