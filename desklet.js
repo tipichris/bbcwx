@@ -4106,7 +4106,6 @@ wxDriverMeteoBlue.prototype = {
 
   // process the data for a multi day forecast and populate this.data
   _load_forecast: function (data) {
-    this.data.city = '';
     if (!data) {
       this.data.status.forecast = BBCWX_SERVICE_STATUS_ERROR;
       this.data.status.cc = BBCWX_SERVICE_STATUS_ERROR;
